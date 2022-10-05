@@ -1,7 +1,8 @@
 library flutter_gyw;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/bt_device.dart' show BTDevice;
+export 'src/bt_manager.dart' show BTManager;
+export 'src/exceptions.dart' show GYWException, GYWStatusException;
+export 'src/screen.dart' show GYWScreenParameters;
+export 'src/fonts.dart' show GYWFont;
+export 'src/drawings.dart' show Drawing, TextDrawing, WhiteScreen;
