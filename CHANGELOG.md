@@ -1,5 +1,6 @@
 ## 0.2.0
-* Support de 27 icones 80x80
+* Support 27 80x80 icons
+* Example to explain how to use the library
 
 ## 0.1.0
 

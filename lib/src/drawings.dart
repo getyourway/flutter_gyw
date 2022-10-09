@@ -43,6 +43,8 @@ class TextDrawing extends Drawing {
 }
 
 class WhiteScreen extends Drawing {
+  const WhiteScreen();
+
   @override
   Map<String, dynamic> toBluetoothJson() {
     return {
