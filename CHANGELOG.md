@@ -1,3 +1,6 @@
+## 0.2.0
+* Support de 27 icones 80x80
+
 ## 0.1.0
 
 * Scan for devices available through Bluetooth
