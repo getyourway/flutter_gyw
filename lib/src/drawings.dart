@@ -73,7 +73,7 @@ class IconDrawing extends Drawing {
       "type": "memory",
       "x_start": left,
       "y_start": top,
-      "data": icon.name,
+      "data": icon.filename,
       "x_size": icon.width,
       "y_size": icon.height,
     };

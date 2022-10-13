@@ -10,13 +10,13 @@ extension FontSize on GYWFont {
   int get index {
     switch (this) {
       case GYWFont.basic:
-        return 1;
+        return 0;
       case GYWFont.title:
-        return 2;
+        return 1;
       case GYWFont.bigBasic:
-        return 3;
+        return 2;
       case GYWFont.bigTitle:
-        return 4;
+        return 3;
     }
   }
 
