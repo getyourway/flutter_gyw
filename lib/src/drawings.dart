@@ -1,4 +1,5 @@
-import 'package:flutter_gyw/src/fonts.dart';
+import 'fonts.dart';
+import 'icons.dart';
 
 abstract class Drawing {
   final int top;
@@ -42,6 +43,8 @@ class TextDrawing extends Drawing {
 }
 
 class WhiteScreen extends Drawing {
+  const WhiteScreen();
+
   @override
   Map<String, dynamic> toBluetoothJson() {
     return {
@@ -52,5 +55,32 @@ class WhiteScreen extends Drawing {
   @override
   String toString() {
     return "Drawing: white screen";
+  }
+}
+
+class IconDrawing extends Drawing {
+  final GYWIcon icon;
+
+  const IconDrawing(
+    this.icon, {
+    super.top,
+    super.left,
+  });
+
+  @override
+  Map<String, dynamic> toBluetoothJson() {
+    return {
+      "type": "memory",
+      "x_start": left,
+      "y_start": top,
+      "data": icon.filename,
+      "x_size": icon.width,
+      "y_size": icon.height,
+    };
+  }
+
+  @override
+  String toString() {
+    return "Drawing: ${icon.name} at ($left, $top)";
   }
 }

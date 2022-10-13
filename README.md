@@ -18,10 +18,19 @@ know whether this package might be useful for them.
 
 TODO: List what your package can do. Maybe include images, gifs, or videos.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+WARNING This package is still in development and is private. Therefore, you need to have access to this git repository to use it.
+
+To install the package, add this to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  flutter_gyw:
+    git:
+      url: git@github.com:getyourway/flutter_gyw.git
+      ref: master
+```
 
 ## Usage
 
@@ -34,9 +43,7 @@ const like = 'sample';
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+This package is still in development. Feel free to add new feature or to contact Get Your Way.
 
 ## Licence
 
