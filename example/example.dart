@@ -26,8 +26,13 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Future<void> _sendExampleData() async {
     const List<Drawing> drawings = [
       WhiteScreen(),
-      IconDrawing(GYWIcons.fire, top: 30, left: 30),
-      TextDrawing(text: "Hello world", top: 30, left: 120),
+      IconDrawing(GYWIcons.fire, top: 50, left: 60),
+      TextDrawing(
+        text: "Hello world",
+        top: 50,
+        left: 220,
+        font: GYWFont.bigBasic,
+      ),
     ];
 
     for (Drawing drawing in drawings) {
@@ -40,6 +45,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
     return Scaffold(
       body: Column(
         children: [
+          SizedBox(height: MediaQuery.of(context).viewPadding.top),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
@@ -58,13 +64,14 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
                 final BTDevice device = BTManager.instance.devices[index];
                 return ListTile(
                   title: Text(
-                    device.name,
+                    device.name.isEmpty ? "Unknown device" : device.name,
                     style: TextStyle(
                       fontWeight: device.id == connectedDevice?.id
                           ? FontWeight.bold
                           : null,
                     ),
                   ),
+                  subtitle: Text(device.id),
                   onTap: () async {
                     if (await device.connect()) {
                       setState(() => connectedDevice = device);
