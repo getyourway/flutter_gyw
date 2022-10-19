@@ -6,6 +6,7 @@ enum GYWFont {
 }
 
 extension FontSize on GYWFont {
+  /// Index value transmitted to the device
   int get index {
     switch (this) {
       case GYWFont.basic:
@@ -19,6 +20,7 @@ extension FontSize on GYWFont {
     }
   }
 
+  /// Width (in pixels) of a character
   int get width {
     switch (this) {
       case GYWFont.basic:
@@ -32,6 +34,7 @@ extension FontSize on GYWFont {
     }
   }
 
+  /// Height (in pixels) of a character
   int get height {
     switch (this) {
       case GYWFont.basic:
