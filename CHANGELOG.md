@@ -1,3 +1,6 @@
-## 0.0.1
+## 0.1.0
 
-* TODO: Describe initial release.
+* Scan for devices available through Bluetooth
+* Establish a Bluetooth connection with a device
+* Send data to a GYW device using the display characteristic
+* New type of drawings: Text, White screen
