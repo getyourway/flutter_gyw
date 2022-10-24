@@ -1,4 +1,7 @@
 class GYWScreenParameters {
-  static int width = 800;
-  static int height = 480;
+  /// Supported Width of a GYW aRdent device
+  static const int width = 800;
+
+  /// Supported Width of a GYW aRdent device
+  static const int height = 480;
 }

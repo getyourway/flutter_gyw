@@ -1,3 +1,7 @@
+## 0.2.1
+* Improve README and docstrings
+* Refactor GYWFont class to migrate from enum to class
+
 ## 0.2.0
 * Support 27 80x80 icons
 * Example to explain how to use the library

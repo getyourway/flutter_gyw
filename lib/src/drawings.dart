@@ -1,8 +1,12 @@
 import 'fonts.dart';
 import 'icons.dart';
 
+/// A drawing that can be made on the aRdent screen
 abstract class Drawing {
+  /// Distance (in pixels) from the top
   final int top;
+
+  /// Distance (in pixels) from the left side
   final int left;
 
   const Drawing({
@@ -10,16 +14,21 @@ abstract class Drawing {
     this.left = 0,
   });
 
+  /// Convert the drawing into a JSON understood by the device
   Map<String, dynamic> toBluetoothJson();
 }
 
+/// A drawing to display text
 class TextDrawing extends Drawing {
+  /// Displayed text
   final String text;
+
+  /// Font (fontSize, fontWeight, ...) of the text
   final GYWFont font;
 
   const TextDrawing({
     required this.text,
-    this.font = GYWFont.basic,
+    this.font = GYWFonts.basic,
     super.left = 0,
     super.top = 0,
   });
@@ -42,6 +51,7 @@ class TextDrawing extends Drawing {
   }
 }
 
+/// A drawing to reset the whole screen to a white screen
 class WhiteScreen extends Drawing {
   const WhiteScreen();
 
@@ -58,7 +68,9 @@ class WhiteScreen extends Drawing {
   }
 }
 
+/// A drawing to display an icon
 class IconDrawing extends Drawing {
+  /// The displayed icon
   final GYWIcon icon;
 
   const IconDrawing(
