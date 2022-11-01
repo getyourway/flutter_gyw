@@ -7,6 +7,8 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
 
 import 'exceptions.dart';
 
+
+/// Representation of a Bluetooth device
 class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   /// Encapsulated FlutterBluePlus device
   fb.BluetoothDevice fbDevice;
@@ -44,7 +46,10 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     if (lastSeen != null) this.lastSeen = lastSeen;
   }
 
+  /// Name of the device
   String get name => fbDevice.name;
+
+  /// UUID of the device
   String get id => fbDevice.id.id;
 
   /// Connect the Bluetooth device to the current device
@@ -120,7 +125,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     }
   }
 
-  /// Send data to the device on the display picture characteristic
+  /// Send data to the aRdent device to display it on the screen
   Future<void> displayData({
     required Map<String, dynamic> data,
   }) async {
@@ -154,6 +159,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     }
   }
 
+  /// Compare this Bluetooth device to another based on signal strength
   @override
   int compareTo(BTDevice? other) {
     return -lastRssi.compareTo(other?.lastRssi ?? -1);

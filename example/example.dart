@@ -31,7 +31,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFont.bigBasic,
+        font: GYWFonts.bigBasic,
       ),
     ];
 

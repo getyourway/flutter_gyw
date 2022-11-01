@@ -7,6 +7,7 @@ import 'exceptions.dart';
 class BTManager {
   BTManager._();
 
+  /// The Bluetooth Manager used in your whole application
   static final BTManager instance = BTManager._();
 
   /// List of devices available for a Bluetooth connection
