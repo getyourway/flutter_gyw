@@ -5,7 +5,16 @@ import 'exceptions.dart';
 
 /// A class used to interact with Bluetooth devices
 class BTManager {
-  BTManager._();
+  BTManager._() {
+    FlutterBluePlus.instance.state.listen((state) {
+      if (bluetoothOn != (state == BluetoothState.on)) {
+        bluetoothOn = state == BluetoothState.on;
+        if (onBluetoothStatusChange != null) {
+          onBluetoothStatusChange!(bluetoothOn);
+        }
+      }
+    });
+  }
 
   /// The Bluetooth Manager used in your whole application
   static final BTManager instance = BTManager._();
@@ -16,7 +25,14 @@ class BTManager {
   /// Status value indicating that the manager is searching around for devices
   bool _isScanning = false;
 
+  /// Whether the Bluetooth is on
+  bool bluetoothOn = false;
+
+  /// Function triggered when there is a Bluetooth status change
+  void Function(bool)? onBluetoothStatusChange;
+
   /// Checks whether the Bluetooth is enabled on the device
+  @Deprecated("This property has been replaced by bluetoothOn")
   Future<bool> get bluetoothStatus async {
     final flutterBluePlus = FlutterBluePlus.instance;
 
@@ -30,7 +46,7 @@ class BTManager {
     int minimumRssi = 0,
     void Function(BTDevice)? onResult,
   }) async {
-    if (!await bluetoothStatus) {
+    if (!bluetoothOn) {
       throw const GYWStatusException("Bluetooth is not enabled");
     }
 

@@ -16,11 +16,11 @@ WARNING This package is still in development and is private. Therefore, you are 
 
 * Display a text at a given postion
 * Font selection
-  * check `fonts.dart` [documentation](TODO: Add fonts link) for details
+  * check `fonts.dart` [documentation](flutter_gyw/GYWFonts-class.html) for details
 * Display an 80x80 icon at a given position
-  * check `icons.dart` [documentation](TODO: Add icons link) for details
+  * check `icons.dart` [documentation](flutter_gyw/GYWIcons-class.html) for details
 * Provide the specification of the GYW aRdent device screen
-  * check `screen.dart` [documentation](TODO: Add screen link) for details
+  * check `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
 
 ## Installation
 

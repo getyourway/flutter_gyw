@@ -42,11 +42,11 @@ class GYWIcons {
   );
   static const GYWIcon arrowAlt = GYWIcon(
     "arrowAlt",
-    "IconAwesomeArrowAlt",
+    "IconAwesomeArrowsAlt",
   );
   static const GYWIcon arrowExpandAlt = GYWIcon(
     "arrowExpandAlt",
-    "IconAwesomeExpandArrowAlt",
+    "IconAwesomeExpandArrowsAlt",
   );
   static const GYWIcon arrowLocation = GYWIcon(
     "arrowLocation",
@@ -142,4 +142,35 @@ class GYWIcons {
     "fire",
     "IconMetroFire",
   );
+
+  /// List of all icons
+  static const List<GYWIcon> values = [
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    arrowAlt,
+    arrowExpandAlt,
+    arrowLocation,
+    batteryFull,
+    batteryHalf,
+    batteryQuarter,
+    batteryEmpty,
+    dropbox,
+    flag,
+    flagCheckered,
+    message,
+    speed,
+    send,
+    notification,
+    information,
+    checkbox,
+    food,
+    mailbox,
+    arrowUpLeft,
+    arrowUpRight,
+    arrowDownLeft,
+    arrowDownRight,
+    fire,
+  ];
 }

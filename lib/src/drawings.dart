@@ -1,5 +1,6 @@
 import 'fonts.dart';
 import 'icons.dart';
+
 /// A drawing that represents data that can be displayed on an aRdent screen
 abstract class Drawing {
   /// Distance (in pixels) from the top
@@ -15,10 +16,30 @@ abstract class Drawing {
 
   /// Convert the drawing into a JSON understood by the device
   Map<String, dynamic> toBluetoothJson();
+
+  /// Deserializes a drawing from JSON data
+  factory Drawing.fromJson(Map<String, dynamic> data) {
+    switch (data["type"]) {
+      case TextDrawing.type:
+        return TextDrawing.fromJson(data);
+      case WhiteScreen.type:
+        return WhiteScreen.fromJson(data);
+      case IconDrawing.type:
+        return IconDrawing.fromJson(data);
+      default:
+        throw UnsupportedError("Type '${data['type']}' is not supported.");
+    }
+  }
+
+  /// Serializes a drawing to JSON data
+  Map<String, dynamic> toJson();
 }
 
 /// A drawing to display text on an aRdent device
 class TextDrawing extends Drawing {
+  // Type of the drawing
+  static const String type = "text";
+
   /// Displayed text
   final String text;
 
@@ -48,10 +69,37 @@ class TextDrawing extends Drawing {
   String toString() {
     return "Drawing: Text $text at ($left, $top)";
   }
+
+  /// Deserializes a text drawing from JSON data
+  factory TextDrawing.fromJson(Map<String, dynamic> data) {
+    return TextDrawing(
+      left: data["left"],
+      top: data["top"],
+      text: data["text"],
+      font: GYWFonts.values.firstWhere(
+        (e) => e.name == data["font"],
+        orElse: () => GYWFonts.basic,
+      ),
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+      "left": left,
+      "top": top,
+      "text": text,
+      "font": font.name,
+    };
+  }
 }
 
 /// A drawing to reset the screen of the aRdent device to a white screen
 class WhiteScreen extends Drawing {
+  // Type of the white screen drawing
+  static const String type = "white_screen";
+
   const WhiteScreen();
 
   @override
@@ -65,10 +113,25 @@ class WhiteScreen extends Drawing {
   String toString() {
     return "Drawing: white screen";
   }
+
+  /// Deserializes a white screen from JSON data
+  factory WhiteScreen.fromJson(Map<String, dynamic> data) {
+    return const WhiteScreen();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+    };
+  }
 }
 
 /// A drawing to display an icon on an aRdent device
 class IconDrawing extends Drawing {
+  // Type of the icon drawing
+  static const String type = "icon";
+
   /// The displayed icon
   final GYWIcon icon;
 
@@ -93,5 +156,24 @@ class IconDrawing extends Drawing {
   @override
   String toString() {
     return "Drawing: ${icon.name} at ($left, $top)";
+  }
+
+  /// Deserializes an icon drawing from JSON data
+  factory IconDrawing.fromJson(Map<String, dynamic> data) {
+    return IconDrawing(
+      GYWIcons.values.firstWhere((element) => element.name == data["icon"]),
+      left: data["left"],
+      top: data["top"],
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+      "left": left,
+      "top": top,
+      "icon": icon.name,
+    };
   }
 }

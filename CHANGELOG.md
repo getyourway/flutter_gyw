@@ -1,3 +1,8 @@
+## 0.2.3
+* [IMP] Improve the Bluetooth status detection
+* [IMP] Serialization of Drawings
+* [FIX] Use the correct sizes for fonts
+
 ## 0.2.2
 * [DOC] Improve docstrings
 * [FEAT] Set up of Onepub
