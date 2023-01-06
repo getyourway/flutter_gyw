@@ -70,6 +70,25 @@ class TextDrawing extends Drawing {
     return "Drawing: Text $text at ($left, $top)";
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (other is TextDrawing) {
+      return text == other.text &&
+          left == other.left &&
+          top == other.top &&
+          font == other.font;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode =>
+      37 * text.hashCode +
+      23 * font.hashCode +
+      51 * left.hashCode +
+      13 * top.hashCode;
+
   /// Deserializes a text drawing from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     return TextDrawing(
@@ -157,6 +176,19 @@ class IconDrawing extends Drawing {
   String toString() {
     return "Drawing: ${icon.name} at ($left, $top)";
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is IconDrawing) {
+      return icon == other.icon && left == other.left && top == other.top;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode =>
+      29 * icon.hashCode + 57 * left.hashCode + 17 * top.hashCode;
 
   /// Deserializes an icon drawing from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {

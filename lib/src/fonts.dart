@@ -22,6 +22,12 @@ class GYWFont {
     this.height = 12,
     this.bold = false,
   ]);
+
+  @override
+  bool operator ==(Object other) => other is GYWFont && other.index == index;
+
+  @override
+  int get hashCode => index;
 }
 
 /// Fonts supported by aRdent devices
