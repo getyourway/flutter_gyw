@@ -1,3 +1,6 @@
+## 0.2.4
+* [ADD] Implementation of automated tests for drawings
+
 ## 0.2.3
 * [IMP] Improve the Bluetooth status detection
 * [IMP] Serialization of Drawings
