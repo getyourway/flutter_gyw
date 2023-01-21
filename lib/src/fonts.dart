@@ -34,7 +34,7 @@ class GYWFont {
 class GYWFonts {
   static const basic = GYWFont("basic", 0, 14, 22, false);
   static const title = GYWFont("title", 1, 20, 31, true);
-  static const bigBasic = GYWFont("big_basic", 2, 29, 47, false);
+  static const bigBasic = GYWFont("big_basic", 2, 29, 47, true);
   static const bigTitle = GYWFont("big_title", 3, 42, 71, true);
 
   static const values = [basic, title, bigBasic, bigTitle];
