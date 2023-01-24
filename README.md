@@ -45,6 +45,8 @@ dependencies:
       ref: master
 ```
 
+:bulb: If you want to use the latest features, you can reference the **develop** branch. However, these features are not merged, so they may lead to errors. Please report them if you see some.
+
 Now in your Dart code, you can use
 
 ```dart
@@ -55,7 +57,7 @@ import 'package:flutter_gyw/flutter_gyw.dart';
 
 ### Step 1 : Scan for Bluetooth Device
 
-First you need to scan for the surrounding Bluetooth device. To do so, use the `Bluetoothmanager`
+First you need to scan for the surrounding Bluetooth device. To do so, use the `BluetoothManager` object.
 
 ```dart
 await BluetoothManager.instance.refreshDevices();
