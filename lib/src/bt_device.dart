@@ -7,7 +7,6 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
 
 import 'exceptions.dart';
 
-
 /// Representation of a Bluetooth device
 class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   /// Encapsulated FlutterBluePlus device
@@ -37,6 +36,8 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     notifyListeners();
   }
 
+  StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
+
   BTDevice({
     required this.fbDevice,
     required int lastRssi,
@@ -58,7 +59,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       throw const GYWStatusException(
         "The device is already triying to be connected.",
       );
-    } else if (isConnecting) {
+    } else if (isDisconnecting) {
       throw const GYWStatusException(
         "The deice is already trying to be disconnected.",
       );
@@ -70,6 +71,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
+      _deviceStateListener = fbDevice.state.listen((state) async {
+        if (state == fb.BluetoothDeviceState.disconnecting ||
+            state == fb.BluetoothDeviceState.disconnected) {
+          await disconnect();
+        }
+      });
       isConnected = true;
     } finally {
       isConnecting = false;
@@ -91,9 +98,14 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
         "The device is already trying to be disconnected.",
       );
     }
-
     isDisconnecting = true;
     notifyListeners();
+
+    // Clear status listener
+    if (_deviceStateListener != null) {
+      await _deviceStateListener!.cancel();
+      _deviceStateListener = null;
+    }
 
     try {
       await fbDevice.disconnect();

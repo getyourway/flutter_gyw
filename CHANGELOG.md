@@ -1,6 +1,7 @@
 ## 0.2.4
 * [ADD] Implementation of automated tests for drawings
 * [FIX] Fix the fontweight of "big basic" font
+* [FIX] Detection of device disconnection
 
 ## 0.2.3
 * [IMP] Improve the Bluetooth status detection
