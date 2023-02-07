@@ -1,5 +1,6 @@
 ## 1.0.0
-* [REFACTOR] Change Bluetooth communication to work with aRdent 1 firmware
+* [ADD] Update Bluetooth communication for aRdent 1
+* [ADD] Update fonts and icons for aRdent 1
 
 ## 0.2.4
 * [ADD] Implementation of automated tests for drawings

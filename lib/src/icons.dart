@@ -25,47 +25,47 @@ class GYWIcon {
 class GYWIcons {
   // Icons from IconAwesome
   static const GYWIcon arrowDown = GYWIcon(
-    "arrowDown",
+    "down",
     "IconAwesomeArrowDown",
   );
   static const GYWIcon arrowLeft = GYWIcon(
-    "arrowLeft",
+    "left",
     "IconAwesomeArrowLeft",
   );
   static const GYWIcon arrowRight = GYWIcon(
-    "arrowRight",
+    "right",
     "IconAwesomeArrowRight",
   );
   static const GYWIcon arrowUp = GYWIcon(
-    "arrowUp",
+    "up",
     "IconAwesomeArrowUp",
   );
   static const GYWIcon arrowAlt = GYWIcon(
-    "arrowAlt",
+    "expIn",
     "IconAwesomeArrowsAlt",
   );
   static const GYWIcon arrowExpandAlt = GYWIcon(
-    "arrowExpandAlt",
+    "expOut",
     "IconAwesomeExpandArrowsAlt",
   );
   static const GYWIcon arrowLocation = GYWIcon(
-    "arrowLocation",
+    "location",
     "IconAwesomeLocationArrow",
   );
   static const GYWIcon batteryFull = GYWIcon(
-    "batteryFull",
+    "batt1",
     "IconAwesomeBatteryFull",
   );
   static const GYWIcon batteryHalf = GYWIcon(
-    "batteryHalf",
+    "batt12",
     "IconAwesomeBatteryHalf",
   );
   static const GYWIcon batteryQuarter = GYWIcon(
-    "batteryQuarter",
+    "batt14",
     "IconAwesomeBatteryQuarter",
   );
   static const GYWIcon batteryEmpty = GYWIcon(
-    "batteryEmpty",
+    "batt0",
     "IconAwesomeBatteryEmpty",
   );
   static const GYWIcon dropbox = GYWIcon(
@@ -73,11 +73,11 @@ class GYWIcons {
     "IconAwesomeDropbox",
   );
   static const GYWIcon flag = GYWIcon(
-    "flag",
+    "flag0",
     "IconAwesomeFlag",
   );
   static const GYWIcon flagCheckered = GYWIcon(
-    "flagCheckered",
+    "flag1",
     "IconAwesomeFlagCheckered",
   );
 
@@ -97,16 +97,22 @@ class GYWIcons {
     "IconIonicIosSend",
   );
   static const GYWIcon notification = GYWIcon(
-    "notification",
+    "notif",
     "IconIonicIosNotifications",
   );
   static const GYWIcon information = GYWIcon(
-    "information",
+    "info",
     "IconIonicIosInformationCircle",
   );
+
+  // Icons from Google Icons
   static const GYWIcon checkbox = GYWIcon(
-    "checkbox",
-    "IconIonicIosCheckbox",
+    "check",
+    "GoogleIconsCheckbox",
+  );
+  static const GYWIcon checkboxEmpty = GYWIcon(
+    "uncheck",
+    "GoogleIconsCheckboxEmpty",
   );
 
   // Icons from IconMap
@@ -121,19 +127,19 @@ class GYWIcons {
     "IconMaterialMarkunreadMailbox",
   );
   static const GYWIcon arrowUpLeft = GYWIcon(
-    "arrowUpLeft",
+    "uLeft",
     "IconMaterialSubdirectoryArrowLeft",
   );
   static const GYWIcon arrowUpRight = GYWIcon(
-    "arrowUpRight",
+    "uRight",
     "IconMaterialSubdirectoryArrowRight",
   );
   static const GYWIcon arrowDownLeft = GYWIcon(
-    "arrowDownLeft",
+    "dLeft",
     "IconMaterialSubdirectoryArrowLeft1",
   );
   static const GYWIcon arrowDownRight = GYWIcon(
-    "arrowDownRight",
+    "dRight",
     "IconMaterialSubdirectoryArrowRight1",
   );
 
@@ -165,6 +171,7 @@ class GYWIcons {
     notification,
     information,
     checkbox,
+    checkboxEmpty,
     food,
     mailbox,
     arrowUpLeft,

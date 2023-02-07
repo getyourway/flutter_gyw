@@ -35,7 +35,7 @@ main() {
     });
 
     test('Text with font', () {
-      const font = GYWFont("Test", 42);
+      const font = GYWFont("Test", "tst", 42);
 
       Drawing drawing = const TextDrawing(
         text: "Text with font",
@@ -49,7 +49,7 @@ main() {
     });
 
     test('Text with font and position', () {
-      const font = GYWFont("Test", 42);
+      const font = GYWFont("Test", "tst", 42);
 
       Drawing drawing = const TextDrawing(
         text: "Text with font and position",

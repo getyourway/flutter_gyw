@@ -54,11 +54,12 @@ class TextDrawing extends Drawing {
   final String text;
 
   /// Font (fontSize, fontWeight, ...) of the text
-  final GYWFont font;
+  /// If no font is given, it uses the most recent one
+  final GYWFont? font;
 
   const TextDrawing({
     required this.text,
-    this.font = GYWFonts.basic,
+    this.font,
     super.left = 0,
     super.top = 0,
   });
@@ -71,7 +72,7 @@ class TextDrawing extends Drawing {
       "y_start": top,
       "data": text,
       "x_size": 800,
-      "title": font.index,
+      if (font != null) "title": font!.index,
     };
   }
 
@@ -79,19 +80,25 @@ class TextDrawing extends Drawing {
   List<BTCommand> toCommands() {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
-    controlBytes.add(int32Bytes(GYWControlCodes.displayText));
-    controlBytes.add(int32Bytes(left, length: 4, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, length: 4, endian: Endian.little));
+    controlBytes.add(int8Bytes(GYWControlCodes.displayText));
+    controlBytes.add(int32Bytes(left, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, endian: Endian.little));
 
-    return [
-      BTCommand(
-        GYWCharacteristics.nameDisplay,
-        const Utf8Encoder().convert(font.name),
-      ),
-      BTCommand(
-        GYWCharacteristics.ctrlDisplay,
-        int32Bytes(GYWControlCodes.setFont),
-      ),
+    final commands = <BTCommand>[];
+    if (font != null) {
+      commands.addAll([
+        BTCommand(
+          GYWCharacteristics.nameDisplay,
+          const Utf8Encoder().convert(font!.prefix),
+        ),
+        BTCommand(
+          GYWCharacteristics.ctrlDisplay,
+          int8Bytes(GYWControlCodes.setFont),
+        ),
+      ]);
+    }
+
+    commands.addAll([
       BTCommand(
         GYWCharacteristics.nameDisplay,
         const Utf8Encoder().convert(text),
@@ -99,8 +106,10 @@ class TextDrawing extends Drawing {
       BTCommand(
         GYWCharacteristics.ctrlDisplay,
         controlBytes.toBytes(),
-      )
-    ];
+      ),
+    ]);
+
+    return commands;
   }
 
   @override
@@ -134,7 +143,7 @@ class TextDrawing extends Drawing {
       top: data["top"],
       text: data["text"],
       font: GYWFonts.values.firstWhere(
-        (e) => e.name == data["font"],
+        (e) => e.index == data["font"] || e.name == data["font"],
         orElse: () => GYWFonts.basic,
       ),
     );
@@ -147,7 +156,7 @@ class TextDrawing extends Drawing {
       "left": left,
       "top": top,
       "text": text,
-      "font": font.name,
+      if (font != null) "font": font!.index,
     };
   }
 }
@@ -171,7 +180,7 @@ class WhiteScreen extends Drawing {
     return [
       BTCommand(
         GYWCharacteristics.ctrlDisplay,
-        int32Bytes(GYWControlCodes.clearWhite),
+        int8Bytes(GYWControlCodes.clearWhite),
       )
     ];
   }
@@ -223,14 +232,14 @@ class IconDrawing extends Drawing {
   @override
   List<BTCommand> toCommands() {
     final controlBytes = BytesBuilder();
-    controlBytes.add(int32Bytes(GYWControlCodes.displayImage));
-    controlBytes.add(int32Bytes(left, length: 4, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, length: 4, endian: Endian.little));
+    controlBytes.add(int8Bytes(GYWControlCodes.displayImage));
+    controlBytes.add(int32Bytes(left, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, endian: Endian.little));
 
     return [
       BTCommand(
         GYWCharacteristics.nameDisplay,
-        const Utf8Encoder().convert(icon.filename),
+        const Utf8Encoder().convert(icon.name),
       ),
       BTCommand(
         GYWCharacteristics.ctrlDisplay,

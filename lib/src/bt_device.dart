@@ -184,8 +184,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     if (characteristic == null) {
       throw const GYWException("Bluetooth characteristic not found");
     } else {
-      await characteristic.write(command.data);
-      // await _sendData(characteristic, command.data);
+      await _sendData(characteristic, command.data);
     }
   }
 
