@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter_gyw/src/consts.dart';
+import 'package:flutter_gyw/src/helpers.dart';
+
 import 'fonts.dart';
 import 'icons.dart';
+import 'dart:typed_data';
 
 /// A drawing that represents data that can be displayed on an aRdent screen
 abstract class Drawing {
@@ -15,7 +21,11 @@ abstract class Drawing {
   });
 
   /// Convert the drawing into a JSON understood by the device
+  @Deprecated("This communication method was used with aRdent 0")
   Map<String, dynamic> toBluetoothJson();
+
+  /// Convert the drawing into a list of commands understood by the device
+  List<BTCommand> toCommands();
 
   /// Deserializes a drawing from JSON data
   factory Drawing.fromJson(Map<String, dynamic> data) {
@@ -63,6 +73,34 @@ class TextDrawing extends Drawing {
       "x_size": 800,
       "title": font.index,
     };
+  }
+
+  @override
+  List<BTCommand> toCommands() {
+    // Bytes generation for the control data (command code + params)
+    final controlBytes = BytesBuilder();
+    controlBytes.add(int32Bytes(GYWControlCodes.displayText));
+    controlBytes.add(int32Bytes(left, length: 4, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, length: 4, endian: Endian.little));
+
+    return [
+      BTCommand(
+        GYWCharacteristics.nameDisplay,
+        const Utf8Encoder().convert(font.name),
+      ),
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        int32Bytes(GYWControlCodes.setFont),
+      ),
+      BTCommand(
+        GYWCharacteristics.nameDisplay,
+        const Utf8Encoder().convert(text),
+      ),
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        controlBytes.toBytes(),
+      )
+    ];
   }
 
   @override
@@ -129,6 +167,16 @@ class WhiteScreen extends Drawing {
   }
 
   @override
+  List<BTCommand> toCommands() {
+    return [
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        int32Bytes(GYWControlCodes.clearWhite),
+      )
+    ];
+  }
+
+  @override
   String toString() {
     return "Drawing: white screen";
   }
@@ -170,6 +218,25 @@ class IconDrawing extends Drawing {
       "x_size": icon.width,
       "y_size": icon.height,
     };
+  }
+
+  @override
+  List<BTCommand> toCommands() {
+    final controlBytes = BytesBuilder();
+    controlBytes.add(int32Bytes(GYWControlCodes.displayImage));
+    controlBytes.add(int32Bytes(left, length: 4, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, length: 4, endian: Endian.little));
+
+    return [
+      BTCommand(
+        GYWCharacteristics.nameDisplay,
+        const Utf8Encoder().convert(icon.filename),
+      ),
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        controlBytes.toBytes(),
+      )
+    ];
   }
 
   @override

@@ -1,3 +1,6 @@
+## 1.0.0
+* [REFACTOR] Change Bluetooth communication to work with aRdent 1 firmware
+
 ## 0.2.4
 * [ADD] Implementation of automated tests for drawings
 * [FIX] Fix the fontweight of "big basic" font

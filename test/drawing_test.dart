@@ -91,7 +91,7 @@ main() {
       expect(bluetoothJson["x_start"], 120);
       expect(bluetoothJson["y_start"], 220);
     });
-  });
+  }, skip: true); // Skip because depreacted
 
   group("JSON", () {
     test('white screen', () {
