@@ -36,10 +36,9 @@ class GYWFont {
 
 /// Fonts supported by aRdent devices
 class GYWFonts {
-  static const basic = GYWFont("Basic", "nba", 0, 14, 19, false);
-  static const title = GYWFont("Title", "nti", 1, 20, 28, true);
-  static const bigBasic = GYWFont("Big basic", "bba", 2, 28, 39, false);
-  static const bigTitle = GYWFont("Big title", "bti", 3, 42, 58, true);
+  static const basic = GYWFont("Basic", "nba", 0, 20, 32, false);
+  static const title = GYWFont("Title", "nti", 1, 20, 32, true);
 
-  static const values = [basic, title, bigBasic, bigTitle];
+  /// Every fonts available
+  static const values = [basic, title];
 }

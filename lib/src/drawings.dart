@@ -239,7 +239,7 @@ class IconDrawing extends Drawing {
     return [
       BTCommand(
         GYWCharacteristics.nameDisplay,
-        const Utf8Encoder().convert(icon.name),
+        const Utf8Encoder().convert("${icon.filename}.png"),
       ),
       BTCommand(
         GYWCharacteristics.ctrlDisplay,

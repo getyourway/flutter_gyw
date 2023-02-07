@@ -145,6 +145,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     return null;
   }
 
+  @Deprecated("This was used with aRdent 0 and should not be used anymore.")
   Future<fb.BluetoothCharacteristic?> _getGYWDisplayCharacteristic() async {
     List<fb.BluetoothService?> services = await fbDevice.discoverServices();
 
@@ -211,6 +212,8 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       await characteristic.write(chunk);
     }
   }
+
+  @Deprecated("This was used with aRdent 0. Use displaydrawing method instead")
 
   /// Send data to the aRdent device to display it on the screen
   Future<void> displayData({

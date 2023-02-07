@@ -117,7 +117,7 @@ main() {
     });
 
     test('Text with font', () {
-      const font = GYWFonts.bigBasic;
+      const font = GYWFonts.title;
 
       Drawing drawing = const TextDrawing(
         text: "Text with font",
@@ -128,7 +128,7 @@ main() {
     });
 
     test('Text with font and position', () {
-      const font = GYWFonts.bigBasic;
+      const font = GYWFonts.title;
 
       Drawing drawing = const TextDrawing(
         text: "Text with font and position",
@@ -141,7 +141,7 @@ main() {
     });
 
     test('Icon', () {
-      const icon = GYWIcons.arrowAlt;
+      const icon = GYWIcons.checkbox;
 
       Drawing drawing = const IconDrawing(icon);
 
@@ -149,7 +149,7 @@ main() {
     });
 
     test('Icon with position', () {
-      const icon = GYWIcons.arrowUp;
+      const icon = GYWIcons.up;
 
       Drawing drawing = const IconDrawing(
         icon,
