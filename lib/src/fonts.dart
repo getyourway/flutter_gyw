@@ -9,6 +9,9 @@ class GYWFont {
   /// Internal prefix of the font
   final String prefix;
 
+  /// Size (in points) of a character
+  final int size;
+
   /// Width (in pixels) of a character
   final int width;
 
@@ -22,8 +25,9 @@ class GYWFont {
     this.name,
     this.prefix,
     this.index, [
+    this.size = 12,
     this.width = 12,
-    this.height = 12,
+    this.height = 20,
     this.bold = false,
   ]);
 
@@ -36,9 +40,11 @@ class GYWFont {
 
 /// Fonts supported by aRdent devices
 class GYWFonts {
-  static const basic = GYWFont("Basic", "nba", 0, 20, 32, false);
-  static const title = GYWFont("Title", "nti", 1, 20, 32, true);
+  static const small = GYWFont("Small", "a10", 0, 18, 10, 25, false);
+  static const medium = GYWFont("Medium", "b14", 1, 24, 14, 33, true);
+  static const large = GYWFont("Large", "a16", 2, 32, 16, 39, false);
+  static const huge = GYWFont("Huge", "b28", 3, 48, 28, 67, true);
 
   /// Every fonts available
-  static const values = [basic, title];
+  static const values = [small, medium, large, huge];
 }

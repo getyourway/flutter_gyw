@@ -144,7 +144,7 @@ class TextDrawing extends Drawing {
       text: data["text"],
       font: GYWFonts.values.firstWhere(
         (e) => e.index == data["font"] || e.name == data["font"],
-        orElse: () => GYWFonts.basic,
+        orElse: () => GYWFonts.small,
       ),
     );
   }

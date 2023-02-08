@@ -117,7 +117,7 @@ main() {
     });
 
     test('Text with font', () {
-      const font = GYWFonts.title;
+      const font = GYWFonts.medium;
 
       Drawing drawing = const TextDrawing(
         text: "Text with font",
@@ -128,7 +128,7 @@ main() {
     });
 
     test('Text with font and position', () {
-      const font = GYWFonts.title;
+      const font = GYWFonts.medium;
 
       Drawing drawing = const TextDrawing(
         text: "Text with font and position",
