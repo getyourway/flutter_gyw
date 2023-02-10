@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_gyw/src/consts.dart';
+import 'package:flutter_gyw/src/commands.dart';
 import 'package:flutter_gyw/src/helpers.dart';
 
 import 'fonts.dart';
@@ -19,10 +19,6 @@ abstract class Drawing {
     this.top = 0,
     this.left = 0,
   });
-
-  /// Convert the drawing into a JSON understood by the device
-  @Deprecated("This communication method was used with aRdent 0")
-  Map<String, dynamic> toBluetoothJson();
 
   /// Convert the drawing into a list of commands understood by the device
   List<BTCommand> toCommands();
@@ -63,18 +59,6 @@ class TextDrawing extends Drawing {
     super.left = 0,
     super.top = 0,
   });
-
-  @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "text",
-      "x_start": left,
-      "y_start": top,
-      "data": text,
-      "x_size": 800,
-      if (font != null) "title": font!.index,
-    };
-  }
 
   @override
   List<BTCommand> toCommands() {
@@ -169,18 +153,11 @@ class WhiteScreen extends Drawing {
   const WhiteScreen();
 
   @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "white_screen",
-    };
-  }
-
-  @override
   List<BTCommand> toCommands() {
     return [
       BTCommand(
         GYWCharacteristics.ctrlDisplay,
-        int8Bytes(GYWControlCodes.clearWhite),
+        int8Bytes(GYWControlCodes.clear),
       )
     ];
   }
@@ -216,18 +193,6 @@ class IconDrawing extends Drawing {
     super.top,
     super.left,
   });
-
-  @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "memory",
-      "x_start": left,
-      "y_start": top,
-      "data": icon.filename,
-      "x_size": icon.width,
-      "y_size": icon.height,
-    };
-  }
 
   @override
   List<BTCommand> toCommands() {

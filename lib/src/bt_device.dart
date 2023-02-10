@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
-import 'package:flutter_gyw/src/consts.dart';
+import 'package:flutter_gyw/src/commands.dart';
 import 'package:flutter_gyw/src/drawings.dart';
 
 import 'exceptions.dart';
