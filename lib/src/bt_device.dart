@@ -108,11 +108,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
         "The device is already trying to be disconnected.",
       );
     }
-<<<<<<< HEAD
-    isDisconnecting = true;
-=======
     _isDisconnecting = true;
->>>>>>> master
     notifyListeners();
 
     // Clear status listener

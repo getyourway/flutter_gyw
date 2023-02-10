@@ -28,11 +28,7 @@ main() {
     });
 
     test('Text with font', () {
-<<<<<<< HEAD
-      const font = GYWFonts.bigBasic;
-=======
       const font = GYWFonts.medium;
->>>>>>> master
 
       Drawing drawing = const TextDrawing(
         text: "Text with font",
@@ -43,11 +39,7 @@ main() {
     });
 
     test('Text with font and position', () {
-<<<<<<< HEAD
-      const font = GYWFonts.bigBasic;
-=======
       const font = GYWFonts.medium;
->>>>>>> master
 
       Drawing drawing = const TextDrawing(
         text: "Text with font and position",
@@ -60,11 +52,7 @@ main() {
     });
 
     test('Icon', () {
-<<<<<<< HEAD
-      const icon = GYWIcons.arrowAlt;
-=======
       const icon = GYWIcons.checkbox;
->>>>>>> master
 
       Drawing drawing = const IconDrawing(icon);
 
@@ -72,11 +60,7 @@ main() {
     });
 
     test('Icon with position', () {
-<<<<<<< HEAD
-      const icon = GYWIcons.arrowUp;
-=======
       const icon = GYWIcons.up;
->>>>>>> master
 
       Drawing drawing = const IconDrawing(
         icon,
