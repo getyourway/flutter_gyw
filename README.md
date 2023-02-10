@@ -28,22 +28,16 @@ WARNING This package is still in development and is private. Therefore, you are 
 
 To install the package, add this to your `pubspec.yaml` file:
 
-Using onepub
-```yaml
-dependencies:
-  flutter_gyw:
-    hosted: https://onepub.dev/api/xvppsdavuh
-    version: ^0.2.2
-```
-
 Using Github repository
 ```yaml
 dependencies:
   flutter_gyw:
     git:
-      url: git@github.com:getyourway/flutter_gyw.git
+      url: https://github.com:getyourway/flutter_gyw.git
       ref: master
 ```
+
+:bulb: If you want to use the latest features, you can reference the **develop** branch. However, these features are not merged, so they may lead to errors. Please report them if you see some.
 
 Now in your Dart code, you can use
 
@@ -55,7 +49,7 @@ import 'package:flutter_gyw/flutter_gyw.dart';
 
 ### Step 1 : Scan for Bluetooth Device
 
-First you need to scan for the surrounding Bluetooth device. To do so, use the `Bluetoothmanager`
+First you need to scan for the surrounding Bluetooth device. To do so, use the `BluetoothManager` object.
 
 ```dart
 await BluetoothManager.instance.refreshDevices();
@@ -88,9 +82,7 @@ final List<Drawing> drawings = [
 
 ```dart
 for (Drawing drawing in drawings) {
-  final Map<String, dynamic> data = drawing.toBluetoothJson();
-
-  device.displayData(data);
+  device.displayDrawing(drawing);
 }
 ```
 
@@ -115,9 +107,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 GYW drawings appears on the screen as a stack, i.e. each new drawing will be printed on the previous one. Therefore, to reset the screen, you need to send a white screen that will override the whole screen.
 
 ```dart
-final Drawing whiteScreen = const WhiteScreen();
-
-device.displayData(whiteScreen.toBluetoothJson());
+device.displayDrawing(const WhiteScreen());
 ```
 
 ### How can I have bigger icons?

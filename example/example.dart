@@ -26,17 +26,17 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Future<void> _sendExampleData() async {
     const List<Drawing> drawings = [
       WhiteScreen(),
-      IconDrawing(GYWIcons.fire, top: 50, left: 60),
+      IconDrawing(GYWIcons.up, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFonts.bigBasic,
+        font: GYWFonts.medium,
       ),
     ];
 
     for (Drawing drawing in drawings) {
-      await connectedDevice?.displayData(data: drawing.toBluetoothJson());
+      await connectedDevice?.displayDrawing(drawing);
     }
   }
 
