@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter_gyw/src/commands.dart';
+import 'package:flutter_gyw/src/helpers.dart';
+
 import 'fonts.dart';
 import 'icons.dart';
+import 'dart:typed_data';
 
 /// A drawing that represents data that can be displayed on an aRdent screen
 abstract class Drawing {
@@ -14,8 +20,8 @@ abstract class Drawing {
     this.left = 0,
   });
 
-  /// Convert the drawing into a JSON understood by the device
-  Map<String, dynamic> toBluetoothJson();
+  /// Convert the drawing into a list of commands understood by the device
+  List<BTCommand> toCommands();
 
   /// Deserializes a drawing from JSON data
   factory Drawing.fromJson(Map<String, dynamic> data) {
@@ -44,25 +50,50 @@ class TextDrawing extends Drawing {
   final String text;
 
   /// Font (fontSize, fontWeight, ...) of the text
-  final GYWFont font;
+  /// If no font is given, it uses the most recent one
+  final GYWFont? font;
 
   const TextDrawing({
     required this.text,
-    this.font = GYWFonts.basic,
+    this.font,
     super.left = 0,
     super.top = 0,
   });
 
   @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "text",
-      "x_start": left,
-      "y_start": top,
-      "data": text,
-      "x_size": 800,
-      "title": font.index,
-    };
+  List<BTCommand> toCommands() {
+    // Bytes generation for the control data (command code + params)
+    final controlBytes = BytesBuilder();
+    controlBytes.add(int8Bytes(GYWControlCodes.displayText));
+    controlBytes.add(int32Bytes(left, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, endian: Endian.little));
+
+    final commands = <BTCommand>[];
+    if (font != null) {
+      commands.addAll([
+        BTCommand(
+          GYWCharacteristics.nameDisplay,
+          const Utf8Encoder().convert(font!.prefix),
+        ),
+        BTCommand(
+          GYWCharacteristics.ctrlDisplay,
+          int8Bytes(GYWControlCodes.setFont),
+        ),
+      ]);
+    }
+
+    commands.addAll([
+      BTCommand(
+        GYWCharacteristics.nameDisplay,
+        const Utf8Encoder().convert(text),
+      ),
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        controlBytes.toBytes(),
+      ),
+    ]);
+
+    return commands;
   }
 
   @override
@@ -96,8 +127,8 @@ class TextDrawing extends Drawing {
       top: data["top"],
       text: data["text"],
       font: GYWFonts.values.firstWhere(
-        (e) => e.name == data["font"],
-        orElse: () => GYWFonts.basic,
+        (e) => e.index == data["font"] || e.name == data["font"],
+        orElse: () => GYWFonts.small,
       ),
     );
   }
@@ -109,7 +140,7 @@ class TextDrawing extends Drawing {
       "left": left,
       "top": top,
       "text": text,
-      "font": font.name,
+      if (font != null) "font": font!.index,
     };
   }
 }
@@ -122,10 +153,13 @@ class WhiteScreen extends Drawing {
   const WhiteScreen();
 
   @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "white_screen",
-    };
+  List<BTCommand> toCommands() {
+    return [
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        int8Bytes(GYWControlCodes.clear),
+      )
+    ];
   }
 
   @override
@@ -161,15 +195,22 @@ class IconDrawing extends Drawing {
   });
 
   @override
-  Map<String, dynamic> toBluetoothJson() {
-    return {
-      "type": "memory",
-      "x_start": left,
-      "y_start": top,
-      "data": icon.filename,
-      "x_size": icon.width,
-      "y_size": icon.height,
-    };
+  List<BTCommand> toCommands() {
+    final controlBytes = BytesBuilder();
+    controlBytes.add(int8Bytes(GYWControlCodes.displayImage));
+    controlBytes.add(int32Bytes(left, endian: Endian.little));
+    controlBytes.add(int32Bytes(top, endian: Endian.little));
+
+    return [
+      BTCommand(
+        GYWCharacteristics.nameDisplay,
+        const Utf8Encoder().convert("${icon.filename}.png"),
+      ),
+      BTCommand(
+        GYWCharacteristics.ctrlDisplay,
+        controlBytes.toBytes(),
+      )
+    ];
   }
 
   @override

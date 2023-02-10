@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
+import 'package:flutter_gyw/src/commands.dart';
+import 'package:flutter_gyw/src/drawings.dart';
 
 import 'exceptions.dart';
 
@@ -15,14 +17,22 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   /// Time when the device was last detected
   late DateTime lastSeen;
 
-  /// Status value indicating that a connection to the device is in progress
-  bool isConnecting = false;
+  bool _isConnecting = false;
+  bool _isDisconnecting = false;
+  bool _isConnected = false;
+  bool _screenOn = false;
 
   /// Status value indicating that a connection to the device is in progress
-  bool isDisconnecting = false;
+  bool get isConnecting => _isConnecting;
+
+  /// Status value indicating that a connection to the device is in progress
+  bool get isDisconnecting => _isDisconnecting;
 
   /// Status value indicating that the device is connected
-  bool isConnected = false;
+  bool get isConnected => _isConnected;
+
+  /// Status value indicating whether the screen device has been turned off or no
+  bool get screenOn => _screenOn;
 
   late int _lastRssi;
 
@@ -61,12 +71,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       );
     } else if (isDisconnecting) {
       throw const GYWStatusException(
-        "The deice is already trying to be disconnected.",
+        "The device is already trying to be disconnected.",
       );
     }
 
-    isConnecting = true;
-    isDisconnecting = false;
+    _isConnecting = true;
+    _isDisconnecting = false;
     notifyListeners();
 
     try {
@@ -77,9 +87,9 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
           await disconnect();
         }
       });
-      isConnected = true;
+      _isConnected = true;
     } finally {
-      isConnecting = false;
+      _isConnecting = false;
     }
 
     notifyListeners();
@@ -93,12 +103,16 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       throw const GYWStatusException(
         "The device is still trying to be connected.",
       );
-    } else if (isDisconnecting) {
+    } else if (_isDisconnecting) {
       throw const GYWStatusException(
         "The device is already trying to be disconnected.",
       );
     }
+<<<<<<< HEAD
     isDisconnecting = true;
+=======
+    _isDisconnecting = true;
+>>>>>>> master
     notifyListeners();
 
     // Clear status listener
@@ -109,16 +123,33 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     try {
       await fbDevice.disconnect();
-      isConnected = false;
+      _isConnected = false;
     } finally {
-      isDisconnecting = false;
+      _isDisconnecting = false;
     }
 
+    _screenOn = false;
     notifyListeners();
 
     return !isConnected;
   }
 
+  Future<fb.BluetoothCharacteristic?> _findCharacteristic(String uuid) async {
+    List<fb.BluetoothService?> services = await fbDevice.discoverServices();
+
+    for (fb.BluetoothService? service in services) {
+      try {
+        return service?.characteristics
+            .firstWhere((element) => element.uuid == fb.Guid(uuid));
+      } on StateError {
+        continue;
+      }
+    }
+
+    return null;
+  }
+
+  @Deprecated("This was used with aRdent 0 and should not be used anymore.")
   Future<fb.BluetoothCharacteristic?> _getGYWDisplayCharacteristic() async {
     List<fb.BluetoothService?> services = await fbDevice.discoverServices();
 
@@ -136,6 +167,57 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       return null;
     }
   }
+
+  /// Send data to the aRdent device to display a drawing
+  Future<void> displayDrawing(Drawing drawing) async {
+    if (!screenOn) {
+      await _sendBTCommand(BTCommands.startScreen);
+      _screenOn = true;
+    }
+
+    // TODO? Reduce delay
+    for (BTCommand command in drawing.toCommands()) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      await _sendBTCommand(command);
+    }
+  }
+
+  Future<void> _sendBTCommand(BTCommand command) async {
+    final fb.BluetoothCharacteristic? characteristic =
+        await _findCharacteristic(command.characteristic);
+
+    if (characteristic == null) {
+      throw const GYWException("Bluetooth characteristic not found");
+    } else {
+      await _sendData(characteristic, command.data);
+    }
+  }
+
+  Future<void> _sendData(
+    fb.BluetoothCharacteristic characteristic,
+    Uint8List data,
+  ) async {
+    // Split this string into chunks of maximum 20 bytes
+    List<Uint8List> chunks = [];
+    int start = 0;
+    int end = 20;
+    while (end < data.length) {
+      chunks.add(data.sublist(start, end));
+      start += 20;
+      end += 20;
+    }
+
+    if (start != data.length) {
+      chunks.add(data.sublist(start, data.length));
+    }
+
+    // Write data on the characteristic by chunks to actually send the data
+    for (var chunk in chunks) {
+      await characteristic.write(chunk);
+    }
+  }
+
+  @Deprecated("This was used with aRdent 0. Use displaydrawing method instead")
 
   /// Send data to the aRdent device to display it on the screen
   Future<void> displayData({
