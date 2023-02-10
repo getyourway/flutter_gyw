@@ -3,8 +3,14 @@ class GYWFont {
   /// Index value transmitted to the device
   final int index;
 
-  /// Internal name of the font
+  /// Name of the font
   final String name;
+
+  /// Internal prefix of the font
+  final String prefix;
+
+  /// Size (in points) of a character
+  final int size;
 
   /// Width (in pixels) of a character
   final int width;
@@ -17,19 +23,28 @@ class GYWFont {
 
   const GYWFont(
     this.name,
+    this.prefix,
     this.index, [
+    this.size = 12,
     this.width = 12,
-    this.height = 12,
+    this.height = 20,
     this.bold = false,
   ]);
+
+  @override
+  bool operator ==(Object other) => other is GYWFont && other.index == index;
+
+  @override
+  int get hashCode => index;
 }
 
 /// Fonts supported by aRdent devices
 class GYWFonts {
-  static const basic = GYWFont("basic", 0, 14, 22, false);
-  static const title = GYWFont("title", 1, 20, 31, true);
-  static const bigBasic = GYWFont("big_basic", 2, 29, 47, false);
-  static const bigTitle = GYWFont("big_title", 3, 42, 71, true);
+  static const small = GYWFont("Small", "a10", 0, 18, 10, 25, false);
+  static const medium = GYWFont("Medium", "b14", 1, 24, 14, 33, true);
+  static const large = GYWFont("Large", "a16", 2, 28, 16, 39, false);
+  static const huge = GYWFont("Huge", "b28", 3, 48, 28, 67, true);
 
-  static const values = [basic, title, bigBasic, bigTitle];
+  /// Every fonts available
+  static const values = [small, medium, large, huge];
 }

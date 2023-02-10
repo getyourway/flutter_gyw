@@ -1,3 +1,12 @@
+## 1.0.0
+* [ADD] Update Bluetooth communication for aRdent 1
+* [ADD] Update fonts and icons for aRdent 1
+
+## 0.2.4
+* [ADD] Implementation of automated tests for drawings
+* [FIX] Fix the fontweight of "big basic" font
+* [FIX] Detection of device disconnection
+
 ## 0.2.3
 * [IMP] Improve the Bluetooth status detection
 * [IMP] Serialization of Drawings
