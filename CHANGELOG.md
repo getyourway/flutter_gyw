@@ -1,3 +1,6 @@
+## 1.0.1 [In Progess]
+* [ADD] Add new icons
+
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1
 * [ADD] Update fonts and icons for aRdent 1

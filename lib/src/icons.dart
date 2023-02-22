@@ -32,10 +32,13 @@ class GYWIcons {
   static const GYWIcon previous = GYWIcon("Previous", "prev");
   static const GYWIcon checkbox = GYWIcon("Checkbox checked", "check");
   static const GYWIcon checkboxEmpty = GYWIcon("Checkbox empty", "uncheck");
-  static const GYWIcon location = GYWIcon("Location", "location");
   static const GYWIcon done = GYWIcon("Done", "done");
   static const GYWIcon edit = GYWIcon("Edit", "edit");
   static const GYWIcon rename = GYWIcon("Rename", "rename");
+  static const GYWIcon file = GYWIcon("File", "file");
+  static const GYWIcon location = GYWIcon("Location", "location");
+  static const GYWIcon info = GYWIcon("Information", "info");
+  static const GYWIcon blank = GYWIcon("Blank", "blank");
 
   /// List of all icons
   static const List<GYWIcon> values = [
@@ -50,5 +53,9 @@ class GYWIcons {
     done,
     edit,
     rename,
+    file,
+    location,
+    info,
+    blank,
   ];
 }
