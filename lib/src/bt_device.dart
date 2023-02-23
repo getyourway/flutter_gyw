@@ -4,10 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
+import 'package:flutter_gyw/flutter_gyw.dart';
 import 'package:flutter_gyw/src/commands.dart';
-import 'package:flutter_gyw/src/drawings.dart';
-
-import 'exceptions.dart';
 
 /// Representation of a Bluetooth device
 class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
@@ -33,6 +31,9 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   /// Status value indicating whether the screen device has been turned off or no
   bool get screenOn => _screenOn;
+
+  /// Most recently used font (optimisation for TextDrawing)
+  GYWFont? _font;
 
   late int _lastRssi;
 
@@ -145,25 +146,6 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     return null;
   }
 
-  @Deprecated("This was used with aRdent 0 and should not be used anymore.")
-  Future<fb.BluetoothCharacteristic?> _getGYWDisplayCharacteristic() async {
-    List<fb.BluetoothService?> services = await fbDevice.discoverServices();
-
-    try {
-      final service = services.firstWhere(
-        (element) =>
-            element?.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c41"),
-      );
-
-      return service?.characteristics.firstWhere(
-        (element) =>
-            element.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c40"),
-      );
-    } on StateError {
-      return null;
-    }
-  }
-
   /// Send data to the aRdent device to display a drawing
   Future<void> displayDrawing(Drawing drawing) async {
     if (!screenOn) {
@@ -171,10 +153,18 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       _screenOn = true;
     }
 
-    // TODO? Reduce delay
-    for (BTCommand command in drawing.toCommands()) {
-      await Future.delayed(const Duration(milliseconds: 100));
+    final commands = drawing.toCommands();
+    if (drawing is TextDrawing) {
+      if (drawing.font == _font) {
+        // Remove the two operations dedicated to setting font
+        commands.removeRange(0, 2);
+      } else {
+        _font = drawing.font;
+      }
+    }
+    for (BTCommand command in commands) {
       await _sendBTCommand(command);
+      await Future.delayed(const Duration(milliseconds: 100));
     }
   }
 
@@ -205,42 +195,6 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     if (start != data.length) {
       chunks.add(data.sublist(start, data.length));
-    }
-
-    // Write data on the characteristic by chunks to actually send the data
-    for (var chunk in chunks) {
-      await characteristic.write(chunk);
-    }
-  }
-
-  @Deprecated("This was used with aRdent 0. Use displaydrawing method instead")
-
-  /// Send data to the aRdent device to display it on the screen
-  Future<void> displayData({
-    required Map<String, dynamic> data,
-  }) async {
-    final characteristic = await _getGYWDisplayCharacteristic();
-    if (characteristic == null) {
-      throw const GYWException(
-        "This device does not support GYW display operation",
-      );
-    }
-
-    // Convert the data into pseudo-json string
-    final jsonBytes = const Utf8Encoder().convert("${jsonEncode(data)}{END}");
-
-    // Split this string into chunks of maximum 20 bytes
-    List<Uint8List> chunks = [];
-    int start = 0;
-    int end = 20;
-    while (end < jsonBytes.length) {
-      chunks.add(jsonBytes.sublist(start, end));
-      start += 20;
-      end += 20;
-    }
-
-    if (start != jsonBytes.length) {
-      chunks.add(jsonBytes.sublist(start, jsonBytes.length));
     }
 
     // Write data on the characteristic by chunks to actually send the data
