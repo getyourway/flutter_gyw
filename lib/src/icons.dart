@@ -15,10 +15,10 @@ class GYWIcon {
   String get path => "assets/icons/$filename.png";
 
   /// Width (in pixel) of the icon
-  double get width => 80.0;
+  double get width => 48.0;
 
   /// Height (in pixel) of the icon
-  double get height => 80.0;
+  double get height => 48.0;
 }
 
 /// Icons supported by aRdent devices
