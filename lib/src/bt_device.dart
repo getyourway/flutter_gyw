@@ -182,7 +182,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
             element.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c40"),
       );
 
-      return displayDataCharacteristic;
+      return displayCharacteristic;
     } on StateError {
       return null;
     }
