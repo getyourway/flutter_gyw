@@ -16,6 +16,12 @@ class BTManager {
     });
   }
 
+  Future<bool> checkBluetoothStatus() async {
+    bluetoothOn = await FlutterBluePlus.instance.isOn &&
+        await FlutterBluePlus.instance.isAvailable;
+    return bluetoothOn;
+  }
+
   /// The Bluetooth Manager used in your whole application
   static final BTManager instance = BTManager._();
 
@@ -46,7 +52,7 @@ class BTManager {
     int minimumRssi = 0,
     void Function(BTDevice)? onResult,
   }) async {
-    if (!bluetoothOn) {
+    if (!bluetoothOn && !await checkBluetoothStatus()) {
       throw const GYWStatusException("Bluetooth is not enabled");
     }
 

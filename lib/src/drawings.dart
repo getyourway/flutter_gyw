@@ -23,6 +23,11 @@ abstract class Drawing {
   /// Convert the drawing into a list of commands understood by the device
   List<BTCommand> toCommands();
 
+  /// Convert the drawing into a JSON understood by the device
+  @Deprecated(
+      "This method was used with aRdent 0 and should not be used anymore")
+  Map<String, dynamic> toBluetoothJson();
+
   /// Deserializes a drawing from JSON data
   factory Drawing.fromJson(Map<String, dynamic> data) {
     switch (data["type"]) {
@@ -143,6 +148,18 @@ class TextDrawing extends Drawing {
       if (font != null) "font": font!.index,
     };
   }
+
+  @override
+  Map<String, dynamic> toBluetoothJson() {
+    return {
+      "type": "text",
+      "x_start": left,
+      "y_start": top,
+      "data": text,
+      "x_size": 800,
+      if (font != null) "font": font!.index,
+    };
+  }
 }
 
 /// A drawing to reset the screen of the aRdent device to a white screen
@@ -176,6 +193,13 @@ class WhiteScreen extends Drawing {
   Map<String, dynamic> toJson() {
     return {
       "type": type,
+    };
+  }
+
+  @override
+  Map<String, dynamic> toBluetoothJson() {
+    return {
+      "type": "white_screen",
     };
   }
 }
@@ -247,6 +271,18 @@ class IconDrawing extends Drawing {
       "left": left,
       "top": top,
       "icon": icon.name,
+    };
+  }
+
+  @override
+  Map<String, dynamic> toBluetoothJson() {
+    return {
+      "type": "memory",
+      "x_start": left,
+      "y_start": top,
+      "data": icon.filename,
+      "x_size": icon.width,
+      "y_size": icon.height,
     };
   }
 }

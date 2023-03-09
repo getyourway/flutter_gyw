@@ -48,6 +48,17 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
 
+  /// Bluetooth charactersitic for sending display commands
+  @Deprecated("This characteristic was used with aRdent 0 "
+      "and should not be used anymore.")
+  fb.BluetoothCharacteristic? displayCharacteristic;
+
+  /// Bluetooth charactersitic for sending display control commands
+  fb.BluetoothCharacteristic? displayControlCharacteristic;
+
+  /// Bluetooth charactersitic for sending display data commands
+  fb.BluetoothCharacteristic? displayDataCharacteristic;
+
   BTDevice({
     required this.fbDevice,
     required int lastRssi,
@@ -81,12 +92,19 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
+
       _deviceStateListener = fbDevice.state.listen((state) async {
         if (state == fb.BluetoothDeviceState.disconnecting ||
             state == fb.BluetoothDeviceState.disconnected) {
           await disconnect();
         }
       });
+
+      displayControlCharacteristic =
+          await _findCharacteristic(GYWCharacteristics.ctrlDisplay);
+      displayDataCharacteristic =
+          await _findCharacteristic(GYWCharacteristics.nameDisplay);
+
       _isConnected = true;
     } finally {
       _isConnecting = false;
@@ -147,6 +165,10 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   @Deprecated("This was used with aRdent 0 and should not be used anymore.")
   Future<fb.BluetoothCharacteristic?> _getGYWDisplayCharacteristic() async {
+    if (displayCharacteristic != null) {
+      return displayCharacteristic;
+    }
+
     List<fb.BluetoothService?> services = await fbDevice.discoverServices();
 
     try {
@@ -155,10 +177,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
             element?.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c41"),
       );
 
-      return service?.characteristics.firstWhere(
+      displayCharacteristic = service?.characteristics.firstWhere(
         (element) =>
             element.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c40"),
       );
+
+      return displayDataCharacteristic;
     } on StateError {
       return null;
     }
@@ -179,8 +203,15 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   }
 
   Future<void> _sendBTCommand(BTCommand command) async {
-    final fb.BluetoothCharacteristic? characteristic =
-        await _findCharacteristic(command.characteristic);
+    fb.BluetoothCharacteristic? characteristic;
+
+    if (command.characteristic == GYWCharacteristics.ctrlDisplay) {
+      characteristic = displayControlCharacteristic;
+    } else if (command.characteristic == GYWCharacteristics.nameDisplay) {
+      characteristic = displayDataCharacteristic;
+    } else {
+      characteristic = await _findCharacteristic(command.characteristic);
+    }
 
     if (characteristic == null) {
       throw const GYWException("Bluetooth characteristic not found");
