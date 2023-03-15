@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -49,6 +49,9 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
 
+  Map<String, fb.BluetoothCharacteristic?> characteristics =
+      <String, fb.BluetoothCharacteristic?>{};
+
   BTDevice({
     required this.fbDevice,
     required int lastRssi,
@@ -82,17 +85,27 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
-      _deviceStateListener = fbDevice.state.listen((state) async {
-        if (state == fb.BluetoothDeviceState.disconnecting ||
-            state == fb.BluetoothDeviceState.disconnected) {
-          await disconnect();
-        }
-      });
-      _isConnected = true;
-    } finally {
+    } on TimeoutException {
+      _isConnected = false;
       _isConnecting = false;
+      notifyListeners();
+
+      return isConnected;
+    } on Exception catch (e, s) {
+      log("An error occured during BT Connection", error: e, stackTrace: s);
     }
 
+    // TODO? Device is already connected
+    _isConnected = true;
+
+    _deviceStateListener = fbDevice.state.listen((state) async {
+      if (state == fb.BluetoothDeviceState.disconnecting ||
+          state == fb.BluetoothDeviceState.disconnected) {
+        await disconnect();
+      }
+    });
+
+    _isConnecting = false;
     notifyListeners();
 
     return isConnected;
@@ -132,12 +145,21 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   }
 
   Future<fb.BluetoothCharacteristic?> _findCharacteristic(String uuid) async {
+    if (characteristics[uuid] != null) {
+      return characteristics[uuid];
+    }
+
     List<fb.BluetoothService?> services = await fbDevice.discoverServices();
 
     for (fb.BluetoothService? service in services) {
       try {
-        return service?.characteristics
+        final c = service?.characteristics
             .firstWhere((element) => element.uuid == fb.Guid(uuid));
+
+        // Save characteristic in cache
+        characteristics[uuid] = c;
+
+        return c;
       } on StateError {
         continue;
       }
@@ -147,7 +169,10 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   }
 
   /// Send data to the aRdent device to display a drawing
-  Future<void> displayDrawing(Drawing drawing) async {
+  Future<void> displayDrawing(
+    Drawing drawing, {
+    int delay = 80,
+  }) async {
     if (!screenOn) {
       await _sendBTCommand(BTCommands.startScreen);
       _screenOn = true;
@@ -162,9 +187,10 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
         _font = drawing.font;
       }
     }
+
     for (BTCommand command in commands) {
       await _sendBTCommand(command);
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(Duration(milliseconds: delay));
     }
   }
 
@@ -183,23 +209,22 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     fb.BluetoothCharacteristic characteristic,
     Uint8List data,
   ) async {
-    // Split this string into chunks of maximum 20 bytes
-    List<Uint8List> chunks = [];
     int start = 0;
     int end = 20;
-    while (end < data.length) {
-      chunks.add(data.sublist(start, end));
-      start += 20;
-      end += 20;
-    }
-
-    if (start != data.length) {
-      chunks.add(data.sublist(start, data.length));
-    }
 
     // Write data on the characteristic by chunks to actually send the data
-    for (var chunk in chunks) {
+    while (start < data.length) {
+      Uint8List chunk;
+      if (end < data.length) {
+        chunk = data.sublist(start, end);
+      } else {
+        chunk = data.sublist(start);
+      }
+
       await characteristic.write(chunk);
+
+      start += 20;
+      end += 20;
     }
   }
 

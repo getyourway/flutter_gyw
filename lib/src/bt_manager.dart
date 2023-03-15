@@ -5,7 +5,16 @@ import 'exceptions.dart';
 
 /// A class used to interact with Bluetooth devices
 class BTManager {
+  /// The Bluetooth Manager used in your whole application
+  static final BTManager instance = BTManager._();
+
   BTManager._() {
+    init();
+  }
+
+  Future<void> init() async {
+    bluetoothOn = await _bluetoothOnAsync;
+
     FlutterBluePlus.instance.state.listen((state) {
       if (bluetoothOn != (state == BluetoothState.on)) {
         bluetoothOn = state == BluetoothState.on;
@@ -15,9 +24,6 @@ class BTManager {
       }
     });
   }
-
-  /// The Bluetooth Manager used in your whole application
-  static final BTManager instance = BTManager._();
 
   /// List of devices available for a Bluetooth connection
   List<BTDevice> devices = [];
@@ -31,18 +37,29 @@ class BTManager {
   /// Function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
 
-  /// Checks whether the Bluetooth is enabled on the device
-  @Deprecated("This property has been replaced by bluetoothOn")
-  Future<bool> get bluetoothStatus async {
-    final flutterBluePlus = FlutterBluePlus.instance;
+  Future<bool> get _bluetoothOnAsync async {
+    final flutterBlue = FlutterBluePlus.instance;
 
-    return await flutterBluePlus.isAvailable && await flutterBluePlus.isOn;
+    return await flutterBlue.isOn && await flutterBlue.isAvailable;
+  }
+
+  void _addDevice(BTDevice device) {
+    final index = devices.indexWhere(
+      (element) => element.id == device.id,
+    );
+
+    if (index == -1) {
+      // Device not found in device list
+      devices.insert(0, device);
+    } else {
+      devices[index] = device;
+    }
   }
 
   /// Scan for Bluetooth devices
   Future<void> refreshDevices({
     Duration timeout = const Duration(seconds: 3),
-    int deviceLifeDuration = 5,
+    int deviceLifeDuration = 10,
     int minimumRssi = 0,
     void Function(BTDevice)? onResult,
   }) async {
@@ -58,39 +75,46 @@ class BTManager {
 
     final flutterBlue = FlutterBluePlus.instance;
 
-    flutterBlue.startScan(
-      timeout: timeout,
-      allowDuplicates: true,
-    );
+    // Add already connected devices
+    for (BluetoothDevice fbDevice in await flutterBlue.connectedDevices) {
+      final device = BTDevice(
+        fbDevice: fbDevice,
+        lastRssi: 0,
+        lastSeen: DateTime.now(),
+      );
+      await device.connect();
 
-    flutterBlue.scanResults.listen((results) {
-      for (ScanResult result in results) {
-        if (result.rssi.abs() < minimumRssi) {
-          // Signal too weak : Skip result
-          return;
-        }
+      // Add device to device list
+      _addDevice(device);
+    }
 
-        late BTDevice device;
-        try {
-          device = devices.firstWhere(
-            (btDevice) => btDevice.id == result.device.id.id,
-          );
+    flutterBlue.scan(timeout: timeout, allowDuplicates: true).listen((result) {
+      if (result.rssi.abs() < minimumRssi) {
+        // Signal too weak : Skip result
+        return;
+      }
 
-          // Update existing device info
-          device.lastRssi = result.rssi;
-        } on StateError {
-          // Device has not been added to the list yet
-          device = BTDevice(
-            fbDevice: result.device,
-            lastRssi: -result.rssi,
-            lastSeen: DateTime.now(),
-          );
-          devices.insert(0, device);
-        } finally {
-          // Insert the device at the right place and apply user function
-          devices.sort();
-          if (onResult != null) onResult(device);
-        }
+      late BTDevice device;
+      try {
+        device = devices.firstWhere(
+          (btDevice) => btDevice.id == result.device.id.id,
+        );
+
+        // Update existing device info
+        device.lastRssi = result.rssi.abs();
+        device.lastSeen = DateTime.now();
+      } on StateError {
+        // Device has not been added to the list yet
+        device = BTDevice(
+          fbDevice: result.device,
+          lastRssi: result.rssi.abs(),
+          lastSeen: DateTime.now(),
+        );
+        devices.insert(0, device);
+      } finally {
+        // Insert the device at the right place and apply user function
+        devices.sort();
+        if (onResult != null) onResult(device);
       }
     });
 
@@ -99,19 +123,15 @@ class BTManager {
       () async {
         try {
           await stopScan();
-        } on GYWStatusException {
-          // Scan was already stopped
-          // WARNING : Old devices are not removed if the scan is considered
-          //           as stopped
-          return;
+        } finally {
+          final now = DateTime.now();
+          devices.removeWhere(
+            (btDevice) =>
+                btDevice.lastSeen.difference(now).inSeconds >
+                deviceLifeDuration,
+          );
+          devices.sort();
         }
-
-        final now = DateTime.now();
-        devices.removeWhere(
-          (btDevice) =>
-              btDevice.lastSeen.difference(now).inSeconds > deviceLifeDuration,
-        );
-        devices.sort();
       },
     );
   }
@@ -123,8 +143,10 @@ class BTManager {
       throw const GYWStatusException("Scan is not in progress.");
     }
 
-    await FlutterBluePlus.instance.stopScan();
-
-    _isScanning = false;
+    try {
+      await FlutterBluePlus.instance.stopScan();
+    } finally {
+      _isScanning = false;
+    }
   }
 }

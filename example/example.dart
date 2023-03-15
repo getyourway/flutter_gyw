@@ -16,8 +16,8 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Future<void> _scanForDevice() async {
     try {
       await BTManager.instance.refreshDevices();
-    } on GYWStatusException catch (e) {
-      log("Impossible to scan", error: e);
+    } on GYWStatusException catch (e, s) {
+      log("Impossible to scan", error: e, stackTrace: s);
     }
 
     setState(() {});

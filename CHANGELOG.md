@@ -1,6 +1,8 @@
 ## 1.0.1 [In Progess]
 * [ADD] Add new icons
 * [IMP] Optimisation for TextDrawing font
+* [IMP] Optimisation of characteristics discovery
+* [FIX] Add already connected devices to list of devices
 
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1
