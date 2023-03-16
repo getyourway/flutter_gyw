@@ -75,11 +75,14 @@ class BTManager {
 
     final flutterBlue = FlutterBluePlus.instance;
 
-    // Add already connected devices
-    for (BluetoothDevice fbDevice in await flutterBlue.connectedDevices) {
+    // Get devices that are already connected
+    final connectedDevices = await flutterBlue.connectedDevices;
+
+    // Add them to the manager list
+    for (BluetoothDevice fbDevice in connectedDevices) {
       final device = BTDevice(
         fbDevice: fbDevice,
-        lastRssi: 0,
+        lastRssi: await fbDevice.readRssi(),
         lastSeen: DateTime.now(),
       );
       await device.connect();
@@ -112,8 +115,10 @@ class BTManager {
         );
         devices.insert(0, device);
       } finally {
-        // Insert the device at the right place and apply user function
+        // Insert the device at the right place
         devices.sort();
+
+        // apply user custom function
         if (onResult != null) onResult(device);
       }
     });
@@ -127,7 +132,7 @@ class BTManager {
           final now = DateTime.now();
           devices.removeWhere(
             (btDevice) =>
-                btDevice.lastSeen.difference(now).inSeconds >
+                now.difference(btDevice.lastSeen).inSeconds >
                 deviceLifeDuration,
           );
           devices.sort();
