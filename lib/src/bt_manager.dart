@@ -82,7 +82,7 @@ class BTManager {
     for (BluetoothDevice fbDevice in connectedDevices) {
       final device = BTDevice(
         fbDevice: fbDevice,
-        lastRssi: await fbDevice.readRssi(),
+        lastRssi: 0,
         lastSeen: DateTime.now(),
       );
       await device.connect();
