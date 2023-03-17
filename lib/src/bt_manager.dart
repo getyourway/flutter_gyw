@@ -13,7 +13,7 @@ class BTManager {
   }
 
   Future<void> init() async {
-    bluetoothOn = await _bluetoothOnAsync;
+    bluetoothOn = await bluetoothOnAsync;
 
     FlutterBluePlus.instance.state.listen((state) {
       if (bluetoothOn != (state == BluetoothState.on)) {
@@ -37,10 +37,13 @@ class BTManager {
   /// Function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
 
-  Future<bool> get _bluetoothOnAsync async {
+  /// Manullay refresh the bluetooth status and returns the new status
+  Future<bool> get bluetoothOnAsync async {
     final flutterBlue = FlutterBluePlus.instance;
 
-    return await flutterBlue.isOn && await flutterBlue.isAvailable;
+    bluetoothOn = await flutterBlue.isOn && await flutterBlue.isAvailable;
+
+    return bluetoothOn;
   }
 
   void _addDevice(BTDevice device) {
@@ -56,7 +59,7 @@ class BTManager {
     }
   }
 
-  /// Scan for Bluetooth devices
+  /// Scan for Bluetooth devices and refresh the list of devices available for a connection
   Future<void> refreshDevices({
     Duration timeout = const Duration(seconds: 3),
     int deviceLifeDuration = 10,

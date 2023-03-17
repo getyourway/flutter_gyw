@@ -3,6 +3,7 @@
 * [IMP] Optimisation for TextDrawing font
 * [IMP] Optimisation of characteristics discovery
 * [FIX] Add already connected devices to list of devices
+* [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
 
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1
