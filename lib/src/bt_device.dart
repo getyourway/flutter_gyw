@@ -5,7 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
 import 'package:flutter_gyw/flutter_gyw.dart';
-import 'package:flutter_gyw/src/commands.dart';
+
+import 'commands.dart';
+import 'helpers.dart';
 
 /// Representation of a Bluetooth device
 class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
@@ -58,7 +60,9 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     DateTime? lastSeen,
   }) {
     this.lastRssi = lastRssi;
-    if (lastSeen != null) this.lastSeen = lastSeen;
+    if (lastSeen != null) {
+      this.lastSeen = lastSeen;
+    }
   }
 
   /// Name of the device
@@ -95,7 +99,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       log("An error occured during BT Connection", error: e, stackTrace: s);
     }
 
-    // TODO? Device is already connected
+    // Device is already connected
     _isConnected = true;
 
     _deviceStateListener = fbDevice.state.listen((state) async {
@@ -149,9 +153,10 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       return characteristics[uuid];
     }
 
-    List<fb.BluetoothService?> services = await fbDevice.discoverServices();
+    final List<fb.BluetoothService?> services =
+        await fbDevice.discoverServices();
 
-    for (fb.BluetoothService? service in services) {
+    for (final fb.BluetoothService? service in services) {
       try {
         final c = service?.characteristics
             .firstWhere((element) => element.uuid == fb.Guid(uuid));
@@ -174,7 +179,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     int delay = 80,
   }) async {
     if (!screenOn) {
-      await _sendBTCommand(BTCommands.startScreen);
+      await _sendBTCommand(
+        BTCommand(
+          GYWCharacteristics.ctrlDisplay,
+          int32Bytes(GYWControlCodes.startDisplay),
+        ),
+      );
       _screenOn = true;
     }
 
@@ -188,7 +198,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       }
     }
 
-    for (BTCommand command in commands) {
+    for (final BTCommand command in commands) {
       await _sendBTCommand(command);
       await Future.delayed(Duration(milliseconds: delay));
     }

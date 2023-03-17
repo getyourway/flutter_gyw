@@ -24,7 +24,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   }
 
   Future<void> _sendExampleData() async {
-    const List<Drawing> drawings = [
+    const List<Drawing> drawings = <Drawing>[
       WhiteScreen(),
       IconDrawing(GYWIcons.up, top: 50, left: 60),
       TextDrawing(
@@ -35,7 +35,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
       ),
     ];
 
-    for (Drawing drawing in drawings) {
+    for (final Drawing drawing in drawings) {
       await connectedDevice?.displayDrawing(drawing);
     }
   }
@@ -44,7 +44,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
+        children: <Widget>[
           SizedBox(height: MediaQuery.of(context).viewPadding.top),
           Padding(
             padding: const EdgeInsets.all(8.0),

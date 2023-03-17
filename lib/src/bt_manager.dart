@@ -82,7 +82,7 @@ class BTManager {
     final connectedDevices = await flutterBlue.connectedDevices;
 
     // Add them to the manager list
-    for (BluetoothDevice fbDevice in connectedDevices) {
+    for (final BluetoothDevice fbDevice in connectedDevices) {
       final device = BTDevice(
         fbDevice: fbDevice,
         lastRssi: 0,
@@ -122,7 +122,9 @@ class BTManager {
         devices.sort();
 
         // apply user custom function
-        if (onResult != null) onResult(device);
+        if (onResult != null) {
+          onResult(device);
+        }
       }
     });
 

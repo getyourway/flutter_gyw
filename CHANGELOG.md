@@ -1,9 +1,11 @@
-## 1.0.1 [In Progess]
+## 1.0.1
 * [ADD] Add new icons
 * [IMP] Optimisation for TextDrawing font
 * [IMP] Optimisation of characteristics discovery
 * [FIX] Add already connected devices to list of devices
 * [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
+* [DEL] Remove every deprecated methods from aRdent 0
+* [ADD] Add more advanced linting rules
 
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1

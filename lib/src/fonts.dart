@@ -40,9 +40,9 @@ class GYWFont {
 
 /// Fonts supported by aRdent devices
 class GYWFonts {
-  static const small = GYWFont("Small", "a10", 0, 18, 10, 25, false);
+  static const small = GYWFont("Small", "a10", 0, 18, 10, 25);
   static const medium = GYWFont("Medium", "b14", 1, 24, 14, 33, true);
-  static const large = GYWFont("Large", "a16", 2, 28, 16, 39, false);
+  static const large = GYWFont("Large", "a16", 2, 28, 16, 39);
   static const huge = GYWFont("Huge", "b28", 3, 48, 28, 67, true);
 
   /// Every fonts available

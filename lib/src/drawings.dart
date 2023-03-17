@@ -1,11 +1,10 @@
 import 'dart:convert';
-
-import 'package:flutter_gyw/src/commands.dart';
-import 'package:flutter_gyw/src/helpers.dart';
-
-import 'fonts.dart';
-import 'icons.dart';
 import 'dart:typed_data';
+
+import 'commands.dart';
+import 'fonts.dart';
+import 'helpers.dart';
+import 'icons.dart';
 
 /// A drawing that represents data that can be displayed on an aRdent screen
 abstract class Drawing {
@@ -65,8 +64,8 @@ class TextDrawing extends Drawing {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCodes.displayText));
-    controlBytes.add(int32Bytes(left, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, endian: Endian.little));
+    controlBytes.add(int32Bytes(left));
+    controlBytes.add(int32Bytes(top));
 
     final commands = <BTCommand>[];
     if (font != null) {
@@ -123,9 +122,9 @@ class TextDrawing extends Drawing {
   /// Deserializes a text drawing from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     return TextDrawing(
-      left: data["left"],
-      top: data["top"],
-      text: data["text"],
+      left: data["left"] as int,
+      top: data["top"] as int,
+      text: data["text"] as String,
       font: GYWFonts.values.firstWhere(
         (e) => e.index == data["font"] || e.name == data["font"],
         orElse: () => GYWFonts.small,
@@ -168,6 +167,7 @@ class WhiteScreen extends Drawing {
   }
 
   /// Deserializes a white screen from JSON data
+  // ignore: avoid_unused_constructor_parameters
   factory WhiteScreen.fromJson(Map<String, dynamic> data) {
     return const WhiteScreen();
   }
@@ -198,8 +198,8 @@ class IconDrawing extends Drawing {
   List<BTCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCodes.displayImage));
-    controlBytes.add(int32Bytes(left, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, endian: Endian.little));
+    controlBytes.add(int32Bytes(left));
+    controlBytes.add(int32Bytes(top));
 
     return [
       BTCommand(
@@ -235,8 +235,8 @@ class IconDrawing extends Drawing {
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     return IconDrawing(
       GYWIcons.values.firstWhere((element) => element.name == data["icon"]),
-      left: data["left"],
-      top: data["top"],
+      left: data["left"] as int,
+      top: data["top"] as int,
     );
   }
 
