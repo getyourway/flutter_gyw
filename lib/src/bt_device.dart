@@ -10,7 +10,7 @@ import 'commands.dart';
 import 'helpers.dart';
 
 /// Representation of a Bluetooth device
-class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
+class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Encapsulated FlutterBluePlus device
   fb.BluetoothDevice fbDevice;
 
@@ -54,7 +54,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   Map<String, fb.BluetoothCharacteristic?> characteristics =
       <String, fb.BluetoothCharacteristic?>{};
 
-  BTDevice({
+  GYWBtDevice({
     required this.fbDevice,
     required int lastRssi,
     DateTime? lastSeen,
@@ -175,12 +175,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   /// Send data to the aRdent device to display a drawing
   Future<void> displayDrawing(
-    Drawing drawing, {
+    GYWDrawing drawing, {
     int delay = 80,
   }) async {
     if (!screenOn) {
       await _sendBTCommand(
-        BTCommand(
+        GYWBtCommand(
           GYWCharacteristics.ctrlDisplay,
           int32Bytes(GYWControlCodes.startDisplay),
         ),
@@ -198,13 +198,13 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       }
     }
 
-    for (final BTCommand command in commands) {
+    for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
       await Future.delayed(Duration(milliseconds: delay));
     }
   }
 
-  Future<void> _sendBTCommand(BTCommand command) async {
+  Future<void> _sendBTCommand(GYWBtCommand command) async {
     final fb.BluetoothCharacteristic? characteristic =
         await _findCharacteristic(command.characteristic);
 
@@ -240,7 +240,7 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   /// Compare this Bluetooth device to another based on signal strength
   @override
-  int compareTo(BTDevice? other) {
+  int compareTo(GYWBtDevice? other) {
     return -lastRssi.compareTo(other?.lastRssi ?? -1);
   }
 }

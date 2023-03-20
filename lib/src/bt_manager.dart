@@ -4,11 +4,11 @@ import 'bt_device.dart';
 import 'exceptions.dart';
 
 /// A class used to interact with Bluetooth devices
-class BTManager {
+class GYWBtManager {
   /// The Bluetooth Manager used in your whole application
-  static final BTManager instance = BTManager._();
+  static final GYWBtManager instance = GYWBtManager._();
 
-  BTManager._() {
+  GYWBtManager._() {
     init();
   }
 
@@ -26,7 +26,7 @@ class BTManager {
   }
 
   /// List of devices available for a Bluetooth connection
-  List<BTDevice> devices = [];
+  List<GYWBtDevice> devices = [];
 
   /// Status value indicating that the manager is searching around for devices
   bool _isScanning = false;
@@ -46,7 +46,7 @@ class BTManager {
     return bluetoothOn;
   }
 
-  void _addDevice(BTDevice device) {
+  void _addDevice(GYWBtDevice device) {
     final index = devices.indexWhere(
       (element) => element.id == device.id,
     );
@@ -64,7 +64,7 @@ class BTManager {
     Duration timeout = const Duration(seconds: 3),
     int deviceLifeDuration = 10,
     int minimumRssi = 0,
-    void Function(BTDevice)? onResult,
+    void Function(GYWBtDevice)? onResult,
   }) async {
     if (!bluetoothOn) {
       throw const GYWStatusException("Bluetooth is not enabled");
@@ -83,7 +83,7 @@ class BTManager {
 
     // Add them to the manager list
     for (final BluetoothDevice fbDevice in connectedDevices) {
-      final device = BTDevice(
+      final device = GYWBtDevice(
         fbDevice: fbDevice,
         lastRssi: 0,
         lastSeen: DateTime.now(),
@@ -100,7 +100,7 @@ class BTManager {
         return;
       }
 
-      late BTDevice device;
+      late GYWBtDevice device;
       try {
         device = devices.firstWhere(
           (btDevice) => btDevice.id == result.device.id.id,
@@ -111,7 +111,7 @@ class BTManager {
         device.lastSeen = DateTime.now();
       } on StateError {
         // Device has not been added to the list yet
-        device = BTDevice(
+        device = GYWBtDevice(
           fbDevice: result.device,
           lastRssi: result.rssi.abs(),
           lastSeen: DateTime.now(),

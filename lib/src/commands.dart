@@ -16,9 +16,9 @@ class GYWControlCodes {
 }
 
 /// A representation of a Bluetooth operation to apply
-class BTCommand {
+class GYWBtCommand {
   final String characteristic;
   final Uint8List data;
 
-  const BTCommand(this.characteristic, this.data);
+  const GYWBtCommand(this.characteristic, this.data);
 }

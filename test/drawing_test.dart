@@ -6,69 +6,69 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group("JSON", () {
     test('white screen', () {
-      const Drawing drawing = WhiteScreen();
+      const GYWDrawing drawing = WhiteScreen();
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text', () {
-      const Drawing drawing = TextDrawing(text: "Text");
+      const GYWDrawing drawing = TextDrawing(text: "Text");
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with position', () {
-      const Drawing drawing = TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with position",
         left: 100,
         top: 200,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with font', () {
       const GYWFont font = GYWFonts.medium;
 
-      const Drawing drawing = TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with font",
         font: font,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with font and position', () {
       const font = GYWFonts.medium;
 
-      const Drawing drawing = TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with font and position",
         left: 150,
         top: 250,
         font: font,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Icon', () {
       const GYWIcon icon = GYWIcons.checkbox;
 
-      const Drawing drawing = IconDrawing(icon);
+      const GYWDrawing drawing = IconDrawing(icon);
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Icon with position', () {
       const GYWIcon icon = GYWIcons.up;
 
-      const Drawing drawing = IconDrawing(
+      const GYWDrawing drawing = IconDrawing(
         icon,
         left: 120,
         top: 220,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Unsupported type', () {
@@ -77,7 +77,7 @@ void main() {
         "data": "Test",
       };
 
-      expect(() => Drawing.fromJson(json), throwsA(isA<UnsupportedError>()));
+      expect(() => GYWDrawing.fromJson(json), throwsA(isA<UnsupportedError>()));
     });
   });
 

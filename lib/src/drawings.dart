@@ -7,23 +7,23 @@ import 'helpers.dart';
 import 'icons.dart';
 
 /// A drawing that represents data that can be displayed on an aRdent screen
-abstract class Drawing {
+abstract class GYWDrawing {
   /// Distance (in pixels) from the top
   final int top;
 
   /// Distance (in pixels) from the left side
   final int left;
 
-  const Drawing({
+  const GYWDrawing({
     this.top = 0,
     this.left = 0,
   });
 
   /// Convert the drawing into a list of commands understood by the device
-  List<BTCommand> toCommands();
+  List<GYWBtCommand> toCommands();
 
   /// Deserializes a drawing from JSON data
-  factory Drawing.fromJson(Map<String, dynamic> data) {
+  factory GYWDrawing.fromJson(Map<String, dynamic> data) {
     switch (data["type"]) {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
@@ -41,7 +41,7 @@ abstract class Drawing {
 }
 
 /// A drawing to display text on an aRdent device
-class TextDrawing extends Drawing {
+class TextDrawing extends GYWDrawing {
   // Type of the drawing
   static const String type = "text";
 
@@ -60,21 +60,21 @@ class TextDrawing extends Drawing {
   });
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCodes.displayText));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    final commands = <BTCommand>[];
+    final commands = <GYWBtCommand>[];
     if (font != null) {
       commands.addAll([
-        BTCommand(
+        GYWBtCommand(
           GYWCharacteristics.nameDisplay,
           const Utf8Encoder().convert(font!.prefix),
         ),
-        BTCommand(
+        GYWBtCommand(
           GYWCharacteristics.ctrlDisplay,
           int8Bytes(GYWControlCodes.setFont),
         ),
@@ -82,11 +82,11 @@ class TextDrawing extends Drawing {
     }
 
     commands.addAll([
-      BTCommand(
+      GYWBtCommand(
         GYWCharacteristics.nameDisplay,
         const Utf8Encoder().convert(text),
       ),
-      BTCommand(
+      GYWBtCommand(
         GYWCharacteristics.ctrlDisplay,
         controlBytes.toBytes(),
       ),
@@ -145,16 +145,16 @@ class TextDrawing extends Drawing {
 }
 
 /// A drawing to reset the screen of the aRdent device to a white screen
-class WhiteScreen extends Drawing {
+class WhiteScreen extends GYWDrawing {
   // Type of the white screen drawing
   static const String type = "white_screen";
 
   const WhiteScreen();
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     return [
-      BTCommand(
+      GYWBtCommand(
         GYWCharacteristics.ctrlDisplay,
         int8Bytes(GYWControlCodes.clear),
       )
@@ -181,7 +181,7 @@ class WhiteScreen extends Drawing {
 }
 
 /// A drawing to display an icon on an aRdent device
-class IconDrawing extends Drawing {
+class IconDrawing extends GYWDrawing {
   // Type of the icon drawing
   static const String type = "icon";
 
@@ -195,18 +195,18 @@ class IconDrawing extends Drawing {
   });
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCodes.displayImage));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
     return [
-      BTCommand(
+      GYWBtCommand(
         GYWCharacteristics.nameDisplay,
         const Utf8Encoder().convert("${icon.filename}.png"),
       ),
-      BTCommand(
+      GYWBtCommand(
         GYWCharacteristics.ctrlDisplay,
         controlBytes.toBytes(),
       )

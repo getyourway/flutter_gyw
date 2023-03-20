@@ -6,6 +6,8 @@
 * [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
 * [DEL] Remove every deprecated methods from aRdent 0
 * [ADD] Add more advanced linting rules
+* [REFACTOR] Prefix custom object with GYW
+* [DOC] Improve README file
 
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1

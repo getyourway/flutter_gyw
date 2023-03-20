@@ -11,11 +11,11 @@ class GYWExampleScreen extends StatefulWidget {
 }
 
 class _GYWExampleScreenState extends State<GYWExampleScreen> {
-  BTDevice? connectedDevice;
+  GYWBtDevice? connectedDevice;
 
   Future<void> _scanForDevice() async {
     try {
-      await BTManager.instance.refreshDevices();
+      await GYWBtManager.instance.refreshDevices();
     } on GYWStatusException catch (e, s) {
       log("Impossible to scan", error: e, stackTrace: s);
     }
@@ -24,7 +24,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   }
 
   Future<void> _sendExampleData() async {
-    const List<Drawing> drawings = <Drawing>[
+    const List<GYWDrawing> drawings = <GYWDrawing>[
       WhiteScreen(),
       IconDrawing(GYWIcons.up, top: 50, left: 60),
       TextDrawing(
@@ -35,7 +35,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
       ),
     ];
 
-    for (final Drawing drawing in drawings) {
+    for (final GYWDrawing drawing in drawings) {
       await connectedDevice?.displayDrawing(drawing);
     }
   }
@@ -59,9 +59,9 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
               border: Border.all(),
             ),
             child: ListView.builder(
-              itemCount: BTManager.instance.devices.length,
+              itemCount: GYWBtManager.instance.devices.length,
               itemBuilder: (_, index) {
-                final BTDevice device = BTManager.instance.devices[index];
+                final GYWBtDevice device = GYWBtManager.instance.devices[index];
                 return ListTile(
                   title: Text(
                     device.name.isEmpty ? "Unknown device" : device.name,
