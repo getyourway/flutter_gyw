@@ -1,8 +1,13 @@
 /// The default parameters of the screen of the aRdent device
-class GYWScreenParameters {
+enum GYWScreenParameters {
   /// Supported Width of a GYW aRdent device
-  static const int width = 800;
+  width(854),
 
   /// Supported Width of a GYW aRdent device
-  static const int height = 480;
+  height(480);
+
+  /// Value associated to the property
+  final num value;
+
+  const GYWScreenParameters(this.value);
 }

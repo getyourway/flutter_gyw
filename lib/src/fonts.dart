@@ -1,7 +1,9 @@
-/// Representation of an icon for an aRdent device
-class GYWFont {
-  /// Index value transmitted to the device
-  final int index;
+/// Text fonts supported on aRdent smart glasses
+enum GYWFont {
+  small("Small", "a10", 18, 10, 25),
+  medium("Medium", "b14", 24, 14, 33, true),
+  large("Large", "a16", 28, 16, 39),
+  huge("Huge", "b28", 48, 28, 67, true);
 
   /// Name of the font
   final String name;
@@ -23,28 +25,10 @@ class GYWFont {
 
   const GYWFont(
     this.name,
-    this.prefix,
-    this.index, [
+    this.prefix, [
     this.size = 12,
     this.width = 12,
     this.height = 20,
     this.bold = false,
   ]);
-
-  @override
-  bool operator ==(Object other) => other is GYWFont && other.index == index;
-
-  @override
-  int get hashCode => index;
-}
-
-/// Fonts supported by aRdent devices
-class GYWFonts {
-  static const small = GYWFont("Small", "a10", 0, 18, 10, 25);
-  static const medium = GYWFont("Medium", "b14", 1, 24, 14, 33, true);
-  static const large = GYWFont("Large", "a16", 2, 28, 16, 39);
-  static const huge = GYWFont("Huge", "b28", 3, 48, 28, 67, true);
-
-  /// Every fonts available
-  static const values = [small, medium, large, huge];
 }

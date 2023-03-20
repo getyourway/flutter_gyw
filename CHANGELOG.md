@@ -1,4 +1,4 @@
-## 1.0.1
+## 1.1.0
 * [ADD] Add new icons
 * [IMP] Optimisation for TextDrawing font
 * [IMP] Optimisation of characteristics discovery
@@ -8,6 +8,7 @@
 * [ADD] Add more advanced linting rules
 * [REFACTOR] Prefix custom object with GYW
 * [DOC] Improve README file
+* [REFACTOR] Use enums instead of static class
 
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1

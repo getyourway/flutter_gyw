@@ -28,7 +28,7 @@ void main() {
     });
 
     test('Text with font', () {
-      const GYWFont font = GYWFonts.medium;
+      const GYWFont font = GYWFont.medium;
 
       const GYWDrawing drawing = TextDrawing(
         text: "Text with font",
@@ -39,7 +39,7 @@ void main() {
     });
 
     test('Text with font and position', () {
-      const font = GYWFonts.medium;
+      const font = GYWFont.medium;
 
       const GYWDrawing drawing = TextDrawing(
         text: "Text with font and position",
@@ -52,7 +52,7 @@ void main() {
     });
 
     test('Icon', () {
-      const GYWIcon icon = GYWIcons.checkbox;
+      const GYWIcon icon = GYWIcon.checkbox;
 
       const GYWDrawing drawing = IconDrawing(icon);
 
@@ -60,7 +60,7 @@ void main() {
     });
 
     test('Icon with position', () {
-      const GYWIcon icon = GYWIcons.up;
+      const GYWIcon icon = GYWIcon.up;
 
       const GYWDrawing drawing = IconDrawing(
         icon,
@@ -85,7 +85,7 @@ void main() {
     test('All icons', () {
       final assetFolderPath = Platform.environment['UNIT_TEST_ASSETS'];
 
-      for (final GYWIcon icon in GYWIcons.values) {
+      for (final GYWIcon icon in GYWIcon.values) {
         expect(
           File("$assetFolderPath/${icon.path}").existsSync(),
           isTrue,

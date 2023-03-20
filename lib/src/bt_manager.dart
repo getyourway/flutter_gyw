@@ -5,7 +5,7 @@ import 'exceptions.dart';
 
 /// A class used to interact with Bluetooth devices
 class GYWBtManager {
-  /// The Bluetooth Manager used in your whole application
+  /// The [GYWBtManager] instance used in your whole application
   static final GYWBtManager instance = GYWBtManager._();
 
   GYWBtManager._() {
@@ -37,7 +37,7 @@ class GYWBtManager {
   /// Function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
 
-  /// Manullay refresh the bluetooth status and returns the new status
+  /// Manullay refresh the Bluetooth status and returns the new status
   Future<bool> get bluetoothOnAsync async {
     final flutterBlue = FlutterBluePlus.instance;
 
@@ -147,7 +147,7 @@ class GYWBtManager {
   }
 
   /// Stop the current scan.
-  /// Throws a GYWStatusException if a scan is not in progress
+  /// Throws a [GYWStatusException] if a scan is not in progress
   Future<void> stopScan() async {
     if (!_isScanning) {
       throw const GYWStatusException("Scan is not in progress.");

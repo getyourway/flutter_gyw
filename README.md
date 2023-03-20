@@ -1,6 +1,6 @@
 # flutter_gyw
 
-**flutter_gyw** is a Flutter package developed and maintained by the Belgian company [Get Your Way](https://www.getyourway.be) to communicate with their devices via Bluetooth. This package allows developers to create Flutter applications that can send drawings, text, and icons to aRdent smart glasses.
+**flutter_gyw** is a Flutter package developed and maintained by the Belgian company [Get Your Way](https://www.getyourway.be) to communicate with their devices via Bluetooth. This package allows developers to create Flutter applications that can send drawings, text, and icons to **aRdent smart glasses**.
 
 Note that this package is still in development and is currently private. As such, you are not allowed to distribute it without Get Your Way's agreement. The team is fully open to your suggestions for the future of the package, and if you find a bug, do not hesitate to contact them.
 
@@ -16,9 +16,9 @@ Note that this package is still in development and is currently private. As such
 
 * Display a text at a given postion
 * Font selection
-  * See `fonts.dart` [documentation](flutter_gyw/GYWFonts-class.html) for details
+  * See `fonts.dart` [documentation](flutter_gyw/GYWFont-class.html) for available fonts
 * Display a 48x48 icon at a given position
-  * See `icons.dart` [documentation](flutter_gyw/GYWIcons-class.html) for details
+  * See `icons.dart` [documentation](flutter_gyw/GYWIcon-class.html) for available icons
 * Provide the specification of the GYW aRdent device screen
   * See `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
 

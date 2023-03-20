@@ -26,12 +26,12 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Future<void> _sendExampleData() async {
     const List<GYWDrawing> drawings = <GYWDrawing>[
       WhiteScreen(),
-      IconDrawing(GYWIcons.up, top: 50, left: 60),
+      IconDrawing(GYWIcon.up, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFonts.medium,
+        font: GYWFont.medium,
       ),
     ];
 

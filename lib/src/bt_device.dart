@@ -34,7 +34,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Status value indicating whether the screen device has been turned off or no
   bool get screenOn => _screenOn;
 
-  /// Most recently used font (optimisation for TextDrawing)
+  /// Most recently used font (optimisation for [TextDrawing])
   GYWFont? _font;
 
   late int _lastRssi;
@@ -173,7 +173,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     return null;
   }
 
-  /// Send data to the aRdent device to display a drawing
+  /// Send data to the aRdent device to display a [GYWDrawing]
   Future<void> displayDrawing(
     GYWDrawing drawing, {
     int delay = 80,
@@ -181,8 +181,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     if (!screenOn) {
       await _sendBTCommand(
         GYWBtCommand(
-          GYWCharacteristics.ctrlDisplay,
-          int32Bytes(GYWControlCodes.startDisplay),
+          GYWCharacteristic.ctrlDisplay,
+          int32Bytes(GYWControlCode.startDisplay.value),
         ),
       );
       _screenOn = true;
@@ -191,7 +191,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     final commands = drawing.toCommands();
     if (drawing is TextDrawing) {
       if (drawing.font == _font) {
-        // Remove the two operations dedicated to setting font
+        // Remove the operations dedicated to setting the text font
         commands.removeRange(0, 2);
       } else {
         _font = drawing.font;
@@ -206,7 +206,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   Future<void> _sendBTCommand(GYWBtCommand command) async {
     final fb.BluetoothCharacteristic? characteristic =
-        await _findCharacteristic(command.characteristic);
+        await _findCharacteristic(command.characteristic.uuid);
 
     if (characteristic == null) {
       throw const GYWException("Bluetooth characteristic not found");
@@ -215,6 +215,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
+  /// Write data on a Bluetooth characteristic by chunk of 20 bytes
   Future<void> _sendData(
     fb.BluetoothCharacteristic characteristic,
     Uint8List data,
@@ -238,7 +239,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Compare this Bluetooth device to another based on signal strength
+  /// Compare this [GYWBtDevice] to another based on signal strength
   @override
   int compareTo(GYWBtDevice? other) {
     return -lastRssi.compareTo(other?.lastRssi ?? -1);
