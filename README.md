@@ -1,28 +1,26 @@
 # flutter_gyw
 
-This package is developed and maintained by the Belgian company Get your Way since 2022. It aims to provide an interface to be able their device with a Flutter application.
+**flutter_gyw** is a Flutter package developed and maintained by the Belgian company [Get Your Way](https://www.getyourway.be) to communicate with their devices via Bluetooth. This package allows developers to create Flutter applications that can send drawings, text, and icons to aRdent smart glasses.
 
-WARNING This package is still in development and is private. Therefore, you are not allowed to distribute it without Get Your Way agreement. The team is fully open to your suggestions for the future of the package. If you find a bug, do not hesitate to contact us. 
+Note that this package is still in development and is currently private. As such, you are not allowed to distribute it without Get Your Way's agreement. The team is fully open to your suggestions for the future of the package, and if you find a bug, do not hesitate to contact them.
 
 ## Features
 
 ### Bluetooth capability
 
-* Connection to any Bluetooth device (unsecured)
-* Disconnection to a Bluetooth device previously connected
+* Connect to any Bluetooth device (unsecured)
+* Disconnect from a previously connected Bluetooth device
 * Scan for surrounding Bluetooth devices
 
 ### GYW display capabilities
 
 * Display a text at a given postion
 * Font selection
-  * check `fonts.dart` [documentation](flutter_gyw/GYWFonts-class.html) for details
-* Display an 80x80 icon at a given position
-  * check `icons.dart` [documentation](flutter_gyw/GYWIcons-class.html) for details
+  * See `fonts.dart` [documentation](flutter_gyw/GYWFonts-class.html) for details
+* Display a 48x48 icon at a given position
+  * See `icons.dart` [documentation](flutter_gyw/GYWIcons-class.html) for details
 * Provide the specification of the GYW aRdent device screen
-  * check `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
-
-## Installation
+  * See `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
 
 ## Installation
 
@@ -49,27 +47,28 @@ import 'package:flutter_gyw/flutter_gyw.dart';
 
 ### Step 1 : Scan for Bluetooth Device
 
-First you need to scan for the surrounding Bluetooth device. To do so, use the `BluetoothManager` object.
+First, scan for surrounding Bluetooth devices using the `GYWBtManager` object ([documentation](flutter_gyw/GYWBtManager-class.html)).
 
 ```dart
-await BluetoothManager.instance.refreshDevices();
+await GYWBtManager.instance.refreshDevices();
 
-final List<BTDevice> devices = BluetoothManager.instance.devices;
+final List<GYWBtDevice> devices = GYWBtManager.instance.devices;
 ```
 
 ### Step 2 : Connect to a BTDevice
 
-```dart
-// TODO: Choose a device from the devices list here above
-final BTDevice device;
+Then, pick the `GYWBtDevice`  ([documentation](flutter_gyw/GYWBtDevice-class.html)) you are interested in, and establish a connection.
 
+```dart
 await device.connect();
 ```
 
 ### Step 3 : Make a drawing
 
+Create a list of drawings that you want to send to the device.
+
 ```dart
-final List<Drawing> drawings = [
+final List<GYWDrawing> drawings = [
   TextDrawing(
     text: "Hello world",
     left: 40,
@@ -80,19 +79,25 @@ final List<Drawing> drawings = [
 
 ### Step 4 : Send the drawings
 
+Send the drawings to the connected device.
+
 ```dart
-for (Drawing drawing in drawings) {
+for (GYWDrawing drawing in drawings) {
   device.displayDrawing(drawing);
 }
 ```
 
-## Additional information
+## Example
 
-This package is still in development. Feel free to add new feature or to contact Get Your Way.
+A complete example can be found [here](example/example.dart)
 
 ## Licence
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Copyright (c) 2023 - Get Your Way SRL
+
+This library is licensed under the Apache License, Version 2.0 (the "License"). You may not use this library except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Troubleshooting
 
@@ -104,7 +109,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ### How can I reset the screen of my GYW device?
 
-GYW drawings appears on the screen as a stack, i.e. each new drawing will be printed on the previous one. Therefore, to reset the screen, you need to send a white screen that will override the whole screen.
+`GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to send a white screen that will override the whole screen.
 
 ```dart
 device.displayDrawing(const WhiteScreen());
@@ -112,4 +117,16 @@ device.displayDrawing(const WhiteScreen());
 
 ### How can I have bigger icons?
 
-For now, only a few 80x80 icons are supported. New icons and different sizes will be added in future versions.
+For now, only a few 48x48 icons are supported. New icons and different sizes will be added in future versions.
+
+### How can I troubleshoot connection issues with my GYW device?
+
+If you encounter issues with connecting to your GYW device, here are a few things you can try:
+
+1. Ensure that Bluetooth is enabled on the device running your Flutter app
+2. Ensure that your app has the Bluetooth permissions to scan for and connect to devices.
+3. Make sure that the GYW device is within range and not connected to any other device.
+4. Check that the GYW device is discoverable by your Flutter app by scanning for devices using `GYWBtManager.instance.refreshDevices()`.
+5. If the device is not listed, switch it off and then back on, and start a scan again.
+6. Restart your app.
+7. If you continue to have issues, please contact our support team for further assistance at [support@getyourway.be](mailto:support@getyourway.be)
