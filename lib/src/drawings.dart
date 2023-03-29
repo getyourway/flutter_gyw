@@ -201,7 +201,7 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    return [
+    return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
         const Utf8Encoder().convert("${icon.filename}.png"),
