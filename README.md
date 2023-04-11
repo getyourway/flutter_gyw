@@ -63,7 +63,15 @@ Then, pick the `GYWBtDevice`  ([documentation](flutter_gyw/GYWBtDevice-class.htm
 await device.connect();
 ```
 
-### Step 3 : Make a drawing
+### Step 3 : Turn the screen on
+
+Notify the device so that it turns it screen on.
+
+```dart
+await device.start_display()
+```
+
+### Step 4 : Make a drawing
 
 Create a list of drawings that you want to send to the device.
 
@@ -77,7 +85,7 @@ final List<GYWDrawing> drawings = [
 ];
 ```
 
-### Step 4 : Send the drawings
+### Step 5 : Send the drawings
 
 Send the drawings to the connected device.
 
@@ -86,6 +94,8 @@ for (GYWDrawing drawing in drawings) {
   device.displayDrawing(drawing);
 }
 ```
+
+> Note: You can use the `delay` parameter of the `displayDrawing` method in order to speed up or down the transfer, but be careful that increasing the transfer rate may affect the reliability of the transfered data, i.e. some drawings may be skipped or badly interpreted.
 
 ## Example
 
