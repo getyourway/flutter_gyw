@@ -6,6 +6,7 @@
 * [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
 * [DEL] Remove every deprecated methods from aRdent 0
 * [ADD] Add more advanced linting rules
+* [ADD] Add a method to manually turn on the display
 * [REFACTOR] Prefix custom object with GYW
 * [DOC] Improve README file
 * [REFACTOR] Use enums instead of static class

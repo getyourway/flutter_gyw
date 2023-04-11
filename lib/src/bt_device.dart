@@ -31,11 +31,11 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Status value indicating that the device is connected
   bool get isConnected => _isConnected;
 
-  /// Status value indicating whether the screen device has been turned off or no
-  bool get screenOn => _screenOn;
+  /// Most recently used font (used for the optimisation of [TextDrawing])
+  GYWFont? font;
 
-  /// Most recently used font (optimisation for [TextDrawing])
-  GYWFont? _font;
+  /// Enable font optimisation
+  bool fontOptimized = true;
 
   late int _lastRssi;
 
@@ -51,7 +51,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
 
-  Map<String, fb.BluetoothCharacteristic?> characteristics =
+  Map<String, fb.BluetoothCharacteristic?> _characteristics =
       <String, fb.BluetoothCharacteristic?>{};
 
   GYWBtDevice({
@@ -135,6 +135,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       _deviceStateListener = null;
     }
 
+    // Clear saved characteristics
+    _characteristics = <String, fb.BluetoothCharacteristic?>{};
+
+    // Clear font
+    font = null;
+
     try {
       await fbDevice.disconnect();
       _isConnected = false;
@@ -149,8 +155,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   Future<fb.BluetoothCharacteristic?> _findCharacteristic(String uuid) async {
-    if (characteristics[uuid] != null) {
-      return characteristics[uuid];
+    if (_characteristics[uuid] != null) {
+      return _characteristics[uuid];
     }
 
     final List<fb.BluetoothService?> services =
@@ -162,7 +168,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
             .firstWhere((element) => element.uuid == fb.Guid(uuid));
 
         // Save characteristic in cache
-        characteristics[uuid] = c;
+        _characteristics[uuid] = c;
 
         return c;
       } on StateError {
@@ -176,25 +182,15 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Send data to the aRdent device to display a [GYWDrawing]
   Future<void> displayDrawing(
     GYWDrawing drawing, {
-    int delay = 80,
+    int delay = 60,
   }) async {
-    if (!screenOn) {
-      await _sendBTCommand(
-        GYWBtCommand(
-          GYWCharacteristic.ctrlDisplay,
-          int32Bytes(GYWControlCode.startDisplay.value),
-        ),
-      );
-      _screenOn = true;
-    }
-
     final commands = drawing.toCommands();
-    if (drawing is TextDrawing) {
-      if (drawing.font == _font) {
+    if (fontOptimized && drawing is TextDrawing) {
+      if (drawing.font != null && drawing.font == font) {
         // Remove the operations dedicated to setting the text font
         commands.removeRange(0, 2);
       } else {
-        _font = drawing.font;
+        font = drawing.font;
       }
     }
 
@@ -237,6 +233,28 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       start += 20;
       end += 20;
     }
+  }
+
+  /// Turn the screen on
+  Future<void> startDisplay({
+    int delay = 400,
+  }) async {
+    if (_screenOn) {
+      // Skip the command
+      return;
+    }
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      int8Bytes(GYWControlCode.startDisplay.value),
+    );
+
+    await _sendBTCommand(command);
+    await Future.delayed(
+      Duration(milliseconds: delay),
+    );
+
+    _screenOn = true;
   }
 
   /// Compare this [GYWBtDevice] to another based on signal strength
