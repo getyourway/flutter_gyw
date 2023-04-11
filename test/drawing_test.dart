@@ -3,72 +3,72 @@ import 'dart:io';
 import 'package:flutter_gyw/flutter_gyw.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-main() {
+void main() {
   group("JSON", () {
     test('white screen', () {
-      Drawing drawing = const WhiteScreen();
+      const GYWDrawing drawing = WhiteScreen();
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text', () {
-      Drawing drawing = const TextDrawing(text: "Text");
+      const GYWDrawing drawing = TextDrawing(text: "Text");
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with position', () {
-      Drawing drawing = const TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with position",
         left: 100,
         top: 200,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with font', () {
-      const font = GYWFonts.medium;
+      const GYWFont font = GYWFont.medium;
 
-      Drawing drawing = const TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with font",
         font: font,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Text with font and position', () {
-      const font = GYWFonts.medium;
+      const font = GYWFont.medium;
 
-      Drawing drawing = const TextDrawing(
+      const GYWDrawing drawing = TextDrawing(
         text: "Text with font and position",
         left: 150,
         top: 250,
         font: font,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Icon', () {
-      const icon = GYWIcons.checkbox;
+      const GYWIcon icon = GYWIcon.checkbox;
 
-      Drawing drawing = const IconDrawing(icon);
+      const GYWDrawing drawing = IconDrawing(icon);
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Icon with position', () {
-      const icon = GYWIcons.up;
+      const GYWIcon icon = GYWIcon.up;
 
-      Drawing drawing = const IconDrawing(
+      const GYWDrawing drawing = IconDrawing(
         icon,
         left: 120,
         top: 220,
       );
 
-      expect(Drawing.fromJson(drawing.toJson()), drawing);
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Unsupported type', () {
@@ -77,14 +77,15 @@ main() {
         "data": "Test",
       };
 
-      expect(() => Drawing.fromJson(json), throwsA(isA<UnsupportedError>()));
+      expect(() => GYWDrawing.fromJson(json), throwsA(isA<UnsupportedError>()));
     });
   });
 
   group('Icon assets', () {
     test('All icons', () {
       final assetFolderPath = Platform.environment['UNIT_TEST_ASSETS'];
-      for (GYWIcon icon in GYWIcons.values) {
+
+      for (final GYWIcon icon in GYWIcon.values) {
         expect(
           File("$assetFolderPath/${icon.path}").existsSync(),
           isTrue,

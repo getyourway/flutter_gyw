@@ -1,29 +1,49 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_gyw/src/helpers.dart';
 
-class GYWCharacteristics {
-  static const String ctrlDisplay = "00004c31-0000-1000-8000-00805f9b34fb";
-  static const String nameDisplay = "00004c32-0000-1000-8000-00805f9b34fb";
+/// A class gathering the characteristics used on aRdent
+enum GYWCharacteristic {
+  /// Characterisitic to control the display
+  ctrlDisplay("00004c31-0000-1000-8000-00805f9b34fb"),
+
+  /// Characteristic to give data to the display
+  nameDisplay("00004c32-0000-1000-8000-00805f9b34fb");
+
+  /// UUID of the characteristic
+  final String uuid;
+
+  const GYWCharacteristic(this.uuid);
 }
 
-class GYWControlCodes {
-  static const int startDisplay = 0x01;
-  static const int displayImage = 0x02;
-  static const int displayText = 0x03;
-  static const int clear = 0x05;
-  static const int setFont = 0x08;
+/// A code to operate aRdent smart glasses
+enum GYWControlCode {
+  /// Switch on the screen
+  startDisplay(0x01),
+
+  /// Show an image on the screen
+  displayImage(0x02),
+
+  /// Show a text on the screen
+  displayText(0x03),
+
+  /// Clear the screen
+  clear(0x05),
+
+  /// Change the text font of the next text elements
+  setFont(0x08);
+
+  /// Control code value used internally on the device
+  final int value;
+
+  const GYWControlCode(this.value);
 }
 
-class BTCommand {
-  final String characteristic;
+/// A representation of a Bluetooth operation to apply
+class GYWBtCommand {
+  /// Bluetooth characteristic
+  final GYWCharacteristic characteristic;
+
+  /// Data to write on the characteristic
   final Uint8List data;
 
-  const BTCommand(this.characteristic, this.data);
-}
-
-class BTCommands {
-  static final startScreen = BTCommand(
-    GYWCharacteristics.ctrlDisplay,
-    int32Bytes(GYWControlCodes.startDisplay),
-  );
+  const GYWBtCommand(this.characteristic, this.data);
 }

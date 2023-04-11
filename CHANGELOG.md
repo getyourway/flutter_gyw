@@ -1,3 +1,16 @@
+## 1.1.0
+* [ADD] Add new icons
+* [IMP] Optimisation for TextDrawing font
+* [IMP] Optimisation of characteristics discovery
+* [FIX] Add already connected devices to list of devices
+* [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
+* [DEL] Remove every deprecated methods from aRdent 0
+* [ADD] Add more advanced linting rules
+* [ADD] Add a method to manually turn on the display
+* [REFACTOR] Prefix custom object with GYW
+* [DOC] Improve README file
+* [REFACTOR] Use enums instead of static class
+
 ## 1.0.0
 * [ADD] Update Bluetooth communication for aRdent 1
 * [ADD] Update fonts and icons for aRdent 1

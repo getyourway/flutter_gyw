@@ -11,31 +11,31 @@ class GYWExampleScreen extends StatefulWidget {
 }
 
 class _GYWExampleScreenState extends State<GYWExampleScreen> {
-  BTDevice? connectedDevice;
+  GYWBtDevice? connectedDevice;
 
   Future<void> _scanForDevice() async {
     try {
-      await BTManager.instance.refreshDevices();
-    } on GYWStatusException catch (e) {
-      log("Impossible to scan", error: e);
+      await GYWBtManager.instance.refreshDevices();
+    } on GYWStatusException catch (e, s) {
+      log("Impossible to scan", error: e, stackTrace: s);
     }
 
     setState(() {});
   }
 
   Future<void> _sendExampleData() async {
-    const List<Drawing> drawings = [
+    const List<GYWDrawing> drawings = <GYWDrawing>[
       WhiteScreen(),
-      IconDrawing(GYWIcons.up, top: 50, left: 60),
+      IconDrawing(GYWIcon.up, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFonts.medium,
+        font: GYWFont.medium,
       ),
     ];
 
-    for (Drawing drawing in drawings) {
+    for (final GYWDrawing drawing in drawings) {
       await connectedDevice?.displayDrawing(drawing);
     }
   }
@@ -44,7 +44,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
+        children: <Widget>[
           SizedBox(height: MediaQuery.of(context).viewPadding.top),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -59,9 +59,9 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
               border: Border.all(),
             ),
             child: ListView.builder(
-              itemCount: BTManager.instance.devices.length,
+              itemCount: GYWBtManager.instance.devices.length,
               itemBuilder: (_, index) {
-                final BTDevice device = BTManager.instance.devices[index];
+                final GYWBtDevice device = GYWBtManager.instance.devices[index];
                 return ListTile(
                   title: Text(
                     device.name.isEmpty ? "Unknown device" : device.name,
@@ -74,6 +74,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
                   subtitle: Text(device.id),
                   onTap: () async {
                     if (await device.connect()) {
+                      await device.startDisplay();
                       setState(() => connectedDevice = device);
                     }
                   },

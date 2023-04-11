@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
-import 'package:flutter_gyw/src/commands.dart';
-import 'package:flutter_gyw/src/drawings.dart';
+import 'package:flutter_gyw/flutter_gyw.dart';
 
-import 'exceptions.dart';
+import 'commands.dart';
+import 'helpers.dart';
 
 /// Representation of a Bluetooth device
-class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
+class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Encapsulated FlutterBluePlus device
   fb.BluetoothDevice fbDevice;
 
@@ -31,8 +31,11 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   /// Status value indicating that the device is connected
   bool get isConnected => _isConnected;
 
-  /// Status value indicating whether the screen device has been turned off or no
-  bool get screenOn => _screenOn;
+  /// Most recently used font (used for the optimisation of [TextDrawing])
+  GYWFont? font;
+
+  /// Enable font optimisation
+  bool fontOptimized = true;
 
   late int _lastRssi;
 
@@ -48,13 +51,18 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
   StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
 
-  BTDevice({
+  Map<String, fb.BluetoothCharacteristic?> _characteristics =
+      <String, fb.BluetoothCharacteristic?>{};
+
+  GYWBtDevice({
     required this.fbDevice,
     required int lastRssi,
     DateTime? lastSeen,
   }) {
     this.lastRssi = lastRssi;
-    if (lastSeen != null) this.lastSeen = lastSeen;
+    if (lastSeen != null) {
+      this.lastSeen = lastSeen;
+    }
   }
 
   /// Name of the device
@@ -81,17 +89,27 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
-      _deviceStateListener = fbDevice.state.listen((state) async {
-        if (state == fb.BluetoothDeviceState.disconnecting ||
-            state == fb.BluetoothDeviceState.disconnected) {
-          await disconnect();
-        }
-      });
-      _isConnected = true;
-    } finally {
+    } on TimeoutException {
+      _isConnected = false;
       _isConnecting = false;
+      notifyListeners();
+
+      return isConnected;
+    } on Exception catch (e, s) {
+      log("An error occured during BT Connection", error: e, stackTrace: s);
     }
 
+    // Device is already connected
+    _isConnected = true;
+
+    _deviceStateListener = fbDevice.state.listen((state) async {
+      if (state == fb.BluetoothDeviceState.disconnecting ||
+          state == fb.BluetoothDeviceState.disconnected) {
+        await disconnect();
+      }
+    });
+
+    _isConnecting = false;
     notifyListeners();
 
     return isConnected;
@@ -117,6 +135,12 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
       _deviceStateListener = null;
     }
 
+    // Clear saved characteristics
+    _characteristics = <String, fb.BluetoothCharacteristic?>{};
+
+    // Clear font
+    font = null;
+
     try {
       await fbDevice.disconnect();
       _isConnected = false;
@@ -131,12 +155,22 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
   }
 
   Future<fb.BluetoothCharacteristic?> _findCharacteristic(String uuid) async {
-    List<fb.BluetoothService?> services = await fbDevice.discoverServices();
+    if (_characteristics[uuid] != null) {
+      return _characteristics[uuid];
+    }
 
-    for (fb.BluetoothService? service in services) {
+    final List<fb.BluetoothService?> services =
+        await fbDevice.discoverServices();
+
+    for (final fb.BluetoothService? service in services) {
       try {
-        return service?.characteristics
+        final c = service?.characteristics
             .firstWhere((element) => element.uuid == fb.Guid(uuid));
+
+        // Save characteristic in cache
+        _characteristics[uuid] = c;
+
+        return c;
       } on StateError {
         continue;
       }
@@ -145,42 +179,30 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     return null;
   }
 
-  @Deprecated("This was used with aRdent 0 and should not be used anymore.")
-  Future<fb.BluetoothCharacteristic?> _getGYWDisplayCharacteristic() async {
-    List<fb.BluetoothService?> services = await fbDevice.discoverServices();
-
-    try {
-      final service = services.firstWhere(
-        (element) =>
-            element?.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c41"),
-      );
-
-      return service?.characteristics.firstWhere(
-        (element) =>
-            element.uuid == fb.Guid("030012ac-4202-d690-ec11-006fcee44c40"),
-      );
-    } on StateError {
-      return null;
-    }
-  }
-
-  /// Send data to the aRdent device to display a drawing
-  Future<void> displayDrawing(Drawing drawing) async {
-    if (!screenOn) {
-      await _sendBTCommand(BTCommands.startScreen);
-      _screenOn = true;
+  /// Send data to the aRdent device to display a [GYWDrawing]
+  Future<void> displayDrawing(
+    GYWDrawing drawing, {
+    int delay = 60,
+  }) async {
+    final commands = drawing.toCommands();
+    if (fontOptimized && drawing is TextDrawing) {
+      if (drawing.font != null && drawing.font == font) {
+        // Remove the operations dedicated to setting the text font
+        commands.removeRange(0, 2);
+      } else {
+        font = drawing.font;
+      }
     }
 
-    // TODO? Reduce delay
-    for (BTCommand command in drawing.toCommands()) {
-      await Future.delayed(const Duration(milliseconds: 100));
+    for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
+      await Future.delayed(Duration(milliseconds: delay));
     }
   }
 
-  Future<void> _sendBTCommand(BTCommand command) async {
+  Future<void> _sendBTCommand(GYWBtCommand command) async {
     final fb.BluetoothCharacteristic? characteristic =
-        await _findCharacteristic(command.characteristic);
+        await _findCharacteristic(command.characteristic.uuid);
 
     if (characteristic == null) {
       throw const GYWException("Bluetooth characteristic not found");
@@ -189,69 +211,55 @@ class BTDevice with ChangeNotifier implements Comparable<BTDevice> {
     }
   }
 
+  /// Write data on a Bluetooth characteristic by chunk of 20 bytes
   Future<void> _sendData(
     fb.BluetoothCharacteristic characteristic,
     Uint8List data,
   ) async {
-    // Split this string into chunks of maximum 20 bytes
-    List<Uint8List> chunks = [];
     int start = 0;
     int end = 20;
-    while (end < data.length) {
-      chunks.add(data.sublist(start, end));
+
+    // Write data on the characteristic by chunks to actually send the data
+    while (start < data.length) {
+      Uint8List chunk;
+      if (end < data.length) {
+        chunk = data.sublist(start, end);
+      } else {
+        chunk = data.sublist(start);
+      }
+
+      await characteristic.write(chunk);
+
       start += 20;
       end += 20;
     }
-
-    if (start != data.length) {
-      chunks.add(data.sublist(start, data.length));
-    }
-
-    // Write data on the characteristic by chunks to actually send the data
-    for (var chunk in chunks) {
-      await characteristic.write(chunk);
-    }
   }
 
-  @Deprecated("This was used with aRdent 0. Use displaydrawing method instead")
-
-  /// Send data to the aRdent device to display it on the screen
-  Future<void> displayData({
-    required Map<String, dynamic> data,
+  /// Turn the screen on
+  Future<void> startDisplay({
+    int delay = 400,
   }) async {
-    final characteristic = await _getGYWDisplayCharacteristic();
-    if (characteristic == null) {
-      throw const GYWException(
-        "This device does not support GYW display operation",
-      );
+    if (_screenOn) {
+      // Skip the command
+      return;
     }
 
-    // Convert the data into pseudo-json string
-    final jsonBytes = const Utf8Encoder().convert("${jsonEncode(data)}{END}");
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      int8Bytes(GYWControlCode.startDisplay.value),
+    );
 
-    // Split this string into chunks of maximum 20 bytes
-    List<Uint8List> chunks = [];
-    int start = 0;
-    int end = 20;
-    while (end < jsonBytes.length) {
-      chunks.add(jsonBytes.sublist(start, end));
-      start += 20;
-      end += 20;
-    }
+    await _sendBTCommand(command);
+    await Future.delayed(
+      Duration(milliseconds: delay),
+    );
 
-    if (start != jsonBytes.length) {
-      chunks.add(jsonBytes.sublist(start, jsonBytes.length));
-    }
-
-    // Write data on the characteristic by chunks to actually send the data
-    for (var chunk in chunks) {
-      await characteristic.write(chunk);
-    }
+    _screenOn = true;
   }
 
-  /// Compare this Bluetooth device to another based on signal strength
+  /// Compare this [GYWBtDevice] to another based on signal strength
   @override
-  int compareTo(BTDevice? other) {
+  int compareTo(GYWBtDevice? other) {
     return -lastRssi.compareTo(other?.lastRssi ?? -1);
   }
 }

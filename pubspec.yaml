@@ -1,12 +1,12 @@
 name: flutter_gyw
-version: 1.0.0
+version: 1.1.0
 publish_to: https://onepub.dev/api/xvppsdavuh
 homepage: https://www.getyourway.be
 
 description: A package to manage connections with GYW devices.
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
   flutter: '>=1.17.0'
 
 dependencies:

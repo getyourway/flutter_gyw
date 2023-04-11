@@ -1,30 +1,29 @@
 import 'dart:convert';
-
-import 'package:flutter_gyw/src/commands.dart';
-import 'package:flutter_gyw/src/helpers.dart';
-
-import 'fonts.dart';
-import 'icons.dart';
 import 'dart:typed_data';
 
-/// A drawing that represents data that can be displayed on an aRdent screen
-abstract class Drawing {
+import 'commands.dart';
+import 'fonts.dart';
+import 'helpers.dart';
+import 'icons.dart';
+
+/// A drawing that can be displayed on a pair of aRdent smart glasses
+abstract class GYWDrawing {
   /// Distance (in pixels) from the top
   final int top;
 
   /// Distance (in pixels) from the left side
   final int left;
 
-  const Drawing({
+  const GYWDrawing({
     this.top = 0,
     this.left = 0,
   });
 
   /// Convert the drawing into a list of commands understood by the device
-  List<BTCommand> toCommands();
+  List<GYWBtCommand> toCommands();
 
-  /// Deserializes a drawing from JSON data
-  factory Drawing.fromJson(Map<String, dynamic> data) {
+  /// Deserializes a [GYWDrawing] from JSON data
+  factory GYWDrawing.fromJson(Map<String, dynamic> data) {
     switch (data["type"]) {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
@@ -42,8 +41,8 @@ abstract class Drawing {
 }
 
 /// A drawing to display text on an aRdent device
-class TextDrawing extends Drawing {
-  // Type of the drawing
+class TextDrawing extends GYWDrawing {
+  /// Type of a [TextDrawing] drawing
   static const String type = "text";
 
   /// Displayed text
@@ -61,34 +60,34 @@ class TextDrawing extends Drawing {
   });
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
-    controlBytes.add(int8Bytes(GYWControlCodes.displayText));
-    controlBytes.add(int32Bytes(left, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, endian: Endian.little));
+    controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
+    controlBytes.add(int32Bytes(left));
+    controlBytes.add(int32Bytes(top));
 
-    final commands = <BTCommand>[];
+    final commands = <GYWBtCommand>[];
     if (font != null) {
       commands.addAll([
-        BTCommand(
-          GYWCharacteristics.nameDisplay,
+        GYWBtCommand(
+          GYWCharacteristic.nameDisplay,
           const Utf8Encoder().convert(font!.prefix),
         ),
-        BTCommand(
-          GYWCharacteristics.ctrlDisplay,
-          int8Bytes(GYWControlCodes.setFont),
+        GYWBtCommand(
+          GYWCharacteristic.ctrlDisplay,
+          int8Bytes(GYWControlCode.setFont.value),
         ),
       ]);
     }
 
     commands.addAll([
-      BTCommand(
-        GYWCharacteristics.nameDisplay,
+      GYWBtCommand(
+        GYWCharacteristic.nameDisplay,
         const Utf8Encoder().convert(text),
       ),
-      BTCommand(
-        GYWCharacteristics.ctrlDisplay,
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
       ),
     ]);
@@ -120,15 +119,15 @@ class TextDrawing extends Drawing {
       51 * left.hashCode +
       13 * top.hashCode;
 
-  /// Deserializes a text drawing from JSON data
+  /// Deserialize a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     return TextDrawing(
-      left: data["left"],
-      top: data["top"],
-      text: data["text"],
-      font: GYWFonts.values.firstWhere(
+      left: data["left"] as int,
+      top: data["top"] as int,
+      text: data["text"] as String,
+      font: GYWFont.values.firstWhere(
         (e) => e.index == data["font"] || e.name == data["font"],
-        orElse: () => GYWFonts.small,
+        orElse: () => GYWFont.small,
       ),
     );
   }
@@ -146,18 +145,18 @@ class TextDrawing extends Drawing {
 }
 
 /// A drawing to reset the screen of the aRdent device to a white screen
-class WhiteScreen extends Drawing {
-  // Type of the white screen drawing
+class WhiteScreen extends GYWDrawing {
+  /// Type of the [WhiteScreen] drawing
   static const String type = "white_screen";
 
   const WhiteScreen();
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     return [
-      BTCommand(
-        GYWCharacteristics.ctrlDisplay,
-        int8Bytes(GYWControlCodes.clear),
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
+        int8Bytes(GYWControlCode.clear.value),
       )
     ];
   }
@@ -167,7 +166,8 @@ class WhiteScreen extends Drawing {
     return "Drawing: white screen";
   }
 
-  /// Deserializes a white screen from JSON data
+  /// Deserialize a [WhiteScreen] from JSON data
+  // ignore: avoid_unused_constructor_parameters
   factory WhiteScreen.fromJson(Map<String, dynamic> data) {
     return const WhiteScreen();
   }
@@ -181,8 +181,8 @@ class WhiteScreen extends Drawing {
 }
 
 /// A drawing to display an icon on an aRdent device
-class IconDrawing extends Drawing {
-  // Type of the icon drawing
+class IconDrawing extends GYWDrawing {
+  /// Type of the [IconDrawing]
   static const String type = "icon";
 
   /// The displayed icon
@@ -195,19 +195,19 @@ class IconDrawing extends Drawing {
   });
 
   @override
-  List<BTCommand> toCommands() {
+  List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
-    controlBytes.add(int8Bytes(GYWControlCodes.displayImage));
-    controlBytes.add(int32Bytes(left, endian: Endian.little));
-    controlBytes.add(int32Bytes(top, endian: Endian.little));
+    controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
+    controlBytes.add(int32Bytes(left));
+    controlBytes.add(int32Bytes(top));
 
-    return [
-      BTCommand(
-        GYWCharacteristics.nameDisplay,
+    return <GYWBtCommand>[
+      GYWBtCommand(
+        GYWCharacteristic.nameDisplay,
         const Utf8Encoder().convert("${icon.filename}.png"),
       ),
-      BTCommand(
-        GYWCharacteristics.ctrlDisplay,
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
       )
     ];
@@ -231,12 +231,12 @@ class IconDrawing extends Drawing {
   int get hashCode =>
       29 * icon.hashCode + 57 * left.hashCode + 17 * top.hashCode;
 
-  /// Deserializes an icon drawing from JSON data
+  /// Deserialize an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     return IconDrawing(
-      GYWIcons.values.firstWhere((element) => element.name == data["icon"]),
-      left: data["left"],
-      top: data["top"],
+      GYWIcon.values.firstWhere((element) => element.name == data["icon"]),
+      left: data["left"] as int,
+      top: data["top"] as int,
     );
   }
 
