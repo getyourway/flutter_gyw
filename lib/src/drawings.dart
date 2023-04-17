@@ -64,6 +64,7 @@ class TextDrawing extends GYWDrawing {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
+
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
