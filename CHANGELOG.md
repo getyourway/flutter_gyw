@@ -1,3 +1,8 @@
+## 1.1.1
+* [IMP] Integrate font in text control instruction
+* [ADD] Add a method to manually set the default font
+* [REFACTOR] Refactor method names and JSON keys
+
 ## 1.1.0
 * [ADD] Add new icons
 * [IMP] Optimisation for TextDrawing font
