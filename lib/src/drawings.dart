@@ -63,25 +63,18 @@ class TextDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
+
+
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    final commands = <GYWBtCommand>[];
+    // Add font
     if (font != null) {
-      commands.addAll([
-        GYWBtCommand(
-          GYWCharacteristic.nameDisplay,
-          const Utf8Encoder().convert(font!.prefix),
-        ),
-        GYWBtCommand(
-          GYWCharacteristic.ctrlDisplay,
-          int8Bytes(GYWControlCode.setFont.value),
-        ),
-      ]);
+      controlBytes.add(utf8.encode(font!.prefix));
     }
 
-    commands.addAll([
+    return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
         const Utf8Encoder().convert(text),
@@ -90,9 +83,7 @@ class TextDrawing extends GYWDrawing {
         GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
       ),
-    ]);
-
-    return commands;
+    ];
   }
 
   @override
@@ -121,14 +112,21 @@ class TextDrawing extends GYWDrawing {
 
   /// Deserialize a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
+    GYWFont? font;
+    try {
+      font = GYWFont.values.firstWhere(
+        (e) => e.index == data["font"] || e.name == data["font"],
+      );
+    } on StateError {
+      font = null;
+    }
+
     return TextDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
-      text: data["text"] as String,
-      font: GYWFont.values.firstWhere(
-        (e) => e.index == data["font"] || e.name == data["font"],
-        orElse: () => GYWFont.small,
-      ),
+      // Deprecated: "text" key will be deprecated in future version
+      text: data["data"] as String? ?? data["text"] as String,
+      font: font,
     );
   }
 
@@ -138,6 +136,8 @@ class TextDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
+      "data": text,
+      // Deprecated: "text" key will be deprecated in future version
       "text": text,
       if (font != null) "font": font!.index,
     };
@@ -233,8 +233,13 @@ class IconDrawing extends GYWDrawing {
 
   /// Deserialize an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
+    // Deprecated "icon" key will be deprecated in future versions
+    final String icon = data["data"] as String? ?? data["icon"] as String;
+
     return IconDrawing(
-      GYWIcon.values.firstWhere((element) => element.name == data["icon"]),
+      GYWIcon.values.firstWhere(
+        (element) => element.filename == icon || element.name == icon,
+      ),
       left: data["left"] as int,
       top: data["top"] as int,
     );
@@ -246,7 +251,9 @@ class IconDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
+      // Deprecated: "icon" key will be deprecated in future versions
       "icon": icon.name,
+      "data": icon.filename,
     };
   }
 }

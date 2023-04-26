@@ -1,3 +1,8 @@
+## 1.1.1
+* [IMP] Integrate font in text control instruction
+* [ADD] Add a method to manually set the default font
+* [REFACTOR] Refactor method names and JSON keys
+
 ## 1.1.0
 * [ADD] Add new icons
 * [IMP] Optimisation for TextDrawing font
@@ -6,6 +11,7 @@
 * [FIX] Add bluetoothOnAsync call to manually refresh Bluetooth Status
 * [DEL] Remove every deprecated methods from aRdent 0
 * [ADD] Add more advanced linting rules
+* [ADD] Add a method to manually turn on the display
 * [REFACTOR] Prefix custom object with GYW
 * [DOC] Improve README file
 * [REFACTOR] Use enums instead of static class
