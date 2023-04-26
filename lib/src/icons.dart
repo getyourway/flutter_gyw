@@ -14,7 +14,23 @@ enum GYWIcon {
   file("File", "file"),
   location("Location", "location"),
   info("Information", "info"),
-  blank("Blank", "blank");
+  blank("Blank", "blank"),
+  key_0("Key 0", "key_0"),
+  key_1("Key 1", "key_1"),
+  key_2("Key 2", "key_2"),
+  key_3("Key 3", "key_3"),
+  key_4("Key 4", "key_4"),
+  key_5("Key 5", "key_5"),
+  key_6("Key 6", "key_6"),
+  key_7("Key 7", "key_7"),
+  key_8("Key 8", "key_8"),
+  key_9("Key 9", "key_9"),
+  key_A("Key A", "key_A"),
+  key_B("Key B", "key_B"),
+  key_C("Key C", "key_C"),
+  key_D("Key D", "key_D"),
+  key_star("Key *", "key_star"),
+  key_num("Key #", "key_#");
 
   /// Name of the icon
   final String name;
