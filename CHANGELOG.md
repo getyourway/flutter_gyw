@@ -2,6 +2,7 @@
 * [IMP] Integrate font in text control instruction
 * [ADD] Add a method to manually set the default font
 * [REFACTOR] Refactor method names and JSON keys
+* [ADD] Add keypad icons
 
 ## 1.1.0
 * [ADD] Add new icons
