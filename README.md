@@ -140,3 +140,15 @@ If you encounter issues with connecting to your GYW device, here are a few thing
 5. If the device is not listed, switch it off and then back on, and start a scan again.
 6. Restart your app.
 7. If you continue to have issues, please contact our support team for further assistance at [support@getyourway.be](mailto:support@getyourway.be)
+
+### What is the format of the color parameter for the IconDrawing ?
+
+The color parameter of an IconDrawing must be 8 characters long and represents the color in the **ORGB format**.
+
+The ORGB format is a hexadecimal color format used in Flutter that represents the color components of an opaque or transparent color as four two-digit hexadecimal numbers, in the order of **opacity** (**alpha**), **red**, **green**, and **blue**. It is an 8-digit color code that ranges from 00000000 (fully transparent black) to FFFFFFFF (fully opaque white).
+
+In Flutter, you can convert a Material Color to this format with this piece of code:
+
+```dart
+color.value.toRadixString(16).padLeft(8, "0");
+```
