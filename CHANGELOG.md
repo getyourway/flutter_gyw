@@ -3,6 +3,7 @@
 * [ADD] Add a method to manually set the default font
 * [REFACTOR] Refactor method names and JSON keys
 * [ADD] Add keypad icons
+* [ADD] Add a color parameter to IconDrawing
 
 ## 1.1.0
 * [ADD] Add new icons

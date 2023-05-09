@@ -64,7 +64,6 @@ class TextDrawing extends GYWDrawing {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
-
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
@@ -188,10 +187,14 @@ class IconDrawing extends GYWDrawing {
   /// The displayed icon
   final GYWIcon icon;
 
+  /// Hexadecimal code of the icon fill color
+  final String? color;
+
   const IconDrawing(
     this.icon, {
     super.top,
     super.left,
+    this.color,
   });
 
   @override
@@ -201,10 +204,15 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
+    if (color != null) {
+      // Add color value
+      controlBytes.add(utf8.encode(color!));
+    }
+
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.png"),
+        const Utf8Encoder().convert("${icon.filename}.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -221,7 +229,10 @@ class IconDrawing extends GYWDrawing {
   @override
   bool operator ==(Object other) {
     if (other is IconDrawing) {
-      return icon == other.icon && left == other.left && top == other.top;
+      return icon == other.icon &&
+          color == other.color &&
+          left == other.left &&
+          top == other.top;
     } else {
       return false;
     }
@@ -229,7 +240,10 @@ class IconDrawing extends GYWDrawing {
 
   @override
   int get hashCode =>
-      29 * icon.hashCode + 57 * left.hashCode + 17 * top.hashCode;
+      29 * icon.hashCode +
+      57 * left.hashCode +
+      17 * top.hashCode +
+      23 * color.hashCode;
 
   /// Deserialize an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
@@ -242,6 +256,7 @@ class IconDrawing extends GYWDrawing {
       ),
       left: data["left"] as int,
       top: data["top"] as int,
+      color: data["color"] as String?,
     );
   }
 
@@ -254,6 +269,7 @@ class IconDrawing extends GYWDrawing {
       // Deprecated: "icon" key will be deprecated in future versions
       "icon": icon.name,
       "data": icon.filename,
+      "color": color,
     };
   }
 }
