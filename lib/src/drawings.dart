@@ -212,7 +212,7 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.png"),
+        const Utf8Encoder().convert("${icon.filename}.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
