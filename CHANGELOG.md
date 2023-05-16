@@ -4,6 +4,7 @@
 * [REFACTOR] Refactor method names and JSON keys
 * [ADD] Add keypad icons
 * [ADD] Add a color parameter to IconDrawing
+* [FIX] Fix deadlock on scan error
 
 ## 1.1.0
 * [ADD] Add new icons
