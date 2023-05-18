@@ -2,6 +2,10 @@
 
 **flutter_gyw** is a Flutter package developed and maintained by the Belgian company [Get Your Way](https://www.getyourway.be) to communicate with their devices via Bluetooth. This package allows developers to create Flutter applications that can send drawings, text, and icons to **aRdent smart glasses**.
 
+<div style="text-align: center;">
+  <img alt="Photo of the aRdent smart glasses" src="static/img/aRdent.png" height=300 width="auto" />
+</div>
+
 Note that this package is still in development and is currently private. As such, you are not allowed to distribute it without Get Your Way's agreement. The team is fully open to your suggestions for the future of the package, and if you find a bug, do not hesitate to contact them.
 
 ## Features
@@ -35,7 +39,7 @@ dependencies:
       ref: master
 ```
 
-:bulb: If you want to use the latest features, you can reference the **develop** branch. However, these features are not merged, so they may lead to errors. Please report them if you see some.
+> :bulb: If you want to use the latest features, you can reference the **develop** branch. However, these features are not merged, so they may lead to errors. Please report them if you see some.
 
 Now in your Dart code, you can use
 
@@ -91,11 +95,11 @@ Send the drawings to the connected device.
 
 ```dart
 for (GYWDrawing drawing in drawings) {
-  device.displayDrawing(drawing);
+  device.sendDrawing(drawing);
 }
 ```
 
-> Note: You can use the `delay` parameter of the `displayDrawing` method in order to speed up or down the transfer, but be careful that increasing the transfer rate may affect the reliability of the transfered data, i.e. some drawings may be skipped or badly interpreted.
+> :bulb: You can use the `delay` parameter of the `sendDrawing` method in order to speed up or down the transfer, but be careful that increasing the transfer rate may affect the reliability of the transfered data, i.e. some drawings may be skipped or badly interpreted.
 
 ## Example
 
