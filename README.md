@@ -68,7 +68,7 @@ await device.connect();
 Notify the device so that it turns it screen on.
 
 ```dart
-await device.start_display()
+await device.startDisplay()
 ```
 
 ### Step 4 : Make a drawing
@@ -111,19 +111,25 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## Troubleshooting
 
-### My GYW device is not listed in the list of devices, what can I do?
+### My glasses are not listed in the list of devices, what can I do?
 
-1. Check that the GYW device is on and not connected to any other device
+1. Check that the aRdent is on and not connected to any other device
 2. Switch it off and back up
 3. Kill your app and restart it, the disconnection process may not have been correctly
 
-### How can I reset the screen of my GYW device?
+### How to reset the screen of the aRdent glasses?
 
 `GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to send a white screen that will override the whole screen.
 
+To achieve this, you can use a `WhiteScreen` drawing:
+
 ```dart
-device.displayDrawing(const WhiteScreen());
+device.sendDrawing(const WhiteScreen());
 ```
+
+By sending this white screen drawing, it will replace all previous drawings and create a blank canvas for new content to be displayed.
+
+Alternatively, if you only need to modify specific elements on the screen, such as toggling a checkbox or changing the color of an icon, you can use the `blank` icon and color it in white. Then, you can display additional elements on top of it. However, keep in mind that stacking too many elements without clearing the screen may consume memory resources, so it's recommended to periodically clear the screen using the `WhiteScreen` drawing when necessary.
 
 ### How can I have bigger icons?
 
@@ -152,3 +158,25 @@ In Flutter, you can convert a Material Color to this format with this piece of c
 ```dart
 color.value.toRadixString(16).padLeft(8, "0");
 ```
+
+### How can I send multiple drawings at the same time ?
+
+Sending multiple drawings simultaneously is **not supported**.
+
+The *send* operation is not atomic, and attempting to send an element while another is being displayed may result in timing issues, causing both drawings to be displayed incorrectly.
+
+To address this limitation, consider the following solutions:
+
+  1. Implement a mechanism to block any send operation while the device is in use for display. This can be achieved by using a `isSending` boolean flag that is set to `true` during the operation and reset to `false` at the end. Based on the state of this boolean, you can enable or disable certain action buttons to prevent the user from sending multiple drawings simultaneously.
+
+  2. Create a waiting queue for requests made during an ongoing operation. When an element is sent while another drawing is being displayed, check the `isSending` flag. If it is `true`, add the new element to a queue. Once the current operation completes and the device is ready to display new elements, check the queue and display any pending elements before returning from the operation.
+
+By implementing these solutions, you can ensure proper handling of multiple drawings and avoid potential timing issues when using the `sendDrawing` method in your Flutter application.
+
+### What is the default font used on the device ?
+
+The font used on the aRdent glasses is **RobotoMono**.
+
+![Example of RobotoMono text](static/img/RobotoMono.png)
+
+You can download it from [Google fonts](https://fonts.google.com/specimen/Roboto+Mono).
