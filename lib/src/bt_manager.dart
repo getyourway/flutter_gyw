@@ -72,78 +72,84 @@ class GYWBtManager {
 
     if (_isScanning) {
       throw const GYWStatusException("Scan already in progress");
-    } else {
+    }
+
+    try {
       _isScanning = true;
-    }
 
-    final flutterBlue = FlutterBluePlus.instance;
+      final flutterBlue = FlutterBluePlus.instance;
 
-    // Get devices that are already connected
-    final connectedDevices = await flutterBlue.connectedDevices;
+      // Get devices that are already connected
+      final connectedDevices = await flutterBlue.connectedDevices;
 
-    // Add them to the manager list
-    for (final BluetoothDevice fbDevice in connectedDevices) {
-      final device = GYWBtDevice(
-        fbDevice: fbDevice,
-        lastRssi: 0,
-        lastSeen: DateTime.now(),
-      );
-      await device.connect();
-
-      // Add device to device list
-      _addDevice(device);
-    }
-
-    flutterBlue.scan(timeout: timeout, allowDuplicates: true).listen((result) {
-      if (result.rssi.abs() < minimumRssi) {
-        // Signal too weak : Skip result
-        return;
-      }
-
-      late GYWBtDevice device;
-      try {
-        device = devices.firstWhere(
-          (btDevice) => btDevice.id == result.device.id.id,
-        );
-
-        // Update existing device info
-        device.lastRssi = result.rssi.abs();
-        device.lastSeen = DateTime.now();
-      } on StateError {
-        // Device has not been added to the list yet
-        device = GYWBtDevice(
-          fbDevice: result.device,
-          lastRssi: result.rssi.abs(),
+      // Add them to the manager list
+      for (final BluetoothDevice fbDevice in connectedDevices) {
+        final device = GYWBtDevice(
+          fbDevice: fbDevice,
+          lastRssi: 0,
           lastSeen: DateTime.now(),
         );
-        devices.insert(0, device);
-      } finally {
-        // Insert the device at the right place
-        devices.sort();
+        await device.connect();
 
-        // apply user custom function
-        if (onResult != null) {
-          onResult(device);
-        }
+        // Add device to device list
+        _addDevice(device);
       }
-    });
 
-    await Future.delayed(
-      timeout,
-      () async {
-        try {
-          await stopScan();
-        } finally {
-          final now = DateTime.now();
-          devices.removeWhere(
-            (btDevice) =>
-                now.difference(btDevice.lastSeen).inSeconds >
-                deviceLifeDuration,
-          );
-          devices.sort();
+      flutterBlue
+          .scan(timeout: timeout, allowDuplicates: true)
+          .listen((result) {
+        if (result.rssi.abs() < minimumRssi) {
+          // Signal too weak : Skip result
+          return;
         }
-      },
-    );
+
+        late GYWBtDevice device;
+        try {
+          device = devices.firstWhere(
+            (btDevice) => btDevice.id == result.device.id.id,
+          );
+
+          // Update existing device info
+          device.lastRssi = result.rssi.abs();
+          device.lastSeen = DateTime.now();
+        } on StateError {
+          // Device has not been added to the list yet
+          device = GYWBtDevice(
+            fbDevice: result.device,
+            lastRssi: result.rssi.abs(),
+            lastSeen: DateTime.now(),
+          );
+          devices.insert(0, device);
+        } finally {
+          // Insert the device at the right place
+          devices.sort();
+
+          // apply user custom function
+          if (onResult != null) {
+            onResult(device);
+          }
+        }
+      });
+
+      await Future.delayed(
+        timeout,
+        () async {
+          try {
+            await stopScan();
+          } finally {
+            final now = DateTime.now();
+            devices.removeWhere(
+              (btDevice) =>
+                  now.difference(btDevice.lastSeen).inSeconds >
+                  deviceLifeDuration,
+            );
+            devices.sort();
+          }
+        },
+      );
+    } finally {
+      _isScanning = false;
+    }
   }
 
   /// Stop the current scan.

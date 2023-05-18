@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -180,24 +181,65 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Send data to the aRdent device to display a [GYWDrawing]
-  Future<void> displayDrawing(
+  Future<void> sendDrawing(
     GYWDrawing drawing, {
     int delay = 60,
   }) async {
     final commands = drawing.toCommands();
-    if (fontOptimized && drawing is TextDrawing) {
-      if (drawing.font != null && drawing.font == font) {
-        // Remove the operations dedicated to setting the text font
-        commands.removeRange(0, 2);
-      } else {
-        font = drawing.font;
-      }
-    }
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
       await Future.delayed(Duration(milliseconds: delay));
     }
+
+    // Save current font
+    if (drawing is TextDrawing && drawing.font != null) {
+      font = drawing.font;
+    }
+  }
+
+  /// Send data to the aRdent device to display a [GYWDrawing]
+  @Deprecated("This method is going to be replaced by sendDrawing")
+  Future<void> displayDrawing(
+    GYWDrawing drawing, {
+    int delay = 60,
+  }) async {
+    final commands = drawing.toCommands();
+
+    for (final GYWBtCommand command in commands) {
+      await _sendBTCommand(command);
+      await Future.delayed(Duration(milliseconds: delay));
+    }
+
+    // Save current font
+    if (drawing is TextDrawing && drawing.font != null) {
+      font = drawing.font;
+    }
+  }
+
+  /// Set the default font on the aRdent to display the next [TextDrawing]
+  Future<void> setFont(
+    GYWFont font, {
+    int delay = 100,
+  }) async {
+    final commands = <GYWBtCommand>[
+      GYWBtCommand(
+        GYWCharacteristic.nameDisplay,
+        const Utf8Encoder().convert(font.prefix),
+      ),
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
+        int8Bytes(GYWControlCode.setFont.value),
+      ),
+    ];
+
+    for (final GYWBtCommand command in commands) {
+      await _sendBTCommand(command);
+      await Future.delayed(Duration(milliseconds: delay));
+    }
+
+    // Save font
+    this.font = font;
   }
 
   Future<void> _sendBTCommand(GYWBtCommand command) async {
