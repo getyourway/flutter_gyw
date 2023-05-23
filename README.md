@@ -151,11 +151,11 @@ If you encounter issues with connecting to your GYW device, here are a few thing
 6. Restart your app.
 7. If you continue to have issues, please contact our support team for further assistance at [support@getyourway.be](mailto:support@getyourway.be)
 
-### What is the format of the color parameter for the IconDrawing ?
+### What is the format of the color parameter of the `TexDrawing` and `IconDrawing`  ?
 
-The color parameter of an IconDrawing must be 8 characters long and represents the color in the **ORGB format**.
+The color parameter of a drawing must be 8 characters long and represents the color in the **ORGB format**.
 
-The ORGB format is a hexadecimal color format used in Flutter that represents the color components of an opaque or transparent color as four two-digit hexadecimal numbers, in the order of **opacity** (**alpha**), **red**, **green**, and **blue**. It is an 8-digit color code that ranges from 00000000 (fully transparent black) to FFFFFFFF (fully opaque white).
+The ORGB format is a hexadecimal color format used in Flutter that represents the color components of an opaque or transparent color as four two-digit hexadecimal numbers, in the order of **opacity** (**alpha**), **red**, **green**, and **blue**. It is an 8-digit color code that ranges from `00000000` (fully transparent black) to `FFFFFFFF` (fully opaque white).
 
 In Flutter, you can convert a Material Color to this format with this piece of code:
 
@@ -184,3 +184,7 @@ The font used on the aRdent glasses is **RobotoMono**.
 ![Example of RobotoMono text](static/img/RobotoMono.png)
 
 You can download it from [Google fonts](https://fonts.google.com/specimen/Roboto+Mono).
+
+### Why does the color and the size parameter of a `TextDrawing` has no impact ?
+
+Color and size of the TextDrawing are two features that will be enabled in the future. For now, those are only there to help developers to prepare their developments with this feature.

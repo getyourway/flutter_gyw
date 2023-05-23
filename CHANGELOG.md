@@ -1,3 +1,6 @@
+## 1.1.2 [In development]
+* [ADD] Add size and color parameters to TextDrawing
+
 ## 1.1.1
 * [IMP] Integrate font in text control instruction
 * [ADD] Add a method to manually set the default font
