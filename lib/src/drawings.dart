@@ -52,9 +52,17 @@ class TextDrawing extends GYWDrawing {
   /// If no font is given, it uses the most recent one
   final GYWFont? font;
 
+  /// size of the text (max 48 pt)
+  final int? size;
+
+  /// color of the text (in 8-characters ORGB format)
+  final String? color;
+
   const TextDrawing({
     required this.text,
     this.font,
+    this.size,
+    this.color,
     super.left = 0,
     super.top = 0,
   });
@@ -96,7 +104,9 @@ class TextDrawing extends GYWDrawing {
       return text == other.text &&
           left == other.left &&
           top == other.top &&
-          font == other.font;
+          font == other.font &&
+          size == other.size &&
+          color == other.color;
     } else {
       return false;
     }
@@ -107,7 +117,9 @@ class TextDrawing extends GYWDrawing {
       37 * text.hashCode +
       23 * font.hashCode +
       51 * left.hashCode +
-      13 * top.hashCode;
+      13 * top.hashCode +
+      19 * size.hashCode +
+      41 * color.hashCode;
 
   /// Deserialize a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
@@ -126,6 +138,8 @@ class TextDrawing extends GYWDrawing {
       // Deprecated: "text" key will be deprecated in future version
       text: data["data"] as String? ?? data["text"] as String,
       font: font,
+      size: data["size"] as int?,
+      color: data["color"] as String?,
     );
   }
 
@@ -139,6 +153,8 @@ class TextDrawing extends GYWDrawing {
       // Deprecated: "text" key will be deprecated in future version
       "text": text,
       if (font != null) "font": font!.index,
+      "size": size,
+      "color": color,
     };
   }
 }

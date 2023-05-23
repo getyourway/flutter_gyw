@@ -1,3 +1,6 @@
+## 1.1.2 [In development]
+* [ADD] Add color and size to texts elements
+
 ## 1.1.1
 * [IMP] Integrate font in text control instruction
 * [ADD] Add a method to manually set the default font
