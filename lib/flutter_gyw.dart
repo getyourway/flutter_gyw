@@ -5,7 +5,7 @@ library flutter_gyw;
 export 'src/bt_device.dart' show GYWBtDevice;
 export 'src/bt_manager.dart' show GYWBtManager;
 export 'src/drawings.dart'
-    show GYWDrawing, TextDrawing, WhiteScreen, IconDrawing;
+    show GYWDrawing, TextDrawing, BlankScreen, IconDrawing;
 export 'src/exceptions.dart' show GYWException, GYWStatusException;
 export 'src/fonts.dart' show GYWFont;
 export 'src/icons.dart' show GYWIcon;

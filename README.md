@@ -123,17 +123,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ### How to reset the screen of the aRdent glasses?
 
-`GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to send a white screen that will override the whole screen.
+`GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to send a blank screen that will override the whole screen.
 
-To achieve this, you can use a `WhiteScreen` drawing:
+To achieve this, you can use a `BlankScreen` drawing:
 
 ```dart
-device.sendDrawing(const WhiteScreen());
+device.sendDrawing(const Blankcreen());
 ```
 
-By sending this white screen drawing, it will replace all previous drawings and create a blank canvas for new content to be displayed.
+By sending this drawing, it will replace all previous drawings and create a blank canvas for new content to be displayed.
 
-Alternatively, if you only need to modify specific elements on the screen, such as toggling a checkbox or changing the color of an icon, you can use the `blank` icon and color it in white. Then, you can display additional elements on top of it. However, keep in mind that stacking too many elements without clearing the screen may consume memory resources, so it's recommended to periodically clear the screen using the `WhiteScreen` drawing when necessary.
+Alternatively, if you only need to modify specific elements on the screen, such as toggling a checkbox or changing the color of an icon, you can use the `blank` icon and color it in the same color as the background. Then, you can display additional elements on top of it. However, keep in mind that stacking too many elements without clearing the screen may consume memory resources, so it's recommended to periodically clear the screen using the `BlankScreen` drawing when necessary.
+
+Note that through this drawing, you can change the background color.
 
 ### How can I have bigger icons?
 
@@ -151,9 +153,9 @@ If you encounter issues with connecting to your GYW device, here are a few thing
 6. Restart your app.
 7. If you continue to have issues, please contact our support team for further assistance at [support@getyourway.be](mailto:support@getyourway.be)
 
-### What is the format of the color parameter of the `TexDrawing` and `IconDrawing`  ?
+### What is the format of the `color` parameter of the `GYWDrawing`  ?
 
-The color parameter of a drawing must be 8 characters long and represents the color in the **ORGB format**.
+The `color` parameter of a drawing must be 8 characters long and represents the color in the **ORGB format**.
 
 The ORGB format is a hexadecimal color format used in Flutter that represents the color components of an opaque or transparent color as four two-digit hexadecimal numbers, in the order of **opacity** (**alpha**), **red**, **green**, and **blue**. It is an 8-digit color code that ranges from `00000000` (fully transparent black) to `FFFFFFFF` (fully opaque white).
 
