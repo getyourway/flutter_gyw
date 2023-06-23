@@ -1,5 +1,6 @@
 ## 1.1.2 [In development]
 * [ADD] Add size and color parameters to TextDrawing
+* [ADD] Convert WhiteScreen into BlankScreen with a color parameter 
 
 ## 1.1.1
 * [IMP] Integrate font in text control instruction
