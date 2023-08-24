@@ -15,9 +15,9 @@ class GYWBtManager {
   Future<void> init() async {
     bluetoothOn = await bluetoothOnAsync;
 
-    FlutterBluePlus.instance.state.listen((state) {
-      if (bluetoothOn != (state == BluetoothState.on)) {
-        bluetoothOn = state == BluetoothState.on;
+    FlutterBluePlus.adapterState.listen((state) {
+      if (bluetoothOn != (state == BluetoothAdapterState.on)) {
+        bluetoothOn = state == BluetoothAdapterState.on;
         if (onBluetoothStatusChange != null) {
           onBluetoothStatusChange!(bluetoothOn);
         }
@@ -39,9 +39,9 @@ class GYWBtManager {
 
   /// Manullay refresh the Bluetooth status and returns the new status
   Future<bool> get bluetoothOnAsync async {
-    final flutterBlue = FlutterBluePlus.instance;
-
-    bluetoothOn = await flutterBlue.isOn && await flutterBlue.isAvailable;
+    final BluetoothAdapterState bluetoothState =
+        await FlutterBluePlus.adapterState.first;
+    bluetoothOn = bluetoothState == BluetoothAdapterState.on;
 
     return bluetoothOn;
   }
@@ -77,10 +77,8 @@ class GYWBtManager {
     try {
       _isScanning = true;
 
-      final flutterBlue = FlutterBluePlus.instance;
-
       // Get devices that are already connected
-      final connectedDevices = await flutterBlue.connectedDevices;
+      final connectedDevices = await FlutterBluePlus.connectedSystemDevices;
 
       // Add them to the manager list
       for (final BluetoothDevice fbDevice in connectedDevices) {
@@ -95,8 +93,7 @@ class GYWBtManager {
         _addDevice(device);
       }
 
-      flutterBlue
-          .scan(timeout: timeout, allowDuplicates: true)
+      FlutterBluePlus.scan(timeout: timeout, allowDuplicates: true)
           .listen((result) {
         if (result.rssi.abs() < minimumRssi) {
           // Signal too weak : Skip result
@@ -106,7 +103,7 @@ class GYWBtManager {
         late GYWBtDevice device;
         try {
           device = devices.firstWhere(
-            (btDevice) => btDevice.id == result.device.id.id,
+            (btDevice) => btDevice.id == result.device.remoteId.str,
           );
 
           // Update existing device info
@@ -160,7 +157,7 @@ class GYWBtManager {
     }
 
     try {
-      await FlutterBluePlus.instance.stopScan();
+      await FlutterBluePlus.stopScan();
     } finally {
       _isScanning = false;
     }
