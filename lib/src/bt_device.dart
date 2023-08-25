@@ -50,7 +50,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     notifyListeners();
   }
 
-  StreamSubscription<fb.BluetoothDeviceState>? _deviceStateListener;
+  StreamSubscription<fb.BluetoothConnectionState>? _deviceStateListener;
 
   Map<String, fb.BluetoothCharacteristic?> _characteristics =
       <String, fb.BluetoothCharacteristic?>{};
@@ -67,10 +67,10 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Name of the device
-  String get name => fbDevice.name;
+  String get name => fbDevice.localName;
 
   /// UUID of the device
-  String get id => fbDevice.id.id;
+  String get id => fbDevice.remoteId.str;
 
   /// Connect the Bluetooth device to the current device
   Future<bool> connect() async {
@@ -103,9 +103,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     // Device is already connected
     _isConnected = true;
 
-    _deviceStateListener = fbDevice.state.listen((state) async {
-      if (state == fb.BluetoothDeviceState.disconnecting ||
-          state == fb.BluetoothDeviceState.disconnected) {
+    _deviceStateListener = fbDevice.connectionState.listen((state) async {
+      if (state == fb.BluetoothConnectionState.disconnected) {
         await disconnect();
       }
     });
