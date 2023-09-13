@@ -93,37 +93,41 @@ class GYWBtManager {
         _addDevice(device);
       }
 
-      FlutterBluePlus.scan(timeout: timeout, allowDuplicates: true)
-          .listen((result) {
-        if (result.rssi.abs() < minimumRssi) {
-          // Signal too weak : Skip result
-          return;
-        }
+      await FlutterBluePlus.startScan(timeout: timeout, oneByOne: true);
 
-        late GYWBtDevice device;
-        try {
-          device = devices.firstWhere(
-            (btDevice) => btDevice.id == result.device.remoteId.str,
-          );
 
-          // Update existing device info
-          device.lastRssi = result.rssi.abs();
-          device.lastSeen = DateTime.now();
-        } on StateError {
-          // Device has not been added to the list yet
-          device = GYWBtDevice(
-            fbDevice: result.device,
-            lastRssi: result.rssi.abs(),
-            lastSeen: DateTime.now(),
-          );
-          devices.insert(0, device);
-        } finally {
-          // Insert the device at the right place
-          devices.sort();
+      FlutterBluePlus.scanResults.listen((results) {
+        for (final ScanResult result in results) {
+          if (result.rssi.abs() < minimumRssi) {
+            // Signal too weak : Skip result
+            return;
+          }
 
-          // apply user custom function
-          if (onResult != null) {
-            onResult(device);
+          late GYWBtDevice device;
+          try {
+            device = devices.firstWhere(
+                  (btDevice) => btDevice.id == result.device.remoteId.str,
+            );
+
+            // Update existing device info
+            device.lastRssi = result.rssi.abs();
+            device.lastSeen = DateTime.now();
+          } on StateError {
+            // Device has not been added to the list yet
+            device = GYWBtDevice(
+              fbDevice: result.device,
+              lastRssi: result.rssi.abs(),
+              lastSeen: DateTime.now(),
+            );
+            devices.insert(0, device);
+          } finally {
+            // Insert the device at the right place
+            devices.sort();
+
+            // apply user custom function
+            if (onResult != null) {
+              onResult(device);
+            }
           }
         }
       });
