@@ -241,12 +241,13 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     this.font = font;
   }
 
-  /// Enables of disable the screen autorotation.
+  /// Enable or disable the screen autorotation
   Future<void> autoRotateScreen(
       bool enable,
   ) async {
     final controlBytes = BytesBuilder()
-      ..addByte(GYWControlCode.autoRotateScreen.value)..addByte(enable ? 1 : 0);
+      ..addByte(GYWControlCode.autoRotateScreen.value)
+      ..addByte(enable ? 1 : 0);
 
     final command = GYWBtCommand(
       GYWCharacteristic.ctrlDisplay,

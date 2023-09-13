@@ -95,7 +95,6 @@ class GYWBtManager {
 
       await FlutterBluePlus.startScan(timeout: timeout, oneByOne: true);
 
-
       FlutterBluePlus.scanResults.listen((results) {
         for (final ScanResult result in results) {
           if (result.rssi.abs() < minimumRssi) {
