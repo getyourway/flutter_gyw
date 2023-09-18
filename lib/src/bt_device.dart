@@ -298,6 +298,21 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     _screenOn = true;
   }
 
+  /// Turn the display backlight on or off
+  Future<void> enableBacklight(
+    bool enable,
+  ) async {
+    final controlBytes = BytesBuilder()
+      ..addByte(GYWControlCode.enableBacklight.value)
+      ..addByte(enable ? 1 : 0);
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      controlBytes.toBytes(),
+    );
+    await _sendBTCommand(command);
+  }
+
   /// Compare this [GYWBtDevice] to another based on signal strength
   @override
   int compareTo(GYWBtDevice? other) {
