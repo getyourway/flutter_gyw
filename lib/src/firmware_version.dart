@@ -33,9 +33,7 @@ class FirmwareVersion implements Comparable<FirmwareVersion> {
   int get hashCode => major.hashCode ^ minor.hashCode ^ patch.hashCode;
 
   @override
-  String toString() {
-    return "$major.$minor.$patch";
-  }
+  String toString() => "$major.$minor.$patch";
 }
 
 extension Compare<T> on Comparable<T> {

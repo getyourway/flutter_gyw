@@ -317,14 +317,15 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Get the firmware version
   Future<FirmwareVersion> getFirmwareVersion() async {
     final fb.BluetoothCharacteristic? characteristic =
-    await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
+        await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
     if (characteristic == null) {
       throw GYWException(
           "Bluetooth characteristic ${GYWCharacteristic.firmwareVersion.uuid} not found");
     }
     final List<int> bytes = await characteristic.read();
     String version = utf8.decode(bytes);
-    version = version.substring(0, version.length - 1); // remove null terminator
+    // Remove null terminator.
+    version = version.substring(0, version.length - 1);
     final List<String> parts = version.split(".");
 
     return FirmwareVersion(
