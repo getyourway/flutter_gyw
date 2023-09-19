@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
 import 'package:flutter_gyw/flutter_gyw.dart';
+import 'package:flutter_gyw/src/firmware_version.dart';
 
 import 'commands.dart';
 import 'helpers.dart';
@@ -243,7 +244,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   /// Enable or disable the screen autorotation
   Future<void> autoRotateScreen(
-      bool enable,
+    bool enable,
   ) async {
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.autoRotateScreen.value)
@@ -311,6 +312,26 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     _screenOn = true;
+  }
+
+  /// Get the firmware version
+  Future<FirmwareVersion> getFirmwareVersion() async {
+    final fb.BluetoothCharacteristic? characteristic =
+    await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
+    if (characteristic == null) {
+      throw GYWException(
+          "Bluetooth characteristic ${GYWCharacteristic.firmwareVersion.uuid} not found");
+    }
+    final List<int> bytes = await characteristic.read();
+    String version = utf8.decode(bytes);
+    version = version.substring(0, version.length - 1); // remove null terminator
+    final List<String> parts = version.split(".");
+
+    return FirmwareVersion(
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+      int.parse(parts[2]),
+    );
   }
 
   /// Compare this [GYWBtDevice] to another based on signal strength
