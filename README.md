@@ -35,7 +35,7 @@ Using Github repository
 dependencies:
   flutter_gyw:
     git:
-      url: https://github.com:getyourway/flutter_gyw.git
+      url: https://github.com/getyourway/flutter_gyw.git
       ref: master
 ```
 
