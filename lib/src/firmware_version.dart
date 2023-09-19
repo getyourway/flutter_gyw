@@ -35,13 +35,3 @@ class FirmwareVersion implements Comparable<FirmwareVersion> {
   @override
   String toString() => "$major.$minor.$patch";
 }
-
-extension Compare<T> on Comparable<T> {
-  bool operator >(T other) => compareTo(other) > 0;
-
-  bool operator <(T other) => compareTo(other) < 0;
-
-  bool operator >=(T other) => compareTo(other) >= 0;
-
-  bool operator <=(T other) => compareTo(other) <= 0;
-}
