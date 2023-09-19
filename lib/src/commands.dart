@@ -6,7 +6,10 @@ enum GYWCharacteristic {
   ctrlDisplay("00004c31-0000-1000-8000-00805f9b34fb"),
 
   /// Characteristic to give data to the display
-  nameDisplay("00004c32-0000-1000-8000-00805f9b34fb");
+  nameDisplay("00004c32-0000-1000-8000-00805f9b34fb"),
+
+  /// Characteristic to read the firmware revision string
+  firmwareVersion("00002a26-0000-1000-8000-00805f9b34fb");
 
   /// UUID of the characteristic
   final String uuid;

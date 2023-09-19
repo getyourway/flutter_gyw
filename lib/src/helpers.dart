@@ -13,3 +13,14 @@ Uint8List int8Bytes(
   Endian endian = Endian.little,
 }) =>
     Uint8List(1)..buffer.asByteData().setInt8(0, value);
+
+/// Allow to compare Comparable object using inequality signs
+extension Compare<T> on Comparable<T> {
+  bool operator >(T other) => compareTo(other) > 0;
+
+  bool operator <(T other) => compareTo(other) < 0;
+
+  bool operator >=(T other) => compareTo(other) >= 0;
+
+  bool operator <=(T other) => compareTo(other) <= 0;
+}

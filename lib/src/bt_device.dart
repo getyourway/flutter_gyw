@@ -243,7 +243,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   /// Enable or disable the screen autorotation
   Future<void> autoRotateScreen(
-      bool enable,
+    bool enable,
   ) async {
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.autoRotateScreen.value)
@@ -311,6 +311,30 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     _screenOn = true;
+  }
+
+  /// Get the firmware version
+  Future<FirmwareVersion> getFirmwareVersion() async {
+    final fb.BluetoothCharacteristic? characteristic =
+        await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
+
+    if (characteristic == null) {
+      throw const GYWException(
+        "Bluetooth characteristic for firmware version not found",
+      );
+    }
+
+    final List<int> bytes = await characteristic.read();
+    String version = utf8.decode(bytes);
+    // Remove null terminator.
+    version = version.substring(0, version.length - 1);
+    final List<String> parts = version.split(".");
+
+    return FirmwareVersion(
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+      int.parse(parts[2]),
+    );
   }
 
   /// Turn the display backlight on or off
