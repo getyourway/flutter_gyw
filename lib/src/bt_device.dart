@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
 import 'package:flutter_gyw/flutter_gyw.dart';
-import 'package:flutter_gyw/src/firmware_version.dart';
 
 import 'commands.dart';
 import 'helpers.dart';
@@ -320,8 +319,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
         await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
 
     if (characteristic == null) {
-      throw GYWException(
-          "Bluetooth characteristic ${GYWCharacteristic.firmwareVersion.uuid} not found",
+      throw const GYWException(
+        "Bluetooth characteristic for firmware version not found",
       );
     }
 
