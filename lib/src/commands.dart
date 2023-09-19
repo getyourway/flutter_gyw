@@ -29,7 +29,10 @@ enum GYWControlCode {
   clear(0x05),
 
   /// Change the text font of the next text elements
-  setFont(0x08);
+  setFont(0x08),
+
+  /// Enable or disable screen auto-rotate
+  autoRotateScreen(0x0A);
 
   /// Control code value used internally on the device
   final int value;
