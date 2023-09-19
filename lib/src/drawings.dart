@@ -163,16 +163,16 @@ class TextDrawing extends GYWDrawing {
 
 /// A drawing to reset the screen of the aRdent device to a white screen
 @Deprecated(
-  "WhiteScreen have been replaced by BlankScreen "
-  "who have a variable background color",
+  "WhiteScreen has been replaced by BlankScreen "
+  "who has a variable background color",
 )
 class WhiteScreen extends GYWDrawing {
   /// Type of the [WhiteScreen] drawing
   static const String type = "white_screen";
 
   @Deprecated(
-    "WhiteScreen have been replaced by BlankScreen "
-    "who have a variable background color",
+    "WhiteScreen has been replaced by BlankScreen "
+    "who has a variable background color",
   )
   const WhiteScreen();
 
@@ -193,8 +193,8 @@ class WhiteScreen extends GYWDrawing {
 
   /// Deserialize a [WhiteScreen] from JSON data
   @Deprecated(
-    "WhiteScreen have been replaced by BlankScreen "
-    "who have a variable background color",
+    "WhiteScreen has been replaced by BlankScreen "
+    "who has a variable background color",
   )
   // ignore: avoid_unused_constructor_parameters
   factory WhiteScreen.fromJson(Map<String, dynamic> data) {

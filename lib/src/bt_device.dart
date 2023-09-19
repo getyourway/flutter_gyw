@@ -318,10 +318,13 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   Future<FirmwareVersion> getFirmwareVersion() async {
     final fb.BluetoothCharacteristic? characteristic =
         await _findCharacteristic(GYWCharacteristic.firmwareVersion.uuid);
+
     if (characteristic == null) {
       throw GYWException(
-          "Bluetooth characteristic ${GYWCharacteristic.firmwareVersion.uuid} not found");
+          "Bluetooth characteristic ${GYWCharacteristic.firmwareVersion.uuid} not found",
+      );
     }
+
     final List<int> bytes = await characteristic.read();
     String version = utf8.decode(bytes);
     // Remove null terminator.
@@ -333,6 +336,21 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       int.parse(parts[1]),
       int.parse(parts[2]),
     );
+  }
+
+  /// Turn the display backlight on or off
+  Future<void> enableBacklight(
+    bool enable,
+  ) async {
+    final controlBytes = BytesBuilder()
+      ..addByte(GYWControlCode.enableBacklight.value)
+      ..addByte(enable ? 1 : 0);
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      controlBytes.toBytes(),
+    );
+    await _sendBTCommand(command);
   }
 
   /// Compare this [GYWBtDevice] to another based on signal strength
