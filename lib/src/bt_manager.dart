@@ -105,7 +105,7 @@ class GYWBtManager {
           late GYWBtDevice device;
           try {
             device = devices.firstWhere(
-                  (btDevice) => btDevice.id == result.device.remoteId.str,
+              (btDevice) => btDevice.id == result.device.remoteId.str,
             );
 
             // Update existing device info
