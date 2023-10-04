@@ -31,7 +31,7 @@ enum GYWIcon {
   key_D("Key D", "key_D"),
   key_star("Key *", "key_star"),
   key_num("Key #", "key_#"),
-  construction("Construction", "construction"),
+  build("Build", "build"),
   help("Help", "help"),
   camera("Camera", "camera");
 
