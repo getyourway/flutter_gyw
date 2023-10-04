@@ -30,7 +30,10 @@ enum GYWIcon {
   key_C("Key C", "key_C"),
   key_D("Key D", "key_D"),
   key_star("Key *", "key_star"),
-  key_num("Key #", "key_#");
+  key_num("Key #", "key_#"),
+  construction("Construction", "construction"),
+  help("Help", "help"),
+  camera("Camera", "camera");
 
   /// Name of the icon
   final String name;
