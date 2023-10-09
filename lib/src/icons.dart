@@ -33,7 +33,11 @@ enum GYWIcon {
   key_num("Key #", "key_#"),
   build("Build", "build"),
   help("Help", "help"),
-  camera("Camera", "camera");
+  camera("Camera", "camera"),
+  chat("Chat", "chat"),
+  nfc("NFC", "nfc"),
+  warning("Warning", "warning"),
+  wifi("Wi-Fi", "wifi");
 
   /// Name of the icon
   final String name;
