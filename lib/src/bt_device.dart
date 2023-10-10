@@ -241,6 +241,42 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     this.font = font;
   }
 
+  /// Set the screen brightness. The value must be between 0 and 1.
+  Future<void> setBrightness(
+    double value, {
+    int delay = 100,
+  }) async {
+    final controlBytes = BytesBuilder()
+      ..addByte(GYWControlCode.setBrightness.value)
+      ..add(int8Bytes((value * 255).toInt()));
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      controlBytes.toBytes(),
+    );
+
+    await _sendBTCommand(command);
+    await Future.delayed(Duration(milliseconds: delay));
+  }
+
+  /// Set the screen brightness. The value must be between 0 and 1.
+  Future<void> setContrast(
+    double value, {
+    int delay = 100,
+  }) async {
+    final controlBytes = BytesBuilder()
+      ..addByte(GYWControlCode.setContrast.value)
+      ..add(int8Bytes((value * 255).toInt()));
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      controlBytes.toBytes(),
+    );
+
+    await _sendBTCommand(command);
+    await Future.delayed(Duration(milliseconds: delay));
+  }
+
   /// Enable or disable the screen autorotation
   Future<void> autoRotateScreen(
     bool enable,
