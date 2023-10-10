@@ -11,9 +11,16 @@ enum GYWIcon {
   done("Done", "done"),
   edit("Edit", "edit"),
   rename("Rename", "rename"),
+  build("Build", "build"),
+  camera("Camera", "camera"),
+  chat("Chat", "chat"),
   file("File", "file"),
-  location("Location", "location"),
+  help("Help", "help"),
   info("Information", "info"),
+  location("Location", "location"),
+  nfc("NFC", "nfc"),
+  warning("Warning", "warning"),
+  wifi("Wi-Fi", "wifi"),
   blank("Blank", "blank"),
   key_0("Key 0", "key_0"),
   key_1("Key 1", "key_1"),
@@ -30,10 +37,7 @@ enum GYWIcon {
   key_C("Key C", "key_C"),
   key_D("Key D", "key_D"),
   key_star("Key *", "key_star"),
-  key_num("Key #", "key_#"),
-  build("Build", "build"),
-  help("Help", "help"),
-  camera("Camera", "camera");
+  key_num("Key #", "key_#");
 
   /// Name of the icon
   final String name;
