@@ -6,7 +6,7 @@
 * [ADD] Add a method to read the firmware version
 * [ADD] Add the build, help, and camera icons
 * [ADD] Add the chat, nfc, warning, and wifi icons
-* [ADD] Add commands to changing the brightness and contrast
+* [ADD] Add commands for changing the brightness and contrast
 
 ## 1.1.1
 * [IMP] Integrate font in text control instruction
