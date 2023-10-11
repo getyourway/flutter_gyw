@@ -3,11 +3,9 @@
 * [ADD] Convert WhiteScreen into BlankScreen with a color parameter
 * [FIX] Upgrade flutter_blue_plus version
 * [ADD] Add a method to enable or disable the display backlight
-* [ADD] Add a method to read the firmware version
 * [ADD] Add the build, help, and camera icons
 * [ADD] Add the chat, nfc, warning, and wifi icons
 * [ADD] Add commands for changing the brightness and contrast
-* [REMOVE] Remove the command that reads the firmware version
 
 ## 1.1.1
 * [IMP] Integrate font in text control instruction
