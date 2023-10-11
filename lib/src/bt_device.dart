@@ -246,6 +246,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     double value, {
     int delay = 100,
   }) async {
+    assert(value >= 0 && value <= 1);
+
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.setBrightness.value)
       ..add(int8Bytes((value * 255).toInt()));
@@ -264,6 +266,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     double value, {
     int delay = 100,
   }) async {
+    assert(value >= 0 && value <= 1);
+
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.setContrast.value)
       ..add(int8Bytes((value * 255).toInt()));
