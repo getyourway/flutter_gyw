@@ -6,6 +6,7 @@
 * [ADD] Add a method to read the firmware version
 * [ADD] Add the build, help, and camera icons
 * [ADD] Add the chat, nfc, warning, and wifi icons
+* [ADD] Add commands for changing the brightness and contrast
 * [REMOVE] Remove the command that reads the firmware version
 
 ## 1.1.1

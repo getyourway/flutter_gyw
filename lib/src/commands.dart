@@ -28,6 +28,12 @@ enum GYWControlCode {
   /// Clear the screen
   clear(0x05),
 
+  /// Change the contrast
+  setContrast(0x06),
+
+  /// Change the brightness
+  setBrightness(0x07),
+
   /// Change the text font of the next text elements
   setFont(0x08),
 
