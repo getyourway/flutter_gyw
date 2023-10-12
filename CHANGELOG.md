@@ -1,4 +1,4 @@
-## 1.1.2 [In development]
+## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
 * [ADD] Convert WhiteScreen into BlankScreen with a color parameter
 * [FIX] Upgrade flutter_blue_plus version
