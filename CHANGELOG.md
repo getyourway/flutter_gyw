@@ -1,5 +1,5 @@
 ## 1.1.3
-* [ADD] Remove artificial delays when sending commands
+* [ADD] Deprecate delays when sending commands and set their default value to 0
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
