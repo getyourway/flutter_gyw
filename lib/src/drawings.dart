@@ -276,17 +276,28 @@ class IconDrawing extends GYWDrawing {
   static const String type = "icon";
 
   /// The displayed icon
-  final GYWIcon icon;
+  final GYWIcon? icon;
+
+  /// If [icon] is null, this is a new icon the library doesn't know about.
+  /// The name of this icon will be stored in this field instead.
+  final String? _unknownIconName;
 
   /// Hexadecimal code of the icon fill color
   final String? color;
 
   const IconDrawing(
-    this.icon, {
+    GYWIcon this.icon, {
     super.top,
     super.left,
     this.color,
-  });
+  }) : _unknownIconName = null;
+
+  const IconDrawing._unknown(
+    this._unknownIconName, {
+    super.top,
+    super.left,
+    this.color,
+  }) : icon = null;
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -303,7 +314,8 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.bin"),
+        const Utf8Encoder()
+            .convert("${icon?.filename ?? _unknownIconName}.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -314,7 +326,7 @@ class IconDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: ${icon.name} at ($left, $top)";
+    return "Drawing: ${icon?.name ?? _unknownIconName} at ($left, $top)";
   }
 
   @override
@@ -341,14 +353,25 @@ class IconDrawing extends GYWDrawing {
     // Deprecated "icon" key will be deprecated in future versions
     final String icon = data["data"] as String? ?? data["icon"] as String;
 
-    return IconDrawing(
-      GYWIcon.values.firstWhere(
-        (element) => element.filename == icon || element.name == icon,
-      ),
-      left: data["left"] as int,
-      top: data["top"] as int,
-      color: data["color"] as String?,
-    );
+    final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
+        (element) => element!.filename == icon || element.name == icon,
+        orElse: () => null);
+
+    if (gywIcon != null) {
+      return IconDrawing(
+        gywIcon,
+        left: data["left"] as int,
+        top: data["top"] as int,
+        color: data["color"] as String?,
+      );
+    } else {
+      return IconDrawing._unknown(
+        icon,
+        left: data["left"] as int,
+        top: data["top"] as int,
+        color: data["color"] as String?,
+      );
+    }
   }
 
   @override
@@ -358,8 +381,8 @@ class IconDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon.name,
-      "data": icon.filename,
+      "icon": icon?.name ?? _unknownIconName,
+      "data": icon?.filename ?? _unknownIconName,
       "color": color,
     };
   }
