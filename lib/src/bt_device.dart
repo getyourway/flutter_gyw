@@ -181,14 +181,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   /// Send data to the aRdent device to display a [GYWDrawing]
   Future<void> sendDrawing(
-    GYWDrawing drawing, {
-    int delay = 60,
-  }) async {
+    GYWDrawing drawing,
+  ) async {
     final commands = drawing.toCommands();
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
-      await Future.delayed(Duration(milliseconds: delay));
     }
 
     // Save current font
@@ -200,14 +198,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Send data to the aRdent device to display a [GYWDrawing]
   @Deprecated("This method is going to be replaced by sendDrawing")
   Future<void> displayDrawing(
-    GYWDrawing drawing, {
-    int delay = 60,
-  }) async {
+    GYWDrawing drawing,
+  ) async {
     final commands = drawing.toCommands();
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
-      await Future.delayed(Duration(milliseconds: delay));
     }
 
     // Save current font
@@ -218,9 +214,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   /// Set the default font on the aRdent to display the next [TextDrawing]
   Future<void> setFont(
-    GYWFont font, {
-    int delay = 100,
-  }) async {
+    GYWFont font,
+  ) async {
     final commands = <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
@@ -234,7 +229,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
-      await Future.delayed(Duration(milliseconds: delay));
     }
 
     // Save font
@@ -243,9 +237,8 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   /// Set the screen brightness. The value must be between 0 and 1.
   Future<void> setBrightness(
-    double value, {
-    int delay = 100,
-  }) async {
+    double value,
+  ) async {
     assert(value >= 0 && value <= 1);
 
     final controlBytes = BytesBuilder()
@@ -258,14 +251,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    await Future.delayed(Duration(milliseconds: delay));
   }
 
   /// Set the screen brightness. The value must be between 0 and 1.
   Future<void> setContrast(
-    double value, {
-    int delay = 100,
-  }) async {
+    double value,
+  ) async {
     assert(value >= 0 && value <= 1);
 
     final controlBytes = BytesBuilder()
@@ -278,7 +269,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    await Future.delayed(Duration(milliseconds: delay));
   }
 
   /// Enable or disable the screen autorotation
@@ -332,9 +322,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Turn the screen on
-  Future<void> startDisplay({
-    int delay = 400,
-  }) async {
+  Future<void> startDisplay() async {
     if (_screenOn) {
       // Skip the command
       return;
@@ -346,10 +334,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    await Future.delayed(
-      Duration(milliseconds: delay),
-    );
-
     _screenOn = true;
   }
 
