@@ -278,14 +278,14 @@ class IconDrawing extends GYWDrawing {
   bool get isCustom => icon == null;
   
   /// Filename of the icon.
-  String get iconName => icon?.filename ?? customIconName!;
+  String get iconFilename => icon?.filename ?? customIconFilename!;
 
   /// The displayed icon
   final GYWIcon? icon;
 
   /// If [icon] is null, this is a custom icon the library doesn't know about.
   /// The name of this icon will be stored in this field instead.
-  final String? customIconName;
+  final String? customIconFilename;
 
   /// Hexadecimal code of the icon fill color
   final String? color;
@@ -295,10 +295,10 @@ class IconDrawing extends GYWDrawing {
     super.top,
     super.left,
     this.color,
-  }) : customIconName = null;
+  }) : customIconFilename = null;
 
   const IconDrawing.custom(
-    String this.customIconName, {
+    String this.customIconFilename, {
     super.top,
     super.left,
     this.color,
@@ -319,8 +319,7 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder()
-            .convert("${icon?.filename ?? customIconName}.bin"),
+        const Utf8Encoder().convert("$iconFilename.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -331,7 +330,7 @@ class IconDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: ${icon?.name ?? customIconName} at ($left, $top)";
+    return "Drawing: ${icon?.name ?? customIconFilename} at ($left, $top)";
   }
 
   @override
@@ -386,8 +385,8 @@ class IconDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon?.name ?? customIconName,
-      "data": icon?.filename ?? customIconName,
+      "icon": icon?.name ?? customIconFilename,
+      "data": iconFilename,
       "color": color,
     };
   }
