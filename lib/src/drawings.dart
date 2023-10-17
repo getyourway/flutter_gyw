@@ -275,15 +275,17 @@ class IconDrawing extends GYWDrawing {
   /// Type of the [IconDrawing]
   static const String type = "icon";
 
+  bool get isCustom => icon == null;
+  
   /// Filename of the icon.
-  String get iconName => icon?.filename ?? _unknownIconName!;
+  String get iconName => icon?.filename ?? customIconName!;
 
   /// The displayed icon
   final GYWIcon? icon;
 
-  /// If [icon] is null, this is a new icon the library doesn't know about.
+  /// If [icon] is null, this is a custom icon the library doesn't know about.
   /// The name of this icon will be stored in this field instead.
-  final String? _unknownIconName;
+  final String? customIconName;
 
   /// Hexadecimal code of the icon fill color
   final String? color;
@@ -293,10 +295,10 @@ class IconDrawing extends GYWDrawing {
     super.top,
     super.left,
     this.color,
-  }) : _unknownIconName = null;
+  }) : customIconName = null;
 
-  const IconDrawing._unknown(
-    this._unknownIconName, {
+  const IconDrawing.custom(
+    String this.customIconName, {
     super.top,
     super.left,
     this.color,
@@ -318,7 +320,7 @@ class IconDrawing extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
         const Utf8Encoder()
-            .convert("${icon?.filename ?? _unknownIconName}.bin"),
+            .convert("${icon?.filename ?? customIconName}.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -329,7 +331,7 @@ class IconDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: ${icon?.name ?? _unknownIconName} at ($left, $top)";
+    return "Drawing: ${icon?.name ?? customIconName} at ($left, $top)";
   }
 
   @override
@@ -368,7 +370,7 @@ class IconDrawing extends GYWDrawing {
         color: data["color"] as String?,
       );
     } else {
-      return IconDrawing._unknown(
+      return IconDrawing.custom(
         icon,
         left: data["left"] as int,
         top: data["top"] as int,
@@ -384,8 +386,8 @@ class IconDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon?.name ?? _unknownIconName,
-      "data": icon?.filename ?? _unknownIconName,
+      "icon": icon?.name ?? customIconName,
+      "data": icon?.filename ?? customIconName,
       "color": color,
     };
   }
