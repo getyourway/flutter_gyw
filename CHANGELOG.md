@@ -1,5 +1,6 @@
 ## 1.1.3
-* [ADD] Deprecate delays when sending commands and set their default value to 0
+* [DEL] Deprecate delays when sending commands and set their default value to 0
+* [IMP] Support custom icons
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
