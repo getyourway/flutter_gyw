@@ -141,6 +141,11 @@ Note that through this drawing, you can change the background color.
 
 For now, only a few 48x48 icons are supported. New icons and different sizes will be added in future versions.
 
+### What is a "custom" IconDrawing?
+
+A custom `IconDrawing` is an icon that is not part of the default set of icons provided by the package.
+Custom icons must also be 48x48.
+
 ### How can I troubleshoot connection issues with my GYW device?
 
 If you encounter issues with connecting to your GYW device, here are a few things you can try:
