@@ -275,6 +275,9 @@ class IconDrawing extends GYWDrawing {
   /// Type of the [IconDrawing]
   static const String type = "icon";
 
+  /// Filename of the icon.
+  String get iconName => icon?.filename ?? _unknownIconName!;
+
   /// The displayed icon
   final GYWIcon? icon;
 
