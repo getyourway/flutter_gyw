@@ -1,5 +1,5 @@
 ## 1.1.3
-* [FIX] Handle icons that are not recognized
+* [IMP] Support custom icons
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
