@@ -1,3 +1,6 @@
+## 1.1.3
+* [IMP] Support custom icons
+
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
 * [ADD] Convert WhiteScreen into BlankScreen with a color parameter
