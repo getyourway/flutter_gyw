@@ -78,10 +78,14 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    // Add font
-    if (font != null) {
-      controlBytes.add(utf8.encode(font!.prefix));
+    controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
+    controlBytes.add(int8Bytes(size ?? 0));
+
+    String shortColor = "NULL";
+    if (color != null) {
+      shortColor = color![0] + color![2] + color![4] + color![6];
     }
+    controlBytes.add(utf8.encode(shortColor));
 
     return [
       GYWBtCommand(
@@ -276,7 +280,7 @@ class IconDrawing extends GYWDrawing {
   static const String type = "icon";
 
   bool get isCustom => icon == null;
-  
+
   /// Filename of the icon.
   String get iconFilename => icon?.filename ?? customIconFilename!;
 

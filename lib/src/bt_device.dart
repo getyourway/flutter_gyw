@@ -221,6 +221,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Set the default font on the aRdent to display the next [TextDrawing]
+  @Deprecated("Set the font when drawing text with `TextDrawing`")
   Future<void> setFont(
     GYWFont font, {
     @Deprecated("Delay is no longer needed") int delay = 0,
