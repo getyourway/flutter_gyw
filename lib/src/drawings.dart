@@ -294,11 +294,15 @@ class IconDrawing extends GYWDrawing {
   /// Hexadecimal code of the icon fill color
   final String? color;
 
+  /// The icon scaling factor
+  final double scale;
+
   const IconDrawing(
     GYWIcon this.icon, {
     super.top,
     super.left,
     this.color,
+    this.scale = 1.0,
   }) : customIconFilename = null;
 
   const IconDrawing.custom(
@@ -306,6 +310,7 @@ class IconDrawing extends GYWDrawing {
     super.top,
     super.left,
     this.color,
+    this.scale = 1.0,
   }) : icon = null;
 
   @override
@@ -315,10 +320,22 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    if (color != null) {
-      // Add color value
-      controlBytes.add(utf8.encode(color!));
+    controlBytes.add(utf8.encode(color ?? "NULLNULL"));
+
+    final scaleDouble = scale.clamp(0.01, 13.8);
+    int scaleByte;
+    if (scaleDouble >= 1.0) {
+      // min: 1.0 -> 0.0 -> 0
+      // max: 13.7 -> 12.7 -> 127
+      scaleByte = ((scale - 1.0) * 10.0).round();
+    } else {
+      // min: 0.01 -> -1
+      // max: 0.99 -> -99
+      scaleByte = (-scale * 100.0).round();
     }
+    assert(-99 <= scale && scale <= 127);
+
+    controlBytes.add(int8Bytes(scaleByte));
 
     return <GYWBtCommand>[
       GYWBtCommand(
@@ -340,21 +357,24 @@ class IconDrawing extends GYWDrawing {
   @override
   bool operator ==(Object other) {
     if (other is IconDrawing) {
-      return icon == other.icon &&
+      return iconFilename == other.iconFilename &&
           color == other.color &&
           left == other.left &&
-          top == other.top;
+          top == other.top &&
+          scale == other.scale;
     } else {
       return false;
     }
   }
 
   @override
-  int get hashCode =>
-      29 * icon.hashCode +
-      57 * left.hashCode +
-      17 * top.hashCode +
-      23 * color.hashCode;
+  int get hashCode => Object.hash(
+        iconFilename,
+        left,
+        top,
+        color,
+        scale,
+      );
 
   /// Deserialize an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
@@ -371,6 +391,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
+        scale: (data["scale"] ?? 1.0) as double,
       );
     } else {
       return IconDrawing.custom(
@@ -378,6 +399,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
+        scale: (data["scale"] ?? 1.0) as double,
       );
     }
   }
@@ -392,6 +414,7 @@ class IconDrawing extends GYWDrawing {
       "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
       "color": color,
+      "scale": scale,
     };
   }
 }
