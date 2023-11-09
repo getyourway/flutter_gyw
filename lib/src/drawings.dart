@@ -323,7 +323,7 @@ class IconDrawing extends GYWDrawing {
 
     controlBytes.add(utf8.encode(color ?? "NULLNULL"));
 
-    final scaleDouble = scale.clamp(0.01, 13.8);
+    final scaleDouble = scale.clamp(0.01, 13.7);
     int scaleByte;
     if (scaleDouble >= 1.0) {
       // min: 1.0 -> 0.0 -> 0
