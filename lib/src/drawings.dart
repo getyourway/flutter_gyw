@@ -294,7 +294,8 @@ class IconDrawing extends GYWDrawing {
   /// Hexadecimal code of the icon fill color
   final String? color;
 
-  /// The icon scaling factor
+  /// The icon scaling factor.
+  /// Minimum is 0.01, maximum is 13.7.
   final double scale;
 
   const IconDrawing(
