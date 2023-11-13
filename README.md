@@ -139,7 +139,9 @@ Note that through this drawing, you can change the background color.
 
 ### How can I have bigger icons?
 
-IconDrawing has a scale parameter that allows you to scale the icon up or down. If the icon is 48x48, a scale factor of 2.0 will result in a 96x96 icon.
+IconDrawing has a scale parameter that allows you to scale the icon up or down. If the icon is 48x48, a scale factor of 2.0 will result in a 96x96 icon. The scale factor has a range between 0.01 and 13.7. Any scale factor outside of this range will be clamped to the nearest value within the range.
+
+```dart
 
 ### What is a "custom" IconDrawing?
 
