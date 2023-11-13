@@ -2,6 +2,7 @@
 * [DEL] Deprecate delays when sending commands and set their default value to 0
 * [IMP] Support custom icons
 * [DEL] Deprecate the `setFont` function and send font size and color through Bluetooth
+* [ADD] Add SVG icons and scaling factor
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
