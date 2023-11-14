@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
 import 'helpers.dart';
 import 'icons.dart';
+import 'screen.dart';
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
 abstract class GYWDrawing {
@@ -65,7 +69,7 @@ class TextDrawing extends GYWDrawing {
   final int maxWidth;
 
   /// The maximum number of lines the text can be wrapped on.
-  /// If the text is too long, it will be truncated.
+  /// All extra lines will be ignored.
   final int maxLines;
 
   const TextDrawing({
@@ -73,7 +77,7 @@ class TextDrawing extends GYWDrawing {
     this.font,
     this.size,
     this.color,
-    this.maxWidth = 0,
+    this.maxWidth = GYWScreenParameters.width,
     this.maxLines = 0,
     super.left = 0,
     super.top = 0,
@@ -81,6 +85,46 @@ class TextDrawing extends GYWDrawing {
 
   @override
   List<GYWBtCommand> toCommands() {
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charWidth = (fontSize * 0.6).ceil();
+    final int charHeight = (fontSize * 1.33).ceil();
+    final int maxCharsPerLine = maxWidth ~/ charWidth;
+
+    final List<GYWBtCommand> commands = [];
+
+    int currentTop = top;
+    for (final String line in _wrapText(text, maxCharsPerLine, maxLines)) {
+      commands.addAll(_lineToCommands(line, currentTop));
+      currentTop += charHeight;
+    }
+    return commands;
+  }
+
+  static Iterable<String> _wrapText(
+    String text,
+    int maxCharsPerLine,
+    int maxLines,
+  ) sync* {
+    final List<String> words = text.split(" ");
+    final List<String> lines = [];
+    final line = StringBuffer();
+
+    for (final String word in words) {
+      if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
+        yield line.toString();
+        if (lines.length >= maxLines) {
+          return;
+        }
+        line.clear();
+        line.write(word);
+      } else {
+        line.write(line.isEmpty ? word : " $word");
+      }
+    }
+    yield line.toString();
+  }
+
+  List<GYWBtCommand> _lineToCommands(String line, int top) {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
@@ -100,7 +144,7 @@ class TextDrawing extends GYWDrawing {
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(text),
+        const Utf8Encoder().convert(line),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
