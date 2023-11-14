@@ -3,6 +3,7 @@
 * [IMP] Support custom icons
 * [DEL] Deprecate the `setFont` function and send font size and color through Bluetooth
 * [ADD] Add SVG icons and scaling factor
+* [FIX] Replace the old rename PNG icon with the new one
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
