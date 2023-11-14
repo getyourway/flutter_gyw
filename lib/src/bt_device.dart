@@ -10,12 +10,12 @@ import 'package:flutter_gyw/flutter_gyw.dart';
 import 'commands.dart';
 import 'helpers.dart';
 
-/// Representation of a Bluetooth device
+/// The representation of a Bluetooth device in the library
 class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
-  /// Encapsulated FlutterBluePlus device
+  /// The encapsulated FlutterBluePlus device
   fb.BluetoothDevice fbDevice;
 
-  /// Time when the device was last detected
+  /// The time when the device was last detected
   late DateTime lastSeen;
 
   bool _isConnecting = false;
@@ -23,27 +23,21 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   bool _isConnected = false;
   bool _screenOn = false;
 
-  /// Status value indicating that a connection to the device is in progress
+  /// Whether the connection to the device is in progress
   bool get isConnecting => _isConnecting;
 
-  /// Status value indicating that a connection to the device is in progress
+  /// Whether the disconnection to the device is in progress
   bool get isDisconnecting => _isDisconnecting;
 
-  /// Status value indicating that the device is connected
+  /// Whether the device is connected
   bool get isConnected => _isConnected;
-
-  /// Most recently used font (used for the optimisation of [TextDrawing])
-  GYWFont? font;
-
-  /// Enable font optimisation
-  bool fontOptimized = true;
 
   late int _lastRssi;
 
-  /// Strength of the signal when the device was last detected
-  int get lastRssi => _lastRssi;
-
+  /// The strength of the signal when the device was last detected
+  ///
   /// By setting the lastRssi, the lastSeen value is also updated
+  int get lastRssi => _lastRssi;
   set lastRssi(int lastRssi) {
     _lastRssi = lastRssi;
     lastSeen = DateTime.now();
@@ -66,13 +60,15 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Name of the device
-  String get name => fbDevice.localName;
+  /// The name of the device
+  String get name => fbDevice.platformName;
 
-  /// UUID of the device
+  /// The MAC address (or the public UUID) of the device
   String get id => fbDevice.remoteId.str;
 
-  /// Connect the Bluetooth device to the current device
+  /// Connects the Bluetooth device to the current device
+  ///
+  /// The method returns `true` if the operation is successful, false otherwise
   Future<bool> connect() async {
     if (isConnecting) {
       throw const GYWStatusException(
@@ -115,7 +111,9 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     return isConnected;
   }
 
-  /// Disconnect the Bluetooth device
+  /// Disconnects the Bluetooth device
+  ///
+  /// The method returns `true` if the operation is successful, false otherwise
   Future<bool> disconnect() async {
     if (isConnecting) {
       throw const GYWStatusException(
@@ -137,9 +135,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     // Clear saved characteristics
     _characteristics = <String, fb.BluetoothCharacteristic?>{};
-
-    // Clear font
-    font = null;
 
     try {
       await fbDevice.disconnect();
@@ -179,7 +174,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     return null;
   }
 
-  /// Send data to the aRdent device to display a [GYWDrawing]
+  /// Sends data to the aRdent device to display a [GYWDrawing]
   Future<void> sendDrawing(
     GYWDrawing drawing, {
     @Deprecated("Delay is no longer needed") int delay = 0,
@@ -189,17 +184,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
       if (delay != 0) {
-        await Future.delayed(Duration(milliseconds: delay));
+        await Future<void>.delayed(Duration(milliseconds: delay));
       }
-    }
-
-    // Save current font
-    if (drawing is TextDrawing && drawing.font != null) {
-      font = drawing.font;
     }
   }
 
-  /// Send data to the aRdent device to display a [GYWDrawing]
+  /// Sends data to the aRdent device to display a [GYWDrawing]
   @Deprecated("This method is going to be replaced by sendDrawing")
   Future<void> displayDrawing(
     GYWDrawing drawing, {
@@ -210,17 +200,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
       if (delay != 0) {
-        await Future.delayed(Duration(milliseconds: delay));
+        await Future<void>.delayed(Duration(milliseconds: delay));
       }
-    }
-
-    // Save current font
-    if (drawing is TextDrawing && drawing.font != null) {
-      font = drawing.font;
     }
   }
 
-  /// Set the default font on the aRdent to display the next [TextDrawing]
+  /// Sets the default font on the aRdent to display the next [TextDrawing]
   @Deprecated("Set the font when drawing text with `TextDrawing`")
   Future<void> setFont(
     GYWFont font, {
@@ -240,15 +225,14 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
       if (delay != 0) {
-        await Future.delayed(Duration(milliseconds: delay));
+        await Future<void>.delayed(Duration(milliseconds: delay));
       }
     }
-
-    // Save font
-    this.font = font;
   }
 
-  /// Set the screen brightness. The value must be between 0 and 1.
+  /// Sets the screen brightness.
+  ///
+  /// The value must be between 0 and 1.
   Future<void> setBrightness(
     double value, {
     @Deprecated("Delay is no longer needed") int delay = 0,
@@ -266,11 +250,13 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     await _sendBTCommand(command);
     if (delay != 0) {
-      await Future.delayed(Duration(milliseconds: delay));
+      await Future<void>.delayed(Duration(milliseconds: delay));
     }
   }
 
-  /// Set the screen brightness. The value must be between 0 and 1.
+  /// Sets the screen contrast.
+  ///
+  /// The value must be between 0 and 1.
   Future<void> setContrast(
     double value, {
     @Deprecated("Delay is no longer needed") int delay = 0,
@@ -288,11 +274,11 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     await _sendBTCommand(command);
     if (delay != 0) {
-      await Future.delayed(Duration(milliseconds: delay));
+      await Future<void>.delayed(Duration(milliseconds: delay));
     }
   }
 
-  /// Enable or disable the screen autorotation
+  /// Enables or disables the screen autorotation.
   Future<void> autoRotateScreen(
     bool enable,
   ) async {
@@ -318,7 +304,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Write data on a Bluetooth characteristic by chunk of 20 bytes
+  /// Writes data on a Bluetooth characteristic by chunks of 20 bytes
   Future<void> _sendData(
     fb.BluetoothCharacteristic characteristic,
     Uint8List data,
@@ -342,7 +328,9 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Turn the screen on
+  /// Turns the screen on and initializes it for future drawings.
+  ///
+  /// This method must be called once before performing display operations.
   Future<void> startDisplay({
     @Deprecated("Delay is no longer needed") int delay = 0,
   }) async {
@@ -358,13 +346,13 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     await _sendBTCommand(command);
     if (delay != 0) {
-      await Future.delayed(Duration(milliseconds: delay));
+      await Future<void>.delayed(Duration(milliseconds: delay));
     }
 
     _screenOn = true;
   }
 
-  /// Turn the display backlight on or off
+  /// Turns the display backlight on or off
   Future<void> enableBacklight(
     bool enable,
   ) async {
@@ -379,7 +367,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     await _sendBTCommand(command);
   }
 
-  /// Compare this [GYWBtDevice] to another based on signal strength
+  /// Compares this [GYWBtDevice] to another based on signal strength
   @override
   int compareTo(GYWBtDevice? other) {
     return -lastRssi.compareTo(other?.lastRssi ?? -1);
