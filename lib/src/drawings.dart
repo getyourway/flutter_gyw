@@ -60,11 +60,21 @@ class TextDrawing extends GYWDrawing {
   /// color of the text (in 8-characters ORGB format)
   final String? color;
 
+  /// The maximum width (in pixels) of the text.
+  /// It will be wrapped on multiple lines if it is too long.
+  final int maxWidth;
+
+  /// The maximum number of lines the text can be wrapped on.
+  /// If the text is too long, it will be truncated.
+  final int maxLines;
+
   const TextDrawing({
     required this.text,
     this.font,
     this.size,
     this.color,
+    this.maxWidth = 0,
+    this.maxLines = 0,
     super.left = 0,
     super.top = 0,
   });
