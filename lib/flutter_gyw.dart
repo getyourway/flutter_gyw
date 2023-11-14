@@ -1,11 +1,14 @@
-/// This library provides an interface between a Flutter application and
-/// Get Your Way devices like the aRdent smart glasses.
+/// This library provides a Flutter interface with aRdent glasses developed.
+///
+/// The aRdent smart glasses are developed by Get Your Way. They can be seen
+/// as a Head-Up Display (HUD) on which are shown drawings (icons, texts, ...).
+/// This library can be use to control the display.
 library flutter_gyw;
 
 export 'src/bt_device.dart' show GYWBtDevice;
 export 'src/bt_manager.dart' show GYWBtManager;
 export 'src/drawings.dart'
-    show GYWDrawing, TextDrawing, BlankScreen, IconDrawing;
+    show BlankScreen, GYWDrawing, IconDrawing, TextDrawing;
 export 'src/exceptions.dart' show GYWException, GYWStatusException;
 export 'src/fonts.dart' show GYWFont;
 export 'src/icons.dart' show GYWIcon;

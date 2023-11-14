@@ -2,9 +2,9 @@
 class GYWScreenParameters {
   GYWScreenParameters._();
 
-  /// Supported Width of a GYW aRdent device
+  /// The screen width (in pixels) of the aRdent glasses
   static const int width = 854;
 
-  /// Supported Width of a GYW aRdent device
+  /// The screen height (in pixels) of the aRdent glasses
   static const int height = 480;
 }

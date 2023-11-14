@@ -1,0 +1,29 @@
+name: Flutter lints & tests
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop 
+
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+
+    - name: Install dependencies
+      run: flutter pub get
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Run linter
+      run: flutter analyze
+
+    - name: Run tests
+      run: flutter test
