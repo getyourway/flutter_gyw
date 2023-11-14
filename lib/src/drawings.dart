@@ -11,7 +11,7 @@ import 'icons.dart';
 /// A drawing that can be displayed on a pair of aRdent smart glasses
 @immutable
 abstract class GYWDrawing {
-  /// The distances (in pixels) from the top of the screen
+  /// The distance (in pixels) from the top of the screen
   final int top;
 
   /// The distance (in pixels) from the left side of the screen
@@ -48,7 +48,7 @@ abstract class GYWDrawing {
 /// A drawing to display text on an aRdent device
 @immutable
 class TextDrawing extends GYWDrawing {
-  /// The type of a [TextDrawing] drawing
+  /// The type of the [TextDrawing] drawing
   static const String type = "text";
 
   /// The text that must be displayed

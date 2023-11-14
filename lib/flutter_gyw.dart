@@ -2,7 +2,7 @@
 ///
 /// The aRdent smart glasses are developed by Get Your Way. They can be seen
 /// as a Head-Up Display (HUD) on which are shown drawings (icons, texts, ...).
-/// This library can be use to control the display.
+/// This library can be used to control the display.
 library flutter_gyw;
 
 export 'src/bt_device.dart' show GYWBtDevice;

@@ -304,7 +304,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Writes data on a Bluetooth characteristic by chunk of 20 bytes
+  /// Writes data on a Bluetooth characteristic by chunks of 20 bytes
   Future<void> _sendData(
     fb.BluetoothCharacteristic characteristic,
     Uint8List data,
@@ -328,7 +328,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Turns the screen on and initialize it for future drawings.
+  /// Turns the screen on and initializes it for future drawings.
   ///
   /// This method must be called once before performing display operations.
   Future<void> startDisplay({

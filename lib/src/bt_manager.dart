@@ -37,7 +37,7 @@ class GYWBtManager {
   /// A function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
 
-  /// Manullay refreshes the Bluetooth status and returns the new status
+  /// Manually refreshes the Bluetooth status and returns the new status
   Future<bool> get bluetoothOnAsync async {
     final BluetoothAdapterState bluetoothState =
         await FlutterBluePlus.adapterState.first;
