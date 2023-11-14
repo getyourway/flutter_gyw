@@ -1,4 +1,4 @@
-/// Icons supported by aRdent smart glasses
+/// The icons supported by aRdent smart glasses
 enum GYWIcon {
   gyw("GYW", "GYW", 121, 48),
   down("Down", "down", 48, 48),
@@ -40,16 +40,16 @@ enum GYWIcon {
   key_star("Key *", "key_star", 48, 48),
   key_num("Key #", "key_#", 48, 48);
 
-  /// Name of the icon
+  /// The name of the icon
   final String name;
 
-  /// Filename on the GYW device
+  /// The filename on the GYW device
   final String filename;
 
-  /// Width (in pixels) of the icon
+  /// The width (in pixels) of the icon
   final double width;
 
-  /// Height (in pixels) of the icon
+  /// The height (in pixels) of the icon
   final double height;
 
   const GYWIcon(
@@ -59,8 +59,13 @@ enum GYWIcon {
     this.height,
   );
 
-  /// Path of the associated file in the assets folder
+  /// The path of the associated file in the assets folder
+  @Deprecated("Use pathPng instead")
   String get path => "assets/icons/$filename.png";
 
+  /// The path of the associated PNG file in the assets folder
+  String get pathPng => "assets/icons/$filename.png";
+
+  /// The path of the associated SVG file in the assets folder
   String get pathSvg => "assets/icons/$filename.svg";
 }

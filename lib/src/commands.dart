@@ -8,7 +8,7 @@ enum GYWCharacteristic {
   /// Characteristic to give data to the display
   nameDisplay("00004c32-0000-1000-8000-00805f9b34fb");
 
-  /// UUID of the characteristic
+  /// The UUID of the characteristic
   final String uuid;
 
   const GYWCharacteristic(this.uuid);
@@ -43,18 +43,18 @@ enum GYWControlCode {
   /// Enable or disable the display backlight
   enableBacklight(0x0B);
 
-  /// Control code value used internally on the device
+  /// The Control code value used internally on the device
   final int value;
 
   const GYWControlCode(this.value);
 }
 
-/// A representation of a Bluetooth operation to apply
+/// A representation of a Bluetooth write operation to apply
 class GYWBtCommand {
-  /// Bluetooth characteristic
+  /// The Bluetooth characteristic on which to write some data
   final GYWCharacteristic characteristic;
 
-  /// Data to write on the characteristic
+  /// The data to write on the characteristic
   final Uint8List data;
 
   const GYWBtCommand(this.characteristic, this.data);
