@@ -11,11 +11,12 @@ import 'icons.dart';
 import 'screen.dart';
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
+@immutable
 abstract class GYWDrawing {
-  /// Distance (in pixels) from the top
+  /// The distance (in pixels) from the top of the screen
   final int top;
 
-  /// Distance (in pixels) from the left side
+  /// The distance (in pixels) from the left side of the screen
   final int left;
 
   const GYWDrawing({
@@ -23,7 +24,7 @@ abstract class GYWDrawing {
     this.left = 0,
   });
 
-  /// Convert the drawing into a list of commands understood by the device
+  /// Converts the drawing into a list of commands understood by the device
   List<GYWBtCommand> toCommands();
 
   /// Deserializes a [GYWDrawing] from JSON data
@@ -47,21 +48,23 @@ abstract class GYWDrawing {
 }
 
 /// A drawing to display text on an aRdent device
+@immutable
 class TextDrawing extends GYWDrawing {
-  /// Type of a [TextDrawing] drawing
+  /// The type of the [TextDrawing] drawing
   static const String type = "text";
 
-  /// Displayed text
+  /// The text that must be displayed
   final String text;
 
-  /// Font (fontSize, fontWeight, ...) of the text
+  /// The [GYWFont] to use
+  ///
   /// If no font is given, it uses the most recent one
   final GYWFont? font;
 
-  /// size of the text (max 48 pt)
+  /// The size of the text (max 48 pt)
   final int? size;
 
-  /// color of the text (in 8-characters ORGB format)
+  /// The color of the text (in 8-characters ORGB format)
   final String? color;
 
   /// The maximum width (in pixels) of the text.
@@ -181,7 +184,7 @@ class TextDrawing extends GYWDrawing {
       19 * size.hashCode +
       41 * color.hashCode;
 
-  /// Deserialize a [TextDrawing] from JSON data
+  /// Deserializes a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
     try {
@@ -225,7 +228,7 @@ class TextDrawing extends GYWDrawing {
   "who has a variable background color",
 )
 class WhiteScreen extends GYWDrawing {
-  /// Type of the [WhiteScreen] drawing
+  /// The type of the [WhiteScreen] drawing
   static const String type = "white_screen";
 
   @Deprecated(
@@ -240,7 +243,7 @@ class WhiteScreen extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         int8Bytes(GYWControlCode.clear.value),
-      )
+      ),
     ];
   }
 
@@ -249,7 +252,7 @@ class WhiteScreen extends GYWDrawing {
     return "Drawing: white screen";
   }
 
-  /// Deserialize a [WhiteScreen] from JSON data
+  /// Deserializes a [WhiteScreen] from JSON data
   @Deprecated(
     "WhiteScreen has been replaced by BlankScreen "
     "who has a variable background color",
@@ -267,12 +270,13 @@ class WhiteScreen extends GYWDrawing {
   }
 }
 
-// A drawing to reset the content of the screen and its background color
+/// A drawing to reset the content of the screen and its background color
+@immutable
 class BlankScreen extends GYWDrawing {
-  /// Type of the [BlankScreen] drawing
+  /// The type of the [BlankScreen] drawing
   static const String type = "blank_screen";
 
-  /// Hexadecimal code of the background color
+  /// The hexadecimal code of the background color
   final String? color;
 
   const BlankScreen({this.color});
@@ -291,7 +295,7 @@ class BlankScreen extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
-      )
+      ),
     ];
   }
 
@@ -300,7 +304,7 @@ class BlankScreen extends GYWDrawing {
     return "Drawing: blank screen";
   }
 
-  /// Deserialize a [BlankScreen] from JSON data
+  /// Deserializes a [BlankScreen] from JSON data
   factory BlankScreen.fromJson(Map<String, dynamic> data) {
     return BlankScreen(
       color: data["color"] as String?,
@@ -329,19 +333,22 @@ class BlankScreen extends GYWDrawing {
 }
 
 /// A drawing to display an icon on an aRdent device
+@immutable
 class IconDrawing extends GYWDrawing {
-  /// Type of the [IconDrawing]
+  /// The type of the [IconDrawing]
   static const String type = "icon";
 
+  /// whether the drawings uses a icon that is not part of the library
   bool get isCustom => icon == null;
 
-  /// Filename of the icon.
+  /// The filename of the icon.
   String get iconFilename => icon?.filename ?? customIconFilename!;
 
-  /// The displayed icon
+  /// The displayed [GYWIcon]
   final GYWIcon? icon;
 
   /// If [icon] is null, this is a custom icon the library doesn't know about.
+  ///
   /// The name of this icon will be stored in this field instead.
   final String? customIconFilename;
 
@@ -349,6 +356,7 @@ class IconDrawing extends GYWDrawing {
   final String? color;
 
   /// The icon scaling factor.
+  ///
   /// Minimum is 0.01, maximum is 13.7.
   final double scale;
 
@@ -360,6 +368,7 @@ class IconDrawing extends GYWDrawing {
     this.scale = 1.0,
   }) : customIconFilename = null;
 
+  /// Creates a custom icon, i.e. an icon whose image is not in the library
   const IconDrawing.custom(
     String this.customIconFilename, {
     super.top,
@@ -400,7 +409,7 @@ class IconDrawing extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
-      )
+      ),
     ];
   }
 
@@ -431,14 +440,15 @@ class IconDrawing extends GYWDrawing {
         scale,
       );
 
-  /// Deserialize an [IconDrawing] from JSON data
+  /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     // Deprecated "icon" key will be deprecated in future versions
     final String icon = data["data"] as String? ?? data["icon"] as String;
 
     final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
-        (element) => element!.filename == icon || element.name == icon,
-        orElse: () => null);
+          (element) => element!.filename == icon || element.name == icon,
+          orElse: () => null,
+        );
 
     if (gywIcon != null) {
       return IconDrawing(
