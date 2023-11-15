@@ -89,30 +89,27 @@ class TextDrawing extends GYWDrawing {
   @override
   List<GYWBtCommand> toCommands() {
     final int fontSize = size ?? font?.size ?? GYWFont.small.size;
-    final int charWidth = (fontSize * 0.6).ceil();
     final int charHeight = (fontSize * 1.33).ceil();
-
-    const int maxInt = -1 >>> 1;
-    final int maxWidth_ = maxWidth ?? maxInt;
-    final int maxCharsPerLine =
-        min(maxWidth_, GYWScreenParameters.width - left) ~/
-            charWidth;
 
     final List<GYWBtCommand> commands = [];
 
     int currentTop = top;
-    for (final String line in _wrapText(text, maxCharsPerLine, maxLines)) {
+    for (final String line in wrapText()) {
       commands.addAll(_lineToCommands(line, currentTop));
       currentTop += charHeight;
     }
     return commands;
   }
 
-  static Iterable<String> _wrapText(
-    String text,
-    int maxCharsPerLine,
-    int? maxLines,
-  ) sync* {
+  Iterable<String> wrapText() sync* {
+    final int textWidth = maxWidth != null
+        ? min(maxWidth!, GYWScreenParameters.width - left)
+        : GYWScreenParameters.width - left;
+
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charWidth = (fontSize * 0.6).ceil();
+    final int maxCharsPerLine = textWidth ~/ charWidth;
+
     final List<String> words = text.split(" ");
     final List<String> lines = [];
     final line = StringBuffer();
@@ -120,7 +117,7 @@ class TextDrawing extends GYWDrawing {
     for (final String word in words) {
       if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
         yield line.toString();
-        if (maxLines != null && lines.length >= maxLines) {
+        if (maxLines != null && lines.length >= maxLines!) {
           return;
         }
         line.clear();
