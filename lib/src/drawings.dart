@@ -55,6 +55,7 @@ class TextDrawing extends GYWDrawing {
   /// The text that must be displayed
   final String text;
 
+  /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
   String get wrappedText => _wrapText().join("\n");
 
   /// The [GYWFont] to use
@@ -69,10 +70,12 @@ class TextDrawing extends GYWDrawing {
   final String? color;
 
   /// The maximum width (in pixels) of the text.
+  ///
   /// It will be wrapped on multiple lines if it is too long.
   final int? maxWidth;
 
   /// The maximum number of lines the text can be wrapped on.
+  ///
   /// All extra lines will be ignored.
   final int? maxLines;
 
@@ -81,8 +84,8 @@ class TextDrawing extends GYWDrawing {
     this.font,
     this.size,
     this.color,
-    this.maxWidth,
     this.maxLines,
+    this.maxWidth,
     super.left = 0,
     super.top = 0,
   });
@@ -117,13 +120,14 @@ class TextDrawing extends GYWDrawing {
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
     final List<String> words = text.split(" ");
-    final List<String> lines = [];
+    int lines = 0;
     final line = StringBuffer();
 
     for (final String word in words) {
       if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
         yield line.toString();
-        if (maxLines != null && lines.length >= maxLines!) {
+        lines++;
+        if (maxLines != null && lines >= maxLines!) {
           return;
         }
         line.clear();
@@ -216,8 +220,8 @@ class TextDrawing extends GYWDrawing {
       font: font,
       size: data["size"] as int?,
       color: data["color"] as String?,
-      maxWidth: data["maxWidth"] as int?,
-      maxLines: data["maxLines"] as int?,
+      maxWidth: data["max_width"] as int?,
+      maxLines: data["max_lines"] as int?,
     );
   }
 
@@ -233,8 +237,8 @@ class TextDrawing extends GYWDrawing {
       if (font != null) "font": font!.index,
       "size": size,
       "color": color,
-      "maxWidth": maxWidth,
-      "maxLines": maxLines,
+      "max_width": maxWidth,
+      "max_lines": maxLines,
     };
   }
 }
