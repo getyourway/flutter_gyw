@@ -104,9 +104,14 @@ class TextDrawing extends GYWDrawing {
   }
 
   Iterable<String> _wrapText() sync* {
-    final int textWidth = maxWidth != null
-        ? min(maxWidth!, GYWScreenParameters.width - left)
-        : GYWScreenParameters.width - left;
+    int textWidth;
+    final int availableWidth = GYWScreenParameters.width - left;
+    if (maxWidth == null || maxWidth! >= availableWidth) {
+      // Never let the text overflow the screen on width.
+      textWidth = availableWidth;
+    } else {
+      textWidth = maxWidth!;
+    }
 
     final int fontSize = size ?? font?.size ?? GYWFont.small.size;
     final int charWidth = (fontSize * 0.6).ceil();
