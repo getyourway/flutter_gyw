@@ -5,6 +5,7 @@
 * [ADD] Add SVG icons and scaling factor
 * [FIX] Replace the old rename PNG icon with the new one
 * [IMP] Improve code documentation
+* [IMP] Add support for wrapping TextDrawings on multiple lines
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
