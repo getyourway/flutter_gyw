@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -77,7 +78,8 @@ class TextDrawing extends GYWDrawing {
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  final int? maxLines;
+  /// The value 0 is special and disables the limit.
+  final int maxLines;
 
   const TextDrawing({
     required this.text,
@@ -85,7 +87,7 @@ class TextDrawing extends GYWDrawing {
     this.size,
     this.color,
     this.maxWidth,
-    this.maxLines,
+    this.maxLines = 1,
     super.left = 0,
     super.top = 0,
   });
@@ -106,13 +108,19 @@ class TextDrawing extends GYWDrawing {
   }
 
   Iterable<String> _wrapText() sync* {
+    // An invalid value will be considered as unconstrained.
+    final int? maxWidth =
+        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+
+    final int maxLines = max(0, this.maxLines);
+
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
-    if (maxWidth == null || maxWidth! >= availableWidth) {
+    if (maxWidth == null || maxWidth >= availableWidth) {
       // Never let the text overflow the screen on width.
       textWidth = availableWidth;
     } else {
-      textWidth = maxWidth!;
+      textWidth = maxWidth;
     }
 
     final int fontSize = size ?? font?.size ?? GYWFont.small.size;
@@ -127,7 +135,7 @@ class TextDrawing extends GYWDrawing {
       if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
         yield line.toString();
         lines++;
-        if (maxLines != null && lines >= maxLines!) {
+        if (maxLines != 0 && lines >= maxLines) {
           return;
         }
         line.clear();
@@ -221,7 +229,7 @@ class TextDrawing extends GYWDrawing {
       size: data["size"] as int?,
       color: data["color"] as String?,
       maxWidth: data["max_width"] as int?,
-      maxLines: data["max_lines"] as int?,
+      maxLines: data["max_lines"] as int? ?? 1,
     );
   }
 
