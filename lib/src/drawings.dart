@@ -84,8 +84,8 @@ class TextDrawing extends GYWDrawing {
     this.font,
     this.size,
     this.color,
-    this.maxLines,
     this.maxWidth,
+    this.maxLines,
     super.left = 0,
     super.top = 0,
   });
