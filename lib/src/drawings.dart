@@ -56,6 +56,8 @@ class TextDrawing extends GYWDrawing {
   /// The text that must be displayed
   final String text;
 
+  String get wrappedText => _wrapText().join("\n");
+
   /// The [GYWFont] to use
   ///
   /// If no font is given, it uses the most recent one
@@ -94,14 +96,14 @@ class TextDrawing extends GYWDrawing {
     final List<GYWBtCommand> commands = [];
 
     int currentTop = top;
-    for (final String line in wrapText()) {
+    for (final String line in _wrapText()) {
       commands.addAll(_lineToCommands(line, currentTop));
       currentTop += charHeight;
     }
     return commands;
   }
 
-  Iterable<String> wrapText() sync* {
+  Iterable<String> _wrapText() sync* {
     final int textWidth = maxWidth != null
         ? min(maxWidth!, GYWScreenParameters.width - left)
         : GYWScreenParameters.width - left;
