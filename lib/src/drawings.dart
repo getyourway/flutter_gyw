@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'commands.dart';
 import 'fonts.dart';
 import 'helpers.dart';
 import 'icons.dart';
+import 'screen.dart';
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
 @immutable
@@ -54,6 +56,9 @@ class TextDrawing extends GYWDrawing {
   /// The text that must be displayed
   final String text;
 
+  /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
+  String get wrappedText => _wrapText().join("\n");
+
   /// The [GYWFont] to use
   ///
   /// If no font is given, it uses the most recent one
@@ -65,17 +70,84 @@ class TextDrawing extends GYWDrawing {
   /// The color of the text (in 8-characters ORGB format)
   final String? color;
 
+  /// The maximum width (in pixels) of the text.
+  ///
+  /// It will be wrapped on multiple lines if it is too long.
+  final int? maxWidth;
+
+  /// The maximum number of lines the text can be wrapped on.
+  ///
+  /// All extra lines will be ignored.
+  /// The value 0 is special and disables the limit.
+  final int maxLines;
+
   const TextDrawing({
     required this.text,
     this.font,
     this.size,
     this.color,
+    this.maxWidth,
+    this.maxLines = 1,
     super.left = 0,
     super.top = 0,
   });
 
   @override
   List<GYWBtCommand> toCommands() {
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charHeight = (fontSize * 1.33).ceil();
+
+    final List<GYWBtCommand> commands = [];
+
+    int currentTop = top;
+    for (final String line in _wrapText()) {
+      commands.addAll(_lineToCommands(line, currentTop));
+      currentTop += charHeight;
+    }
+    return commands;
+  }
+
+  Iterable<String> _wrapText() sync* {
+    // An invalid value will be considered as unconstrained.
+    final int? maxWidth =
+        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+
+    final int maxLines = max(0, this.maxLines);
+
+    int textWidth;
+    final int availableWidth = GYWScreenParameters.width - left;
+    if (maxWidth == null || maxWidth >= availableWidth) {
+      // Never let the text overflow the screen on width.
+      textWidth = availableWidth;
+    } else {
+      textWidth = maxWidth;
+    }
+
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charWidth = (fontSize * 0.6).ceil();
+    final int maxCharsPerLine = textWidth ~/ charWidth;
+
+    final List<String> words = text.split(" ");
+    int lines = 0;
+    final line = StringBuffer();
+
+    for (final String word in words) {
+      if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
+        yield line.toString();
+        lines++;
+        if (maxLines != 0 && lines >= maxLines) {
+          return;
+        }
+        line.clear();
+        line.write(word);
+      } else {
+        line.write(line.isEmpty ? word : " $word");
+      }
+    }
+    yield line.toString();
+  }
+
+  List<GYWBtCommand> _lineToCommands(String line, int top) {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
@@ -95,7 +167,7 @@ class TextDrawing extends GYWDrawing {
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(text),
+        const Utf8Encoder().convert(line),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -117,20 +189,25 @@ class TextDrawing extends GYWDrawing {
           top == other.top &&
           font == other.font &&
           size == other.size &&
-          color == other.color;
+          color == other.color &&
+          maxWidth == other.maxWidth &&
+          maxLines == other.maxLines;
     } else {
       return false;
     }
   }
 
   @override
-  int get hashCode =>
-      37 * text.hashCode +
-      23 * font.hashCode +
-      51 * left.hashCode +
-      13 * top.hashCode +
-      19 * size.hashCode +
-      41 * color.hashCode;
+  int get hashCode => Object.hash(
+        text,
+        font,
+        left,
+        top,
+        size,
+        color,
+        maxWidth,
+        maxLines,
+      );
 
   /// Deserializes a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
@@ -151,6 +228,8 @@ class TextDrawing extends GYWDrawing {
       font: font,
       size: data["size"] as int?,
       color: data["color"] as String?,
+      maxWidth: data["max_width"] as int?,
+      maxLines: data["max_lines"] as int? ?? 1,
     );
   }
 
@@ -166,6 +245,8 @@ class TextDrawing extends GYWDrawing {
       if (font != null) "font": font!.index,
       "size": size,
       "color": color,
+      "max_width": maxWidth,
+      "max_lines": maxLines,
     };
   }
 }
