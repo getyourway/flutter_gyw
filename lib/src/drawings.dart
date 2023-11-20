@@ -1,17 +1,22 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
 import 'helpers.dart';
 import 'icons.dart';
+import 'screen.dart';
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
+@immutable
 abstract class GYWDrawing {
-  /// Distance (in pixels) from the top
+  /// The distance (in pixels) from the top of the screen
   final int top;
 
-  /// Distance (in pixels) from the left side
+  /// The distance (in pixels) from the left side of the screen
   final int left;
 
   const GYWDrawing({
@@ -19,7 +24,7 @@ abstract class GYWDrawing {
     this.left = 0,
   });
 
-  /// Convert the drawing into a list of commands understood by the device
+  /// Converts the drawing into a list of commands understood by the device
   List<GYWBtCommand> toCommands();
 
   /// Deserializes a [GYWDrawing] from JSON data
@@ -43,34 +48,106 @@ abstract class GYWDrawing {
 }
 
 /// A drawing to display text on an aRdent device
+@immutable
 class TextDrawing extends GYWDrawing {
-  /// Type of a [TextDrawing] drawing
+  /// The type of the [TextDrawing] drawing
   static const String type = "text";
 
-  /// Displayed text
+  /// The text that must be displayed
   final String text;
 
-  /// Font (fontSize, fontWeight, ...) of the text
+  /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
+  String get wrappedText => _wrapText().join("\n");
+
+  /// The [GYWFont] to use
+  ///
   /// If no font is given, it uses the most recent one
   final GYWFont? font;
 
-  /// size of the text (max 48 pt)
+  /// The size of the text (max 48 pt)
   final int? size;
 
-  /// color of the text (in 8-characters ORGB format)
+  /// The color of the text (in 8-characters ORGB format)
   final String? color;
+
+  /// The maximum width (in pixels) of the text.
+  ///
+  /// It will be wrapped on multiple lines if it is too long.
+  final int? maxWidth;
+
+  /// The maximum number of lines the text can be wrapped on.
+  ///
+  /// All extra lines will be ignored.
+  /// The value 0 is special and disables the limit.
+  final int maxLines;
 
   const TextDrawing({
     required this.text,
     this.font,
     this.size,
     this.color,
+    this.maxWidth,
+    this.maxLines = 1,
     super.left = 0,
     super.top = 0,
   });
 
   @override
   List<GYWBtCommand> toCommands() {
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charHeight = (fontSize * 1.33).ceil();
+
+    final List<GYWBtCommand> commands = [];
+
+    int currentTop = top;
+    for (final String line in _wrapText()) {
+      commands.addAll(_lineToCommands(line, currentTop));
+      currentTop += charHeight;
+    }
+    return commands;
+  }
+
+  Iterable<String> _wrapText() sync* {
+    // An invalid value will be considered as unconstrained.
+    final int? maxWidth =
+        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+
+    final int maxLines = max(0, this.maxLines);
+
+    int textWidth;
+    final int availableWidth = GYWScreenParameters.width - left;
+    if (maxWidth == null || maxWidth >= availableWidth) {
+      // Never let the text overflow the screen on width.
+      textWidth = availableWidth;
+    } else {
+      textWidth = maxWidth;
+    }
+
+    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int charWidth = (fontSize * 0.6).ceil();
+    final int maxCharsPerLine = textWidth ~/ charWidth;
+
+    final List<String> words = text.split(" ");
+    int lines = 0;
+    final line = StringBuffer();
+
+    for (final String word in words) {
+      if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
+        yield line.toString();
+        lines++;
+        if (maxLines != 0 && lines >= maxLines) {
+          return;
+        }
+        line.clear();
+        line.write(word);
+      } else {
+        line.write(line.isEmpty ? word : " $word");
+      }
+    }
+    yield line.toString();
+  }
+
+  List<GYWBtCommand> _lineToCommands(String line, int top) {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
@@ -78,15 +155,19 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    // Add font
-    if (font != null) {
-      controlBytes.add(utf8.encode(font!.prefix));
+    controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
+    controlBytes.add(int8Bytes(size ?? 0));
+
+    String shortColor = "NULL";
+    if (color != null) {
+      shortColor = color![0] + color![2] + color![4] + color![6];
     }
+    controlBytes.add(utf8.encode(shortColor));
 
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(text),
+        const Utf8Encoder().convert(line),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -108,22 +189,27 @@ class TextDrawing extends GYWDrawing {
           top == other.top &&
           font == other.font &&
           size == other.size &&
-          color == other.color;
+          color == other.color &&
+          maxWidth == other.maxWidth &&
+          maxLines == other.maxLines;
     } else {
       return false;
     }
   }
 
   @override
-  int get hashCode =>
-      37 * text.hashCode +
-      23 * font.hashCode +
-      51 * left.hashCode +
-      13 * top.hashCode +
-      19 * size.hashCode +
-      41 * color.hashCode;
+  int get hashCode => Object.hash(
+        text,
+        font,
+        left,
+        top,
+        size,
+        color,
+        maxWidth,
+        maxLines,
+      );
 
-  /// Deserialize a [TextDrawing] from JSON data
+  /// Deserializes a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
     try {
@@ -142,6 +228,8 @@ class TextDrawing extends GYWDrawing {
       font: font,
       size: data["size"] as int?,
       color: data["color"] as String?,
+      maxWidth: data["max_width"] as int?,
+      maxLines: data["max_lines"] as int? ?? 1,
     );
   }
 
@@ -157,6 +245,8 @@ class TextDrawing extends GYWDrawing {
       if (font != null) "font": font!.index,
       "size": size,
       "color": color,
+      "max_width": maxWidth,
+      "max_lines": maxLines,
     };
   }
 }
@@ -167,7 +257,7 @@ class TextDrawing extends GYWDrawing {
   "who has a variable background color",
 )
 class WhiteScreen extends GYWDrawing {
-  /// Type of the [WhiteScreen] drawing
+  /// The type of the [WhiteScreen] drawing
   static const String type = "white_screen";
 
   @Deprecated(
@@ -182,7 +272,7 @@ class WhiteScreen extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         int8Bytes(GYWControlCode.clear.value),
-      )
+      ),
     ];
   }
 
@@ -191,7 +281,7 @@ class WhiteScreen extends GYWDrawing {
     return "Drawing: white screen";
   }
 
-  /// Deserialize a [WhiteScreen] from JSON data
+  /// Deserializes a [WhiteScreen] from JSON data
   @Deprecated(
     "WhiteScreen has been replaced by BlankScreen "
     "who has a variable background color",
@@ -209,12 +299,13 @@ class WhiteScreen extends GYWDrawing {
   }
 }
 
-// A drawing to reset the content of the screen and its background color
+/// A drawing to reset the content of the screen and its background color
+@immutable
 class BlankScreen extends GYWDrawing {
-  /// Type of the [BlankScreen] drawing
+  /// The type of the [BlankScreen] drawing
   static const String type = "blank_screen";
 
-  /// Hexadecimal code of the background color
+  /// The hexadecimal code of the background color
   final String? color;
 
   const BlankScreen({this.color});
@@ -233,7 +324,7 @@ class BlankScreen extends GYWDrawing {
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
-      )
+      ),
     ];
   }
 
@@ -242,7 +333,7 @@ class BlankScreen extends GYWDrawing {
     return "Drawing: blank screen";
   }
 
-  /// Deserialize a [BlankScreen] from JSON data
+  /// Deserializes a [BlankScreen] from JSON data
   factory BlankScreen.fromJson(Map<String, dynamic> data) {
     return BlankScreen(
       color: data["color"] as String?,
@@ -271,22 +362,49 @@ class BlankScreen extends GYWDrawing {
 }
 
 /// A drawing to display an icon on an aRdent device
+@immutable
 class IconDrawing extends GYWDrawing {
-  /// Type of the [IconDrawing]
+  /// The type of the [IconDrawing]
   static const String type = "icon";
 
-  /// The displayed icon
-  final GYWIcon icon;
+  /// whether the drawings uses a icon that is not part of the library
+  bool get isCustom => icon == null;
+
+  /// The filename of the icon.
+  String get iconFilename => icon?.filename ?? customIconFilename!;
+
+  /// The displayed [GYWIcon]
+  final GYWIcon? icon;
+
+  /// If [icon] is null, this is a custom icon the library doesn't know about.
+  ///
+  /// The name of this icon will be stored in this field instead.
+  final String? customIconFilename;
 
   /// Hexadecimal code of the icon fill color
   final String? color;
 
+  /// The icon scaling factor.
+  ///
+  /// Minimum is 0.01, maximum is 13.7.
+  final double scale;
+
   const IconDrawing(
-    this.icon, {
+    GYWIcon this.icon, {
     super.top,
     super.left,
     this.color,
-  });
+    this.scale = 1.0,
+  }) : customIconFilename = null;
+
+  /// Creates a custom icon, i.e. an icon whose image is not in the library
+  const IconDrawing.custom(
+    String this.customIconFilename, {
+    super.top,
+    super.left,
+    this.color,
+    this.scale = 1.0,
+  }) : icon = null;
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -295,60 +413,89 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    if (color != null) {
-      // Add color value
-      controlBytes.add(utf8.encode(color!));
+    controlBytes.add(utf8.encode(color ?? "NULLNULL"));
+
+    final scaleDouble = scale.clamp(0.01, 13.7);
+    int scaleByte;
+    if (scaleDouble >= 1.0) {
+      // min: 1.0 -> 0.0 -> 0
+      // max: 13.7 -> 12.7 -> 127
+      scaleByte = ((scale - 1.0) * 10.0).round();
+    } else {
+      // min: 0.01 -> -1
+      // max: 0.99 -> -99
+      scaleByte = (-scale * 100.0).round();
     }
+    assert(-99 <= scale && scale <= 127);
+
+    controlBytes.add(int8Bytes(scaleByte));
 
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.bin"),
+        const Utf8Encoder().convert("$iconFilename.bin"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
         controlBytes.toBytes(),
-      )
+      ),
     ];
   }
 
   @override
   String toString() {
-    return "Drawing: ${icon.name} at ($left, $top)";
+    return "Drawing: ${icon?.name ?? customIconFilename} at ($left, $top)";
   }
 
   @override
   bool operator ==(Object other) {
     if (other is IconDrawing) {
-      return icon == other.icon &&
+      return iconFilename == other.iconFilename &&
           color == other.color &&
           left == other.left &&
-          top == other.top;
+          top == other.top &&
+          scale == other.scale;
     } else {
       return false;
     }
   }
 
   @override
-  int get hashCode =>
-      29 * icon.hashCode +
-      57 * left.hashCode +
-      17 * top.hashCode +
-      23 * color.hashCode;
+  int get hashCode => Object.hash(
+        iconFilename,
+        left,
+        top,
+        color,
+        scale,
+      );
 
-  /// Deserialize an [IconDrawing] from JSON data
+  /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     // Deprecated "icon" key will be deprecated in future versions
     final String icon = data["data"] as String? ?? data["icon"] as String;
 
-    return IconDrawing(
-      GYWIcon.values.firstWhere(
-        (element) => element.filename == icon || element.name == icon,
-      ),
-      left: data["left"] as int,
-      top: data["top"] as int,
-      color: data["color"] as String?,
-    );
+    final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
+          (element) => element!.filename == icon || element.name == icon,
+          orElse: () => null,
+        );
+
+    if (gywIcon != null) {
+      return IconDrawing(
+        gywIcon,
+        left: data["left"] as int,
+        top: data["top"] as int,
+        color: data["color"] as String?,
+        scale: (data["scale"] ?? 1.0) as double,
+      );
+    } else {
+      return IconDrawing.custom(
+        icon,
+        left: data["left"] as int,
+        top: data["top"] as int,
+        color: data["color"] as String?,
+        scale: (data["scale"] ?? 1.0) as double,
+      );
+    }
   }
 
   @override
@@ -358,9 +505,10 @@ class IconDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon.name,
-      "data": icon.filename,
+      "icon": icon?.name ?? customIconFilename,
+      "data": iconFilename,
       "color": color,
+      "scale": scale,
     };
   }
 }

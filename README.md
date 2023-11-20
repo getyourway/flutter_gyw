@@ -139,7 +139,12 @@ Note that through this drawing, you can change the background color.
 
 ### How can I have bigger icons?
 
-For now, only a few 48x48 icons are supported. New icons and different sizes will be added in future versions.
+IconDrawing has a scale parameter that allows you to scale the icon up or down. If the icon is 48x48, a scale factor of 2.0 will result in a 96x96 icon. The scale factor has a range between 0.01 and 13.7. Any scale factor outside of this range will be clamped to the nearest value within the range.
+
+### What is a "custom" IconDrawing?
+
+A custom `IconDrawing` is an icon that is not part of the default set of icons provided by the package.
+Custom icons will be shown on the GYW device if it contains the corresponding icon file in its internal storage.
 
 ### How can I troubleshoot connection issues with my GYW device?
 
@@ -186,7 +191,3 @@ The font used on the aRdent glasses is **RobotoMono**.
 ![Example of RobotoMono text](static/img/RobotoMono.png)
 
 You can download it from [Google fonts](https://fonts.google.com/specimen/Roboto+Mono).
-
-### Why does the color and the size parameter of a `TextDrawing` has no impact ?
-
-Color and size of the TextDrawing are two features that will be enabled in the future. For now, those are only there to help developers to prepare their developments with this feature.

@@ -9,10 +9,10 @@ class GYWBtManager {
   static final GYWBtManager instance = GYWBtManager._();
 
   GYWBtManager._() {
-    init();
+    _init();
   }
 
-  Future<void> init() async {
+  Future<void> _init() async {
     bluetoothOn = await bluetoothOnAsync;
 
     FlutterBluePlus.adapterState.listen((state) {
@@ -25,19 +25,19 @@ class GYWBtManager {
     });
   }
 
-  /// List of devices available for a Bluetooth connection
+  /// The list of devices available for a Bluetooth connection
   List<GYWBtDevice> devices = [];
 
-  /// Status value indicating that the manager is searching around for devices
+  /// whether the manager is searching around for devices
   bool _isScanning = false;
 
-  /// Whether the Bluetooth is on
+  /// Whether the Bluetooth is active
   bool bluetoothOn = false;
 
-  /// Function triggered when there is a Bluetooth status change
+  /// A function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
 
-  /// Manullay refresh the Bluetooth status and returns the new status
+  /// Manually refreshes the Bluetooth status and returns the new status
   Future<bool> get bluetoothOnAsync async {
     final BluetoothAdapterState bluetoothState =
         await FlutterBluePlus.adapterState.first;
@@ -59,7 +59,10 @@ class GYWBtManager {
     }
   }
 
-  /// Scan for Bluetooth devices and refresh the list of devices available for a connection
+  /// Scans for Bluetooth devices in the surroundings
+  ///
+  /// This refreshes the list of devices available for a connection and throws
+  /// [GYWStatusException] in case of error
   Future<void> refreshDevices({
     Duration timeout = const Duration(seconds: 3),
     int deviceLifeDuration = 10,
@@ -78,7 +81,7 @@ class GYWBtManager {
       _isScanning = true;
 
       // Get devices that are already connected
-      final connectedDevices = await FlutterBluePlus.connectedSystemDevices;
+      final connectedDevices = await FlutterBluePlus.systemDevices;
 
       // Add them to the manager list
       for (final BluetoothDevice fbDevice in connectedDevices) {
@@ -152,8 +155,9 @@ class GYWBtManager {
     }
   }
 
-  /// Stop the current scan.
-  /// Throws a [GYWStatusException] if a scan is not in progress
+  /// Stops the current scan
+  ///
+  /// It throws a [GYWStatusException] if a scan is not in progress
   Future<void> stopScan() async {
     if (!_isScanning) {
       throw const GYWStatusException("Scan is not in progress.");
