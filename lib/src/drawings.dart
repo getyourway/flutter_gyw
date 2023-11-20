@@ -485,7 +485,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
-        scale: (data["scale"] ?? 1.0) as double,
+        scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
       return IconDrawing.custom(
@@ -493,7 +493,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
-        scale: (data["scale"] ?? 1.0) as double,
+        scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
   }

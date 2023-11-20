@@ -1,3 +1,7 @@
+## 1.1.4
+
+* [FIX] Make icon scale deserialization work also with integers, not only doubles
+
 ## 1.1.3
 * [DEL] Deprecate delays when sending commands and set their default value to 0
 * [IMP] Support custom icons
