@@ -1,3 +1,7 @@
+## 1.1.4
+
+* [FIX] Make icon scale deserialization work also with integers, not only doubles
+
 ## 1.1.3
 * [DEL] Deprecate delays when sending commands and set their default value to 0
 * [IMP] Support custom icons
@@ -6,7 +10,6 @@
 * [FIX] Replace the old rename PNG icon with the new one
 * [IMP] Improve code documentation
 * [IMP] Add support for wrapping TextDrawings on multiple lines
-* [FIX] Make icon scale deserialization work also with integers, not only doubles
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
