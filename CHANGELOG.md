@@ -5,6 +5,7 @@
 * [ADD] Add SVG icons and scaling factor
 * [FIX] Replace the old rename PNG icon with the new one
 * [IMP] Improve code documentation
+* [FIX] Make icon scale deserialization work also with integers, not only doubles
 
 ## 1.1.2
 * [ADD] Add size and color parameters to TextDrawing
