@@ -41,7 +41,10 @@ enum GYWControlCode {
   autoRotateScreen(0x0A),
 
   /// Enable or disable the display backlight
-  enableBacklight(0x0B);
+  enableBacklight(0x0B),
+
+  /// Draw a colored rectangle
+  drawRectangle(0x0C);
 
   /// The Control code value used internally on the device
   final int value;

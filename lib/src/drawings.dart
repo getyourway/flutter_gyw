@@ -38,6 +38,8 @@ abstract class GYWDrawing {
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
         return IconDrawing.fromJson(data);
+      case RectangleDrawing.type:
+        return RectangleDrawing.fromJson(data);
       default:
         throw UnsupportedError("Type '${data['type']}' is not supported.");
     }
@@ -509,6 +511,95 @@ class IconDrawing extends GYWDrawing {
       "data": iconFilename,
       "color": color,
       "scale": scale,
+    };
+  }
+}
+
+@immutable
+class RectangleDrawing extends GYWDrawing {
+  /// The type of the [RectangleDrawing].
+  static const String type = "rectangle";
+
+  /// The rectangle width.
+  final int width;
+
+  /// The rectangle height.
+  final int height;
+
+  /// The fill color. If null, the rectangle will use the current background color.
+  final String? color;
+
+  const RectangleDrawing({
+    required super.left,
+    required super.top,
+    required this.width,
+    required this.height,
+    this.color,
+  });
+
+  @override
+  List<GYWBtCommand> toCommands() {
+    final controlBytes = BytesBuilder()
+      ..add(int8Bytes(GYWControlCode.drawRectangle.value))
+      ..add(uint16Bytes(left))
+      ..add(uint16Bytes(top))
+      ..add(uint16Bytes(width))
+      ..add(uint16Bytes(height))
+      ..add(rgba8888BytesFromColorString(color));
+
+    return [
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
+        controlBytes.toBytes(),
+      ),
+    ];
+  }
+
+  @override
+  String toString() {
+    return 'RectangleDrawing{left: $left, top: $top, width: $width, height: $height, color: $color}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RectangleDrawing &&
+          runtimeType == other.runtimeType &&
+          left == other.left &&
+          top == other.top &&
+          width == other.width &&
+          height == other.height &&
+          color == other.color;
+
+  @override
+  int get hashCode => Object.hash(
+        left,
+        top,
+        width,
+        height,
+        color,
+      );
+
+  /// Deserializes a [RectangleDrawing] from JSON data
+  factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
+    return RectangleDrawing(
+      left: data["left"] as int,
+      top: data["top"] as int,
+      width: data["width"] as int,
+      height: data["height"] as int,
+      color: data["color"] as String?,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+      "left": left,
+      "top": top,
+      "width": width,
+      "height": height,
+      "color": color,
     };
   }
 }
