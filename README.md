@@ -107,6 +107,8 @@ A complete example can be found [here](example/example.dart)
 
 ## Drawings
 
+Here is a list of the different elements that can be shown on the screen. For more information on parameters and authorized values, feel free to look at the code documentation for more advanced details.
+
 ### 1. BlankScreen
 
 Fills the screen with a solid color. If no color is given, the screen will be filled with the last color used, useful for erasing parts of the screen.
@@ -130,8 +132,6 @@ final drawing = TextDrawing(
   maxLines: 2,
 );
 ```
-
-Look at the documentation for details about each parameter.
 
 ### 3. IconDrawing
 
