@@ -105,6 +105,62 @@ for (GYWDrawing drawing in drawings) {
 
 A complete example can be found [here](example/example.dart)
 
+## Drawings
+
+### 1. BlankScreen
+
+Fills the screen with a solid color. If no color is given, the screen will be filled with the last color used, useful for erasing parts of the screen.
+
+```dart
+final drawing = BlankScreen(color: "FF0000FF");
+```
+
+### 2. TextDrawing
+
+Displays text on the screen.
+
+```dart
+final drawing = TextDrawing(
+  text: "Hello, World!",
+  left: 220,
+  top: 50,
+  font: GYWFont.large,
+  size: 34,
+  maxWidth: 200,
+  maxLines: 2,
+);
+```
+
+Look at the documentation for details about each parameter.
+
+### 3. IconDrawing
+
+Displays an icon on the screen.
+
+```dart
+final drawing = IconDrawing(
+  icon: GYWIcon.checkbox,
+  left: 220,
+  top: 50,
+  color: "FF0000FF",
+  scale: 1.5,
+);
+```
+
+### 4. RectangleDrawing
+
+Draws a colored rectangle on the screen.
+
+```dart
+final drawing = RectangleDrawing(
+  left: 220,
+  top: 50,
+  width: 100,
+  height: 100,
+  color: "FF0000FF",
+);
+```
+
 ## Licence
 
 Copyright (c) 2023 - Get Your Way SRL

@@ -66,7 +66,7 @@ class TextDrawing extends GYWDrawing {
   /// If no font is given, it uses the most recent one
   final GYWFont? font;
 
-  /// The size of the text (max 48 pt)
+  /// The text size. Overrides the font size.
   final int? size;
 
   /// The color of the text (in 8-characters ORGB format)
