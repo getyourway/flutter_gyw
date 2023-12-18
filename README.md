@@ -161,6 +161,22 @@ final drawing = RectangleDrawing(
 );
 ```
 
+### 5. SpinnerDrawing
+
+Draws an animated spinner.
+
+```dart
+final drawing = SpinnerDrawing(
+  left: 300,
+  top: 200,
+  image: "spinner_1.svg",
+  scale: 2.5,
+  color: "ffff00ff",
+  animationTimingFunction: AnimationTimingFunction.ease_out,
+  spinsPerSecond: 1.5,
+);
+```
+
 ## Licence
 
 Copyright (c) 2023 - Get Your Way SRL

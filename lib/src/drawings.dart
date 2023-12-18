@@ -596,19 +596,27 @@ class SpinnerDrawing extends GYWDrawing {
 
   /// The path to the SVG image on the device.
   final String image;
+
+  /// The scale of the image.
   final num scale;
-  final String color;
+
+  /// The fill color. If null, the image colors will be preserved.
+  final String? color;
+
+  /// The curve applied while spinning.
   final AnimationTimingFunction animationTimingFunction;
+
+  /// How many rotations per second.
   final num spinsPerSecond;
 
   const SpinnerDrawing({
     required super.left,
     required super.top,
     required this.image,
-    required this.scale,
-    required this.color,
-    required this.animationTimingFunction,
-    required this.spinsPerSecond,
+    this.scale = 1,
+    this.color,
+    this.animationTimingFunction = AnimationTimingFunction.linear,
+    this.spinsPerSecond = 1,
   });
 
   @override
@@ -619,7 +627,7 @@ class SpinnerDrawing extends GYWDrawing {
       ..add(uint16Bytes(top))
       ..add(rgba8888BytesFromColorString(color))
       ..add(byteFromScale(scale))
-      ..add(uint8Bytes(animationTimingFunction.value))
+      ..add(uint8Bytes(animationTimingFunction.id))
       ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
 
     return [
@@ -679,7 +687,7 @@ SpinnerDrawing{
       top: data["top"] as int,
       image: data["image"] as String,
       scale: data["scale"] as num,
-      color: data["color"] as String,
+      color: data["color"] as String?,
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),
@@ -707,7 +715,7 @@ enum AnimationTimingFunction {
   ease_in(1),
   ease_out(2);
 
-  final int value;
+  final int id;
 
-  const AnimationTimingFunction(this.value);
+  const AnimationTimingFunction(this.id);
 }
