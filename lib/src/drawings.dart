@@ -594,9 +594,6 @@ class SpinnerDrawing extends GYWDrawing {
   /// The type of the [SpinnerDrawing].
   static const String type = "spinner";
 
-  /// The path to the SVG image on the device.
-  final String image;
-
   /// The scale of the image.
   final num scale;
 
@@ -612,7 +609,6 @@ class SpinnerDrawing extends GYWDrawing {
   const SpinnerDrawing({
     required super.left,
     required super.top,
-    required this.image,
     this.scale = 1,
     this.color,
     this.animationTimingFunction = AnimationTimingFunction.linear,
@@ -633,7 +629,7 @@ class SpinnerDrawing extends GYWDrawing {
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(image),
+        const Utf8Encoder().convert("spinner_1.svg"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -648,7 +644,6 @@ class SpinnerDrawing extends GYWDrawing {
 SpinnerDrawing{
   left: $left,
   top: $top,
-  image: $image,
   color: $color,
   scale: $scale,
   animationTimingFunction: $animationTimingFunction,
@@ -663,7 +658,6 @@ SpinnerDrawing{
           runtimeType == other.runtimeType &&
           left == other.left &&
           top == other.top &&
-          image == other.image &&
           scale == other.scale &&
           color == other.color &&
           animationTimingFunction == other.animationTimingFunction &&
@@ -673,7 +667,6 @@ SpinnerDrawing{
   int get hashCode => Object.hash(
         left,
         top,
-        image,
         scale,
         color,
         animationTimingFunction,
@@ -685,7 +678,6 @@ SpinnerDrawing{
     return SpinnerDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
-      image: data["image"] as String,
       scale: data["scale"] as num,
       color: data["color"] as String?,
       animationTimingFunction: AnimationTimingFunction.values.byName(
@@ -701,7 +693,6 @@ SpinnerDrawing{
       "type": type,
       "left": left,
       "top": top,
-      "image": image,
       "scale": scale,
       "color": color,
       "animation_timing_function": animationTimingFunction.name,
