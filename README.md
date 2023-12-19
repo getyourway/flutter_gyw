@@ -169,7 +169,6 @@ Draws an animated spinner.
 final drawing = SpinnerDrawing(
   left: 300,
   top: 200,
-  image: "spinner_1.svg",
   scale: 2.5,
   color: "ffff00ff",
   animationTimingFunction: AnimationTimingFunction.ease_out,
