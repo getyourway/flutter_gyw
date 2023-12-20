@@ -13,6 +13,12 @@ Uint8List int8Bytes(
 ) =>
     Uint8List(1)..buffer.asByteData().setInt8(0, value);
 
+/// Converts a uint8 into bytes
+Uint8List uint8Bytes(
+  int value,
+) =>
+    Uint8List(1)..buffer.asByteData().setUint8(0, value);
+
 /// Converts a uint16 into bytes
 Uint8List uint16Bytes(
   int value, {
@@ -43,4 +49,20 @@ extension Compare<T> on Comparable<T> {
   bool operator >=(T other) => compareTo(other) >= 0;
 
   bool operator <=(T other) => compareTo(other) <= 0;
+}
+
+List<int> byteFromScale(num scale) {
+  scale = scale.clamp(0.01, 13.7);
+  int scaleByte;
+  if (scale >= 1.0) {
+    // min: 1.0 -> 0.0 -> 0
+    // max: 13.7 -> 12.7 -> 127
+    scaleByte = ((scale - 1.0) * 10.0).round();
+  } else {
+    // min: 0.01 -> -1
+    // max: 0.99 -> -99
+    scaleByte = (-scale * 100.0).round();
+  }
+  assert(-99 <= scaleByte && scaleByte <= 127);
+  return int8Bytes(scaleByte);
 }
