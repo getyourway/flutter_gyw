@@ -44,7 +44,10 @@ enum GYWControlCode {
   enableBacklight(0x0B),
 
   /// Draw a colored rectangle
-  drawRectangle(0x0C);
+  drawRectangle(0x0C),
+
+  /// Display an animated spinner
+  displaySpinner(0x0D);
 
   /// The Control code value used internally on the device
   final int value;

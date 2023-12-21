@@ -3,6 +3,7 @@
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
 * [ADD] Add a new drawing for colored rectangles which allows for partially clearing the screen
 * [FIX] Fix blank.svg not rendering
+* [ADD] Add `SpinnerDrawing` for drawing animated spinners
 * [FIX] Fix bluetooth not enabled error when it's actually enabled
 
 ## 1.1.3
