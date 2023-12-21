@@ -13,8 +13,6 @@ class GYWBtManager {
   }
 
   Future<void> _init() async {
-    bluetoothOn = await bluetoothOnAsync;
-
     FlutterBluePlus.adapterState.listen((state) {
       if (bluetoothOn != (state == BluetoothAdapterState.on)) {
         bluetoothOn = state == BluetoothAdapterState.on;
@@ -36,15 +34,6 @@ class GYWBtManager {
 
   /// A function triggered when there is a Bluetooth status change
   void Function(bool)? onBluetoothStatusChange;
-
-  /// Manually refreshes the Bluetooth status and returns the new status
-  Future<bool> get bluetoothOnAsync async {
-    final BluetoothAdapterState bluetoothState =
-        await FlutterBluePlus.adapterState.first;
-    bluetoothOn = bluetoothState == BluetoothAdapterState.on;
-
-    return bluetoothOn;
-  }
 
   void _addDevice(GYWBtDevice device) {
     final index = devices.indexWhere(
