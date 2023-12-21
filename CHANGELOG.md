@@ -3,6 +3,7 @@
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
 * [ADD] Add a new drawing for colored rectangles which allows for partially clearing the screen
 * [FIX] Fix blank.svg not rendering
+* [FIX] Fix bluetooth not enabled error when it's actually enabled
 
 ## 1.1.3
 * [DEL] Deprecate delays when sending commands and set their default value to 0
