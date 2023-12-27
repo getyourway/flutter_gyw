@@ -108,7 +108,7 @@ class TextDrawing extends GYWDrawing {
 
     int currentTop = top;
     for (final String line in _wrapText()) {
-      commands.addAll(_lineToCommands(line, currentTop));
+      commands.addAll(_lineToCommands(line, currentTop, darkMode));
       currentTop += charHeight;
     }
     return commands;
@@ -154,7 +154,7 @@ class TextDrawing extends GYWDrawing {
     yield line.toString();
   }
 
-  List<GYWBtCommand> _lineToCommands(String line, int top) {
+  List<GYWBtCommand> _lineToCommands(String line, int top, bool darkMode) {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
@@ -167,7 +167,12 @@ class TextDrawing extends GYWDrawing {
 
     String shortColor = "NULL";
     if (color != null) {
-      shortColor = color![0] + color![2] + color![4] + color![6];
+      Color c = colorFromHex(color!);
+      if (darkMode) {
+        c = c.dark();
+      }
+      final String hexColor = hexFromColor(c);
+      shortColor = hexColor[0] + hexColor[2] + hexColor[4] + hexColor[6];
     }
     controlBytes.add(utf8.encode(shortColor));
 
