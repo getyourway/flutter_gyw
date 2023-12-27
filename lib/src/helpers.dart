@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
 /// Converts a int32 into bytes
 Uint8List int32Bytes(
