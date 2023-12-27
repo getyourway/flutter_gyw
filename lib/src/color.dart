@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 extension Dark on Color {
@@ -33,4 +35,14 @@ String hexFromColor(Color color) {
       "${color.red.toRadixString(16).padLeft(2, "0")}"
       "${color.green.toRadixString(16).padLeft(2, "0")}"
       "${color.blue.toRadixString(16).padLeft(2, "0")}";
+}
+
+/// Converts a color to an RGBA8888 bytes array
+Uint8List rgba8888BytesFromColor(Color color) {
+  return Uint8List.fromList([
+    color.red,
+    color.green,
+    color.blue,
+    color.alpha,
+  ]);
 }

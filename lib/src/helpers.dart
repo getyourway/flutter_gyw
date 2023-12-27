@@ -27,16 +27,6 @@ Uint8List uint16Bytes(
 }) =>
     Uint8List(2)..buffer.asByteData().setUint16(0, value, endian);
 
-/// Converts a color to an RGBA8888 bytes array
-Uint8List rgba8888BytesFromColor(Color color) {
-  return Uint8List.fromList([
-    color.red,
-    color.green,
-    color.blue,
-    color.alpha,
-  ]);
-}
-
 /// Allows to compare Comparable object using inequality signs
 extension Compare<T> on Comparable<T> {
   bool operator >(T other) => compareTo(other) > 0;
