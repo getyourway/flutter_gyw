@@ -165,15 +165,13 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    String shortColor = "NULL";
-    if (color != null) {
-      Color c = colorFromHex(color!);
-      if (darkMode) {
-        c = c.dark();
-      }
-      final String hexColor = hexFromColor(c);
-      shortColor = hexColor[0] + hexColor[2] + hexColor[4] + hexColor[6];
+    Color c = colorFromHex(color ?? "FF000000");
+    if (darkMode) {
+      c = c.dark();
     }
+    final String hexColor = hexFromColor(c);
+    final String shortColor =
+        hexColor[0] + hexColor[2] + hexColor[4] + hexColor[6];
     controlBytes.add(utf8.encode(shortColor));
 
     return [
@@ -436,14 +434,11 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    String hexColor = "NULLNULL";
-    if (color != null) {
-      Color c = colorFromHex(color!);
-      if (darkMode) {
-        c = c.dark();
-      }
-      hexColor = hexFromColor(c);
+    Color c = colorFromHex(color ?? "FF000000");
+    if (darkMode) {
+      c = c.dark();
     }
+    final String hexColor = hexFromColor(c);
     controlBytes.add(utf8.encode(hexColor));
     controlBytes.add(byteFromScale(scale));
 
