@@ -3,22 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 extension Dark on Color {
-  Color dark() => _rotateColor(_invertColor(this));
-}
-
-Color _invertColor(Color color) {
-  return Color.fromARGB(
-    color.alpha,
-    255 - color.red,
-    255 - color.green,
-    255 - color.blue,
-  );
-}
-
-Color _rotateColor(Color color) {
-  final hsvColor = HSVColor.fromColor(color);
-  final rotatedColor = hsvColor.withHue((hsvColor.hue + 180.0) % 360.0);
-  return rotatedColor.toColor();
+  Color dark() {
+    final hslColor = HSLColor.fromColor(this);
+    return hslColor.withLightness(1.0 - hslColor.lightness).toColor();
+  }
 }
 
 Color colorFromHex(String color) {
