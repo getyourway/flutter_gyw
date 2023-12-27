@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 /// Converts a int32 into bytes
 Uint8List int32Bytes(
@@ -26,18 +27,14 @@ Uint8List uint16Bytes(
 }) =>
     Uint8List(2)..buffer.asByteData().setUint16(0, value, endian);
 
-/// Converts an ARGB color string to an RGBA8888 bytes array
-Uint8List rgba8888BytesFromColorString(String? color) {
-  if (color == null) {
-    return Uint8List(4);
-  }
-
-  final int alpha = int.parse(color.substring(0, 2), radix: 16);
-  final int red = int.parse(color.substring(2, 4), radix: 16);
-  final int green = int.parse(color.substring(4, 6), radix: 16);
-  final int blue = int.parse(color.substring(6, 8), radix: 16);
-
-  return Uint8List.fromList([red, green, blue, alpha]);
+/// Converts a color to an RGBA8888 bytes array
+Uint8List rgba8888BytesFromColor(Color color) {
+  return Uint8List.fromList([
+    color.red,
+    color.green,
+    color.blue,
+    color.alpha,
+  ]);
 }
 
 /// Allows to compare Comparable object using inequality signs

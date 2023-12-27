@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gyw/src/color.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
@@ -25,7 +26,9 @@ abstract class GYWDrawing {
   });
 
   /// Converts the drawing into a list of commands understood by the device
-  List<GYWBtCommand> toCommands();
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  });
 
   /// Deserializes a [GYWDrawing] from JSON data
   factory GYWDrawing.fromJson(Map<String, dynamic> data) {
@@ -95,7 +98,9 @@ class TextDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
     final int fontSize = size ?? font?.size ?? GYWFont.small.size;
     final int charHeight = (fontSize * 1.33).ceil();
 
@@ -269,7 +274,9 @@ class WhiteScreen extends GYWDrawing {
   const WhiteScreen();
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
     return [
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -313,13 +320,20 @@ class BlankScreen extends GYWDrawing {
   const BlankScreen({this.color});
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.clear.value));
 
     if (color != null) {
       // Add color value
-      controlBytes.add(utf8.encode(color!));
+      Color c = colorFromHex(color!);
+      if (darkMode) {
+        c = c.dark();
+      }
+
+      controlBytes.add(utf8.encode(hexFromColor(c)));
     }
 
     return [
@@ -409,12 +423,23 @@ class IconDrawing extends GYWDrawing {
   }) : icon = null;
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
-    controlBytes.add(utf8.encode(color ?? "NULLNULL"));
+
+    String hexColor = "NULLNULL";
+    if (color != null) {
+      Color c = colorFromHex(color!);
+      if (darkMode) {
+        c = c.dark();
+      }
+      hexColor = hexFromColor(c);
+    }
+    controlBytes.add(utf8.encode(hexColor));
     controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
@@ -523,14 +548,24 @@ class RectangleDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
+    Color c = const Color.fromARGB(0, 0, 0, 0);
+    if (color != null) {
+      c = colorFromHex(color!);
+      if (darkMode) {
+        c = c.dark();
+      }
+    }
+
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
       ..add(uint16Bytes(left))
       ..add(uint16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
-      ..add(rgba8888BytesFromColorString(color));
+      ..add(rgba8888BytesFromColor(c));
 
     return [
       GYWBtCommand(
@@ -616,12 +651,22 @@ class SpinnerDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands() {
+  List<GYWBtCommand> toCommands({
+    bool darkMode = false,
+  }) {
+    Color c = const Color.fromARGB(0, 0, 0, 0);
+    if (color != null) {
+      c = colorFromHex(color!);
+      if (darkMode) {
+        c = c.dark();
+      }
+    }
+
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
       ..add(uint16Bytes(left))
       ..add(uint16Bytes(top))
-      ..add(rgba8888BytesFromColorString(color))
+      ..add(rgba8888BytesFromColor(c))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))
       ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
