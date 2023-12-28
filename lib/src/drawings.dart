@@ -167,7 +167,7 @@ class TextDrawing extends GYWDrawing {
 
     Color c = colorFromHex(color ?? "FF000000");
     if (darkMode) {
-      c = c.dark();
+      c = c.invertLightness();
     }
     final String hexColor = hexFromColor(c);
     final String shortColor =
@@ -333,7 +333,7 @@ class BlankScreen extends GYWDrawing {
       // Add color value
       Color c = colorFromHex(color!);
       if (darkMode) {
-        c = c.dark();
+        c = c.invertLightness();
       }
 
       controlBytes.add(utf8.encode(hexFromColor(c)));
@@ -436,7 +436,7 @@ class IconDrawing extends GYWDrawing {
 
     Color c = colorFromHex(color ?? "FF000000");
     if (darkMode) {
-      c = c.dark();
+      c = c.invertLightness();
     }
     final String hexColor = hexFromColor(c);
     controlBytes.add(utf8.encode(hexColor));
@@ -555,7 +555,7 @@ class RectangleDrawing extends GYWDrawing {
     if (color != null) {
       c = colorFromHex(color!);
       if (darkMode) {
-        c = c.dark();
+        c = c.invertLightness();
       }
     }
 
@@ -658,7 +658,7 @@ class SpinnerDrawing extends GYWDrawing {
     if (color != null) {
       c = colorFromHex(color!);
       if (darkMode) {
-        c = c.dark();
+        c = c.invertLightness();
       }
     }
 

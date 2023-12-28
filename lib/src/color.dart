@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
-extension Dark on Color {
-  Color dark() {
+extension InvertLightness on Color {
+  Color invertLightness() {
     final hslColor = HSLColor.fromColor(this);
     return hslColor.withLightness(1.0 - hslColor.lightness).toColor();
   }

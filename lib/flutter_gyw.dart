@@ -7,7 +7,7 @@ library flutter_gyw;
 
 export 'src/bt_device.dart' show GYWBtDevice;
 export 'src/bt_manager.dart' show GYWBtManager;
-export 'src/color.dart' show Dark;
+export 'src/color.dart' show InvertLightness;
 export 'src/drawings.dart'
     show
         BlankScreen,
