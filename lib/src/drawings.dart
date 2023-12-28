@@ -100,7 +100,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   GYWDrawing invertLightness() {
-    final String color = this.color ?? "FFFFFFFF";
+    final String color = this.color ?? "FF000000";
 
     return TextDrawing(
       text: text,
@@ -453,7 +453,7 @@ class IconDrawing extends GYWDrawing {
 
   @override
   GYWDrawing invertLightness() {
-    final String color = this.color ?? "FFFFFFFF";
+    final String color = this.color ?? "FF000000";
     return IconDrawing._(
       top: top,
       left: left,
