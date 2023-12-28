@@ -25,10 +25,10 @@ abstract class GYWDrawing {
     this.left = 0,
   });
 
+  GYWDrawing invertLightness();
+
   /// Converts the drawing into a list of commands understood by the device
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  });
+  List<GYWBtCommand> toCommands();
 
   /// Deserializes a [GYWDrawing] from JSON data
   factory GYWDrawing.fromJson(Map<String, dynamic> data) {
@@ -72,6 +72,7 @@ class TextDrawing extends GYWDrawing {
   /// The text size. Overrides the font size.
   final int? size;
 
+  // TODO(roscale): It doesn't make sense to have nullable color.
   /// The color of the text (in 8-characters ORGB format)
   final String? color;
 
@@ -98,9 +99,23 @@ class TextDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    final String color = this.color ?? "FFFFFFFF";
+
+    return TextDrawing(
+      text: text,
+      font: font,
+      size: size,
+      color: hexFromColor(colorFromHex(color).invertLightness()),
+      maxWidth: maxWidth,
+      maxLines: maxLines,
+      left: left,
+      top: top,
+    );
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     final int fontSize = size ?? font?.size ?? GYWFont.small.size;
     final int charHeight = (fontSize * 1.33).ceil();
 
@@ -108,7 +123,7 @@ class TextDrawing extends GYWDrawing {
 
     int currentTop = top;
     for (final String line in _wrapText()) {
-      commands.addAll(_lineToCommands(line, currentTop, darkMode));
+      commands.addAll(_lineToCommands(line, currentTop));
       currentTop += charHeight;
     }
     return commands;
@@ -154,7 +169,7 @@ class TextDrawing extends GYWDrawing {
     yield line.toString();
   }
 
-  List<GYWBtCommand> _lineToCommands(String line, int top, bool darkMode) {
+  List<GYWBtCommand> _lineToCommands(String line, int top) {
     // Bytes generation for the control data (command code + params)
     final controlBytes = BytesBuilder();
 
@@ -165,11 +180,7 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    Color c = colorFromHex(color ?? "FF000000");
-    if (darkMode) {
-      c = c.invertLightness();
-    }
-    final String hexColor = hexFromColor(c);
+    final String hexColor = color ?? "FF000000";
     final String shortColor =
         hexColor[0] + hexColor[2] + hexColor[4] + hexColor[6];
     controlBytes.add(utf8.encode(shortColor));
@@ -277,9 +288,12 @@ class WhiteScreen extends GYWDrawing {
   const WhiteScreen();
 
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    return const BlankScreen(color: "FF000000");
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     return [
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -323,21 +337,20 @@ class BlankScreen extends GYWDrawing {
   const BlankScreen({this.color});
 
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    // FIXME(roscale): It doesn't make sense to have nullable background color.
+    final String color = this.color ?? "FFFFFFFF";
+    return BlankScreen(
+      color: hexFromColor(colorFromHex(color).invertLightness()),
+    );
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.clear.value));
-
-    if (color != null) {
-      // Add color value
-      Color c = colorFromHex(color!);
-      if (darkMode) {
-        c = c.invertLightness();
-      }
-
-      controlBytes.add(utf8.encode(hexFromColor(c)));
-    }
+    final String color = this.color ?? "FFFFFFFF";
+    controlBytes.add(utf8.encode(color));
 
     return [
       GYWBtCommand(
@@ -386,6 +399,7 @@ class IconDrawing extends GYWDrawing {
   /// The type of the [IconDrawing]
   static const String type = "icon";
 
+  // TODO(roscale): Decouple GYWIcon from this class, just have the filepath as a string.
   /// whether the drawings uses a icon that is not part of the library
   bool get isCustom => icon == null;
 
@@ -400,6 +414,7 @@ class IconDrawing extends GYWDrawing {
   /// The name of this icon will be stored in this field instead.
   final String? customIconFilename;
 
+  // TODO(roscale): It doesn't make sense to have nullable color.
   /// Hexadecimal code of the icon fill color
   final String? color;
 
@@ -425,21 +440,39 @@ class IconDrawing extends GYWDrawing {
     this.scale = 1.0,
   }) : icon = null;
 
+  // TODO(roscale): make this class immutable with Freezed and use copyWith.
+  /// Utility private constructor for easier copying.
+  const IconDrawing._({
+    required super.top,
+    required super.left,
+    required this.icon,
+    required this.customIconFilename,
+    required this.color,
+    required this.scale,
+  });
+
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    final String color = this.color ?? "FFFFFFFF";
+    return IconDrawing._(
+      top: top,
+      left: left,
+      icon: icon,
+      customIconFilename: customIconFilename,
+      color: hexFromColor(colorFromHex(color).invertLightness()),
+      scale: scale,
+    );
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
 
-    Color c = colorFromHex(color ?? "FF000000");
-    if (darkMode) {
-      c = c.invertLightness();
-    }
-    final String hexColor = hexFromColor(c);
-    controlBytes.add(utf8.encode(hexColor));
+    final String color = this.color ?? "FF000000";
+    controlBytes.add(utf8.encode(color));
     controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
@@ -548,15 +581,25 @@ class RectangleDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    final String? color = this.color != null
+        ? hexFromColor(colorFromHex(this.color!).invertLightness())
+        : null;
+
+    return RectangleDrawing(
+      left: left,
+      top: top,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     Color c = const Color.fromARGB(0, 0, 0, 0);
     if (color != null) {
       c = colorFromHex(color!);
-      if (darkMode) {
-        c = c.invertLightness();
-      }
     }
 
     final controlBytes = BytesBuilder()
@@ -651,15 +694,26 @@ class SpinnerDrawing extends GYWDrawing {
   });
 
   @override
-  List<GYWBtCommand> toCommands({
-    bool darkMode = false,
-  }) {
+  GYWDrawing invertLightness() {
+    final String? color = this.color != null
+        ? hexFromColor(colorFromHex(this.color!).invertLightness())
+        : null;
+
+    return SpinnerDrawing(
+      left: left,
+      top: top,
+      scale: scale,
+      color: color,
+      animationTimingFunction: animationTimingFunction,
+      spinsPerSecond: spinsPerSecond,
+    );
+  }
+
+  @override
+  List<GYWBtCommand> toCommands() {
     Color c = const Color.fromARGB(0, 0, 0, 0);
     if (color != null) {
       c = colorFromHex(color!);
-      if (darkMode) {
-        c = c.invertLightness();
-      }
     }
 
     final controlBytes = BytesBuilder()

@@ -22,7 +22,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   bool _isDisconnecting = false;
   bool _isConnected = false;
   bool _screenOn = false;
-  bool _darkMode = false;
 
   /// Whether the connection to the device is in progress
   bool get isConnecting => _isConnecting;
@@ -40,16 +39,9 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// By setting the lastRssi, the lastSeen value is also updated
   int get lastRssi => _lastRssi;
 
-  bool get darkMode => _darkMode;
-
   set lastRssi(int lastRssi) {
     _lastRssi = lastRssi;
     lastSeen = DateTime.now();
-    notifyListeners();
-  }
-
-  set darkMode(bool darkMode) {
-    _darkMode = darkMode;
     notifyListeners();
   }
 
@@ -188,9 +180,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     GYWDrawing drawing, {
     @Deprecated("Delay is no longer needed") int delay = 0,
   }) async {
-    final commands = drawing.toCommands(
-      darkMode: darkMode,
-    );
+    final commands = drawing.toCommands();
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
