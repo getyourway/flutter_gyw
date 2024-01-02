@@ -38,6 +38,8 @@ abstract class GYWDrawing {
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
         return IconDrawing.fromJson(data);
+      case RectangleDrawing.type:
+        return RectangleDrawing.fromJson(data);
       default:
         throw UnsupportedError("Type '${data['type']}' is not supported.");
     }
@@ -64,7 +66,7 @@ class TextDrawing extends GYWDrawing {
   /// If no font is given, it uses the most recent one
   final GYWFont? font;
 
-  /// The size of the text (max 48 pt)
+  /// The text size. Overrides the font size.
   final int? size;
 
   /// The color of the text (in 8-characters ORGB format)
@@ -412,23 +414,8 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
-
     controlBytes.add(utf8.encode(color ?? "NULLNULL"));
-
-    final scaleDouble = scale.clamp(0.01, 13.7);
-    int scaleByte;
-    if (scaleDouble >= 1.0) {
-      // min: 1.0 -> 0.0 -> 0
-      // max: 13.7 -> 12.7 -> 127
-      scaleByte = ((scale - 1.0) * 10.0).round();
-    } else {
-      // min: 0.01 -> -1
-      // max: 0.99 -> -99
-      scaleByte = (-scale * 100.0).round();
-    }
-    assert(-99 <= scale && scale <= 127);
-
-    controlBytes.add(int8Bytes(scaleByte));
+    controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
       GYWBtCommand(
@@ -485,7 +472,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
-        scale: (data["scale"] ?? 1.0) as double,
+        scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
       return IconDrawing.custom(
@@ -493,7 +480,7 @@ class IconDrawing extends GYWDrawing {
         left: data["left"] as int,
         top: data["top"] as int,
         color: data["color"] as String?,
-        scale: (data["scale"] ?? 1.0) as double,
+        scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
   }
@@ -511,4 +498,215 @@ class IconDrawing extends GYWDrawing {
       "scale": scale,
     };
   }
+}
+
+@immutable
+class RectangleDrawing extends GYWDrawing {
+  /// The type of the [RectangleDrawing].
+  static const String type = "rectangle";
+
+  /// The rectangle width.
+  final int width;
+
+  /// The rectangle height.
+  final int height;
+
+  /// The fill color. If null, the rectangle will use the current background color.
+  final String? color;
+
+  const RectangleDrawing({
+    required super.left,
+    required super.top,
+    required this.width,
+    required this.height,
+    this.color,
+  });
+
+  @override
+  List<GYWBtCommand> toCommands() {
+    final controlBytes = BytesBuilder()
+      ..add(int8Bytes(GYWControlCode.drawRectangle.value))
+      ..add(uint16Bytes(left))
+      ..add(uint16Bytes(top))
+      ..add(uint16Bytes(width))
+      ..add(uint16Bytes(height))
+      ..add(rgba8888BytesFromColorString(color));
+
+    return [
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
+        controlBytes.toBytes(),
+      ),
+    ];
+  }
+
+  @override
+  String toString() {
+    return 'RectangleDrawing{left: $left, top: $top, width: $width, height: $height, color: $color}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RectangleDrawing &&
+          runtimeType == other.runtimeType &&
+          left == other.left &&
+          top == other.top &&
+          width == other.width &&
+          height == other.height &&
+          color == other.color;
+
+  @override
+  int get hashCode => Object.hash(
+        left,
+        top,
+        width,
+        height,
+        color,
+      );
+
+  /// Deserializes a [RectangleDrawing] from JSON data
+  factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
+    return RectangleDrawing(
+      left: data["left"] as int,
+      top: data["top"] as int,
+      width: data["width"] as int,
+      height: data["height"] as int,
+      color: data["color"] as String?,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+      "left": left,
+      "top": top,
+      "width": width,
+      "height": height,
+      "color": color,
+    };
+  }
+}
+
+@immutable
+class SpinnerDrawing extends GYWDrawing {
+  /// The type of the [SpinnerDrawing].
+  static const String type = "spinner";
+
+  /// The scale of the image.
+  final num scale;
+
+  /// The fill color. If null, the image colors will be preserved.
+  final String? color;
+
+  /// The curve applied while spinning.
+  final AnimationTimingFunction animationTimingFunction;
+
+  /// How many rotations per second.
+  final num spinsPerSecond;
+
+  const SpinnerDrawing({
+    required super.left,
+    required super.top,
+    this.scale = 1,
+    this.color,
+    this.animationTimingFunction = AnimationTimingFunction.linear,
+    this.spinsPerSecond = 1,
+  });
+
+  @override
+  List<GYWBtCommand> toCommands() {
+    final controlBytes = BytesBuilder()
+      ..add(int8Bytes(GYWControlCode.displaySpinner.value))
+      ..add(uint16Bytes(left))
+      ..add(uint16Bytes(top))
+      ..add(rgba8888BytesFromColorString(color))
+      ..add(byteFromScale(scale))
+      ..add(uint8Bytes(animationTimingFunction.id))
+      ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
+
+    return [
+      GYWBtCommand(
+        GYWCharacteristic.nameDisplay,
+        const Utf8Encoder().convert("spinner_1.svg"),
+      ),
+      GYWBtCommand(
+        GYWCharacteristic.ctrlDisplay,
+        controlBytes.toBytes(),
+      ),
+    ];
+  }
+
+  @override
+  String toString() {
+    return '''
+SpinnerDrawing{
+  left: $left,
+  top: $top,
+  color: $color,
+  scale: $scale,
+  animationTimingFunction: $animationTimingFunction,
+  spinsPerSecond: $spinsPerSecond,
+}''';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SpinnerDrawing &&
+          runtimeType == other.runtimeType &&
+          left == other.left &&
+          top == other.top &&
+          scale == other.scale &&
+          color == other.color &&
+          animationTimingFunction == other.animationTimingFunction &&
+          spinsPerSecond == other.spinsPerSecond;
+
+  @override
+  int get hashCode => Object.hash(
+        left,
+        top,
+        scale,
+        color,
+        animationTimingFunction,
+        spinsPerSecond,
+      );
+
+  /// Deserializes a [RectangleDrawing] from JSON data
+  factory SpinnerDrawing.fromJson(Map<String, dynamic> data) {
+    return SpinnerDrawing(
+      left: data["left"] as int,
+      top: data["top"] as int,
+      scale: data["scale"] as num,
+      color: data["color"] as String?,
+      animationTimingFunction: AnimationTimingFunction.values.byName(
+        data["animation_timing_function"] as String,
+      ),
+      spinsPerSecond: data["spins_per_second"] as num,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "type": type,
+      "left": left,
+      "top": top,
+      "scale": scale,
+      "color": color,
+      "animation_timing_function": animationTimingFunction.name,
+      "spins_per_second": spinsPerSecond,
+    };
+  }
+}
+
+enum AnimationTimingFunction {
+  linear(0),
+  ease_in(1),
+  ease_out(2);
+
+  final int id;
+
+  const AnimationTimingFunction(this.id);
 }
