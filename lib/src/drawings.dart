@@ -682,8 +682,9 @@ SpinnerDrawing{
       top: data["top"] as int,
       scale: data["scale"] as num,
       color: data["color"] as String?,
-      animationTimingFunction: AnimationTimingFunction.values.byName(
-        data["animation_timing_function"] as String,
+      animationTimingFunction: AnimationTimingFunction.values.firstWhere(
+        (element) =>
+            element.name == data["animation_timing_function"] as String,
       ),
       spinsPerSecond: data["spins_per_second"] as num,
     );
