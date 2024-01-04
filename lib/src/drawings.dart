@@ -702,11 +702,12 @@ SpinnerDrawing{
 }
 
 enum AnimationTimingFunction {
-  linear(0),
-  ease_in(1),
-  ease_out(2);
+  linear(0, "linear"),
+  ease_in(1, "ease-in"),
+  ease_out(2, "ease-out");
 
   final int id;
+  final String name;
 
-  const AnimationTimingFunction(this.id);
+  const AnimationTimingFunction(this.id, this.name);
 }

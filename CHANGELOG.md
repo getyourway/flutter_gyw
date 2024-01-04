@@ -1,3 +1,6 @@
+## 1.1.5
+* [ADD] Add spinner image
+
 ## 1.1.4
 
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
