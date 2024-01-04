@@ -40,6 +40,8 @@ abstract class GYWDrawing {
         return IconDrawing.fromJson(data);
       case RectangleDrawing.type:
         return RectangleDrawing.fromJson(data);
+      case SpinnerDrawing.type:
+        return SpinnerDrawing.fromJson(data);
       default:
         throw UnsupportedError("Type '${data['type']}' is not supported.");
     }
