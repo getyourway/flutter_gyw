@@ -40,6 +40,8 @@ abstract class GYWDrawing {
         return IconDrawing.fromJson(data);
       case RectangleDrawing.type:
         return RectangleDrawing.fromJson(data);
+      case SpinnerDrawing.type:
+        return SpinnerDrawing.fromJson(data);
       default:
         throw UnsupportedError("Type '${data['type']}' is not supported.");
     }
@@ -680,8 +682,9 @@ SpinnerDrawing{
       top: data["top"] as int,
       scale: data["scale"] as num,
       color: data["color"] as String?,
-      animationTimingFunction: AnimationTimingFunction.values.byName(
-        data["animation_timing_function"] as String,
+      animationTimingFunction: AnimationTimingFunction.values.firstWhere(
+        (element) =>
+            element.name == data["animation_timing_function"] as String,
       ),
       spinsPerSecond: data["spins_per_second"] as num,
     );
@@ -702,11 +705,12 @@ SpinnerDrawing{
 }
 
 enum AnimationTimingFunction {
-  linear(0),
-  ease_in(1),
-  ease_out(2);
+  linear(0, "linear"),
+  ease_in(1, "ease-in"),
+  ease_out(2, "ease-out");
 
   final int id;
+  final String name;
 
-  const AnimationTimingFunction(this.id);
+  const AnimationTimingFunction(this.id, this.name);
 }

@@ -1,5 +1,7 @@
-## 1.2.0
+## 1.2.1
+* [ADD] Add spinner image
 
+## 1.2.0
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
 * [ADD] Add a new drawing for colored rectangles which allows for partially clearing the screen
 * [FIX] Fix blank.svg not rendering
