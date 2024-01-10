@@ -51,7 +51,7 @@ extension Compare<T> on Comparable<T> {
   bool operator <=(T other) => compareTo(other) <= 0;
 }
 
-List<int> byteFromScale(num scale) {
+List<int> byteFromScale(double scale) {
   scale = scale.clamp(0.01, 13.7);
   int scaleByte;
   if (scale >= 1.0) {
