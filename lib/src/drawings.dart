@@ -597,7 +597,7 @@ class SpinnerDrawing extends GYWDrawing {
   static const String type = "spinner";
 
   /// The scale of the image.
-  final num scale;
+  final double scale;
 
   /// The fill color. If null, the image colors will be preserved.
   final String? color;
@@ -606,15 +606,15 @@ class SpinnerDrawing extends GYWDrawing {
   final AnimationTimingFunction animationTimingFunction;
 
   /// How many rotations per second.
-  final num spinsPerSecond;
+  final double spinsPerSecond;
 
   const SpinnerDrawing({
     required super.left,
     required super.top,
-    this.scale = 1,
+    this.scale = 1.0,
     this.color,
     this.animationTimingFunction = AnimationTimingFunction.linear,
-    this.spinsPerSecond = 1,
+    this.spinsPerSecond = 1.0,
   });
 
   @override
@@ -680,12 +680,12 @@ SpinnerDrawing{
     return SpinnerDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
-      scale: data["scale"] as num,
+      scale: (data["scale"] as num).toDouble(),
       color: data["color"] as String?,
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),
-      spinsPerSecond: data["spins_per_second"] as num,
+      spinsPerSecond: (data["spins_per_second"] as num).toDouble(),
     );
   }
 
