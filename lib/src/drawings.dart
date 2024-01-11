@@ -33,7 +33,7 @@ abstract class GYWDrawing {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
       case WhiteScreen.type:
-        return WhiteScreen.fromJson(data);
+        return const BlankScreen(color: "FFFFFFFF");
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
