@@ -422,7 +422,9 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("$iconFilename.bin"),
+        const Utf8Encoder().convert(
+          isCustom ? iconFilename : "$iconFilename.svg",
+        ),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
