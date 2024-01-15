@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gyw/src/utils.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
@@ -33,7 +34,7 @@ abstract class GYWDrawing {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
       case WhiteScreen.type:
-        return const BlankScreen(color: "FFFFFFFF");
+        return const BlankScreen(color: Colors.white);
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
@@ -71,8 +72,8 @@ class TextDrawing extends GYWDrawing {
   /// The text size. Overrides the font size.
   final int? size;
 
-  /// The color of the text (in 8-characters ORGB format)
-  final String? color;
+  /// The color of the text.
+  final Color color;
 
   /// The maximum width (in pixels) of the text.
   ///
@@ -89,7 +90,7 @@ class TextDrawing extends GYWDrawing {
     required this.text,
     this.font,
     this.size,
-    this.color,
+    this.color = Colors.black,
     this.maxWidth,
     this.maxLines = 1,
     super.left = 0,
@@ -162,10 +163,10 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    String shortColor = "NULL";
-    if (color != null) {
-      shortColor = color![0] + color![2] + color![4] + color![6];
-    }
+    final shortColor = [color.red, color.green, color.blue, color.alpha]
+        .map((channel) => (channel ~/ 16).toRadixString(16))
+        .join();
+
     controlBytes.add(utf8.encode(shortColor));
 
     return [
@@ -231,7 +232,7 @@ class TextDrawing extends GYWDrawing {
       text: data["data"] as String? ?? data["text"] as String,
       font: font,
       size: data["size"] as int?,
-      color: data["color"] as String?,
+      color: Color(data["color"] as int),
       maxWidth: data["max_width"] as int?,
       maxLines: data["max_lines"] as int? ?? 1,
     );
@@ -248,7 +249,7 @@ class TextDrawing extends GYWDrawing {
       "text": text,
       if (font != null) "font": font!.index,
       "size": size,
-      "color": color,
+      "color": color.value,
       "max_width": maxWidth,
       "max_lines": maxLines,
     };
@@ -309,8 +310,8 @@ class BlankScreen extends GYWDrawing {
   /// The type of the [BlankScreen] drawing
   static const String type = "blank_screen";
 
-  /// The hexadecimal code of the background color
-  final String? color;
+  /// The background color. If null, the screen will be cleared with the latest background color used.
+  final Color? color;
 
   const BlankScreen({this.color});
 
@@ -321,7 +322,7 @@ class BlankScreen extends GYWDrawing {
 
     if (color != null) {
       // Add color value
-      controlBytes.add(utf8.encode(color!));
+      controlBytes.add(utf8.encode(hexFromColor(color!)));
     }
 
     return [
@@ -339,8 +340,10 @@ class BlankScreen extends GYWDrawing {
 
   /// Deserializes a [BlankScreen] from JSON data
   factory BlankScreen.fromJson(Map<String, dynamic> data) {
+    final colorValue = data["color"] as int?;
+
     return BlankScreen(
-      color: data["color"] as String?,
+      color: colorValue != null ? Color(colorValue) : null,
     );
   }
 
@@ -348,7 +351,7 @@ class BlankScreen extends GYWDrawing {
   Map<String, dynamic> toJson() {
     return {
       "type": type,
-      "color": color,
+      "color": color?.value,
     };
   }
 
@@ -386,7 +389,7 @@ class IconDrawing extends GYWDrawing {
   final String? customIconFilename;
 
   /// Hexadecimal code of the icon fill color
-  final String? color;
+  final Color color;
 
   /// The icon scaling factor.
   ///
@@ -397,7 +400,7 @@ class IconDrawing extends GYWDrawing {
     GYWIcon this.icon, {
     super.top,
     super.left,
-    this.color,
+    this.color = Colors.black,
     this.scale = 1.0,
   }) : customIconFilename = null;
 
@@ -406,7 +409,7 @@ class IconDrawing extends GYWDrawing {
     String this.customIconFilename, {
     super.top,
     super.left,
-    this.color,
+    this.color = Colors.black,
     this.scale = 1.0,
   }) : icon = null;
 
@@ -416,13 +419,15 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
-    controlBytes.add(utf8.encode(color ?? "NULLNULL"));
+    controlBytes.add(utf8.encode(hexFromColor(color)));
     controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("$iconFilename.bin"),
+        const Utf8Encoder().convert(
+          isCustom ? iconFilename : "$iconFilename.svg",
+        ),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
