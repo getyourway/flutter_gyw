@@ -519,8 +519,8 @@ class RectangleDrawing extends GYWDrawing {
   final String? color;
 
   const RectangleDrawing({
-    super.left = 0,
-    super.top = 0,
+    super.left,
+    super.top,
     required this.width,
     required this.height,
     this.color,
