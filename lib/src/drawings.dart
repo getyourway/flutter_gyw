@@ -422,7 +422,9 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("$iconFilename.bin"),
+        const Utf8Encoder().convert(
+          isCustom ? iconFilename : "$iconFilename.svg",
+        ),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -517,8 +519,8 @@ class RectangleDrawing extends GYWDrawing {
   final String? color;
 
   const RectangleDrawing({
-    required super.left,
-    required super.top,
+    super.left,
+    super.top,
     required this.width,
     required this.height,
     this.color,
@@ -609,8 +611,8 @@ class SpinnerDrawing extends GYWDrawing {
   final double spinsPerSecond;
 
   const SpinnerDrawing({
-    required super.left,
-    required super.top,
+    super.left,
+    super.top,
     this.scale = 1.0,
     this.color,
     this.animationTimingFunction = AnimationTimingFunction.linear,
