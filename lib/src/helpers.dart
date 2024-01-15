@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 /// Converts a int32 into bytes
 Uint8List int32Bytes(
@@ -25,6 +26,13 @@ Uint8List uint16Bytes(
   Endian endian = Endian.little,
 }) =>
     Uint8List(2)..buffer.asByteData().setUint16(0, value, endian);
+
+/// Converts a uint32 into bytes
+Uint8List uint32Bytes(
+    int value, {
+      Endian endian = Endian.little,
+    }) =>
+    Uint8List(4)..buffer.asByteData().setUint32(0, value, endian);
 
 /// Converts an ARGB color string to an RGBA8888 bytes array
 Uint8List rgba8888BytesFromColorString(String? color) {
@@ -65,4 +73,25 @@ List<int> byteFromScale(double scale) {
   }
   assert(-99 <= scaleByte && scaleByte <= 127);
   return int8Bytes(scaleByte);
+}
+
+/// Converts an hexadecimal string of length 8 into a Flutter color
+Color? colorFromHex(String? value) {
+  if ((value?.length ?? 0) != 8) {
+    return null;
+  }
+
+  final int? colorValue = int.tryParse(value!, radix: 16);
+  if (colorValue == null || colorValue > 0xffffffff) {
+    return null;
+  }
+
+  return Color(colorValue);
+}
+
+String hexFromColor(Color color) {
+  return "${color.alpha.toRadixString(16).padLeft(2, "0")}"
+      "${color.red.toRadixString(16).padLeft(2, "0")}"
+      "${color.green.toRadixString(16).padLeft(2, "0")}"
+      "${color.blue.toRadixString(16).padLeft(2, "0")}";
 }

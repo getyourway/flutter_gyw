@@ -85,7 +85,7 @@ void main() {
         icon,
         left: 120,
         top: 220,
-        color: "ff00ff00",
+        color: Colors.green,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);

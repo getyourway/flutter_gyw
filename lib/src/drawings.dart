@@ -3,11 +3,10 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gyw/src/utils.dart';
+import 'package:flutter_gyw/src/helpers.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
-import 'helpers.dart';
 import 'icons.dart';
 import 'screen.dart';
 
@@ -322,7 +321,7 @@ class BlankScreen extends GYWDrawing {
 
     if (color != null) {
       // Add color value
-      controlBytes.add(utf8.encode(hexFromColor(color!)));
+      controlBytes.add(uint32Bytes(color!.value));
     }
 
     return [
@@ -478,7 +477,7 @@ class IconDrawing extends GYWDrawing {
         gywIcon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: data["color"] as String?,
+        color: Color(data["color"] as int),
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
@@ -486,7 +485,7 @@ class IconDrawing extends GYWDrawing {
         icon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: data["color"] as String?,
+        color: Color(data["color"] as int),
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
@@ -501,7 +500,7 @@ class IconDrawing extends GYWDrawing {
       // Deprecated: "icon" key will be deprecated in future versions
       "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
-      "color": color,
+      "color": color.value,
       "scale": scale,
     };
   }
@@ -519,7 +518,7 @@ class RectangleDrawing extends GYWDrawing {
   final int height;
 
   /// The fill color. If null, the rectangle will use the current background color.
-  final String? color;
+  final Color? color;
 
   const RectangleDrawing({
     required super.left,
@@ -537,7 +536,7 @@ class RectangleDrawing extends GYWDrawing {
       ..add(uint16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
-      ..add(rgba8888BytesFromColorString(color));
+      ..add(uint32Bytes(color?.value ?? 0));
 
     return [
       GYWBtCommand(
@@ -574,12 +573,14 @@ class RectangleDrawing extends GYWDrawing {
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
+    final colorValue = data["color"] as int?;
+
     return RectangleDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
       width: data["width"] as int,
       height: data["height"] as int,
-      color: data["color"] as String?,
+      color: colorValue != null ? Color(colorValue) : null,
     );
   }
 
@@ -591,7 +592,7 @@ class RectangleDrawing extends GYWDrawing {
       "top": top,
       "width": width,
       "height": height,
-      "color": color,
+      "color": color?.value,
     };
   }
 }
@@ -605,7 +606,7 @@ class SpinnerDrawing extends GYWDrawing {
   final double scale;
 
   /// The fill color. If null, the image colors will be preserved.
-  final String? color;
+  final Color? color;
 
   /// The curve applied while spinning.
   final AnimationTimingFunction animationTimingFunction;
@@ -628,7 +629,7 @@ class SpinnerDrawing extends GYWDrawing {
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
       ..add(uint16Bytes(left))
       ..add(uint16Bytes(top))
-      ..add(rgba8888BytesFromColorString(color))
+      ..add(uint32Bytes(color?.value ?? 0))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))
       ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
@@ -682,11 +683,13 @@ SpinnerDrawing{
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory SpinnerDrawing.fromJson(Map<String, dynamic> data) {
+    final colorValue = data["color"] as int?;
+
     return SpinnerDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
       scale: (data["scale"] as num).toDouble(),
-      color: data["color"] as String?,
+      color: colorValue != null ? Color(colorValue) : null,
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),
@@ -701,7 +704,7 @@ SpinnerDrawing{
       "left": left,
       "top": top,
       "scale": scale,
-      "color": color,
+      "color": color?.value,
       "animation_timing_function": animationTimingFunction.name,
       "spins_per_second": spinsPerSecond,
     };
