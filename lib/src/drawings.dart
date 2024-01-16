@@ -530,8 +530,8 @@ class RectangleDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(uint16Bytes(left))
-      ..add(uint16Bytes(top))
+      ..add(int32Bytes(left))
+      ..add(int32Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
       ..add(rgba8888BytesFromColorString(color));
@@ -623,8 +623,8 @@ class SpinnerDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(uint16Bytes(left))
-      ..add(uint16Bytes(top))
+      ..add(int32Bytes(left))
+      ..add(int32Bytes(top))
       ..add(rgba8888BytesFromColorString(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))

@@ -1,3 +1,5 @@
+## 1.2.1
+* [FIX] Fix position encoding for rectangles and spinners
 * [ADD] Add spinner image
 * [FIX] Fix incorrect spinner serialization
 * [IMP] Change field types from num to double
