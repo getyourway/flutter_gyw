@@ -231,7 +231,7 @@ class TextDrawing extends GYWDrawing {
       text: data["data"] as String? ?? data["text"] as String,
       font: font,
       size: data["size"] as int?,
-      color: Color(data["color"] as int),
+      color: colorFromHex(data["color"] as String?) ?? Colors.black,
       maxWidth: data["max_width"] as int?,
       maxLines: data["max_lines"] as int? ?? 1,
     );
@@ -248,7 +248,7 @@ class TextDrawing extends GYWDrawing {
       "text": text,
       if (font != null) "font": font!.index,
       "size": size,
-      "color": color.value,
+      "color": hexFromColor(color),
       "max_width": maxWidth,
       "max_lines": maxLines,
     };
@@ -321,7 +321,7 @@ class BlankScreen extends GYWDrawing {
 
     if (color != null) {
       // Add color value
-      controlBytes.add(uint32Bytes(color!.value));
+      controlBytes.add(utf8.encode(hexFromColor(color!)));
     }
 
     return [
@@ -339,10 +339,8 @@ class BlankScreen extends GYWDrawing {
 
   /// Deserializes a [BlankScreen] from JSON data
   factory BlankScreen.fromJson(Map<String, dynamic> data) {
-    final colorValue = data["color"] as int?;
-
     return BlankScreen(
-      color: colorValue != null ? Color(colorValue) : null,
+      color: colorFromHex(data["color"] as String?),
     );
   }
 
@@ -350,7 +348,7 @@ class BlankScreen extends GYWDrawing {
   Map<String, dynamic> toJson() {
     return {
       "type": type,
-      "color": color?.value,
+      "color": color != null ? hexFromColor(color!) : null,
     };
   }
 
@@ -477,7 +475,7 @@ class IconDrawing extends GYWDrawing {
         gywIcon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: Color(data["color"] as int),
+        color: colorFromHex(data["color"] as String?) ?? Colors.black,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
@@ -485,7 +483,7 @@ class IconDrawing extends GYWDrawing {
         icon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: Color(data["color"] as int),
+        color: colorFromHex(data["color"] as String?) ?? Colors.black,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
@@ -500,7 +498,7 @@ class IconDrawing extends GYWDrawing {
       // Deprecated: "icon" key will be deprecated in future versions
       "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
-      "color": color.value,
+      "color": hexFromColor(color),
       "scale": scale,
     };
   }
@@ -536,7 +534,7 @@ class RectangleDrawing extends GYWDrawing {
       ..add(uint16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
-      ..add(uint32Bytes(color?.value ?? 0));
+      ..add(rgba8888BytesFromColor(color));
 
     return [
       GYWBtCommand(
@@ -573,14 +571,12 @@ class RectangleDrawing extends GYWDrawing {
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
-    final colorValue = data["color"] as int?;
-
     return RectangleDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
       width: data["width"] as int,
       height: data["height"] as int,
-      color: colorValue != null ? Color(colorValue) : null,
+      color: colorFromHex(data["color"] as String?),
     );
   }
 
@@ -592,7 +588,7 @@ class RectangleDrawing extends GYWDrawing {
       "top": top,
       "width": width,
       "height": height,
-      "color": color?.value,
+      "color": color != null ? hexFromColor(color!) : null,
     };
   }
 }
@@ -629,7 +625,7 @@ class SpinnerDrawing extends GYWDrawing {
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
       ..add(uint16Bytes(left))
       ..add(uint16Bytes(top))
-      ..add(uint32Bytes(color?.value ?? 0))
+      ..add(rgba8888BytesFromColor(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))
       ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
@@ -683,13 +679,11 @@ SpinnerDrawing{
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory SpinnerDrawing.fromJson(Map<String, dynamic> data) {
-    final colorValue = data["color"] as int?;
-
     return SpinnerDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
       scale: (data["scale"] as num).toDouble(),
-      color: colorValue != null ? Color(colorValue) : null,
+      color: colorFromHex(data["color"] as String?),
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),
@@ -704,7 +698,7 @@ SpinnerDrawing{
       "left": left,
       "top": top,
       "scale": scale,
-      "color": color?.value,
+      "color": color != null ? hexFromColor(color!) : null,
       "animation_timing_function": animationTimingFunction.name,
       "spins_per_second": spinsPerSecond,
     };

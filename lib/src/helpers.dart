@@ -34,18 +34,12 @@ Uint8List uint32Bytes(
     }) =>
     Uint8List(4)..buffer.asByteData().setUint32(0, value, endian);
 
-/// Converts an ARGB color string to an RGBA8888 bytes array
-Uint8List rgba8888BytesFromColorString(String? color) {
+/// Converts a Color to an RGBA8888 bytes array
+Uint8List rgba8888BytesFromColor(Color? color) {
   if (color == null) {
     return Uint8List(4);
   }
-
-  final int alpha = int.parse(color.substring(0, 2), radix: 16);
-  final int red = int.parse(color.substring(2, 4), radix: 16);
-  final int green = int.parse(color.substring(4, 6), radix: 16);
-  final int blue = int.parse(color.substring(6, 8), radix: 16);
-
-  return Uint8List.fromList([red, green, blue, alpha]);
+  return Uint8List.fromList([color.red, color.green, color.blue, color.alpha]);
 }
 
 /// Allows to compare Comparable object using inequality signs
