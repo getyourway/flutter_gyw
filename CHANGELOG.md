@@ -3,6 +3,7 @@
 * [IMP] Change field types from num to double
 * [IMP] Convert legacy WhiteScreen into BlankScreen
 * [FIX] Fix custom icon filenames not constructed properly
+* [IMP] Replace string colors with Flutter Color objects
 
 ## 1.2.0
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
