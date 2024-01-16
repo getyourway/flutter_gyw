@@ -25,7 +25,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
 
   Future<void> _sendExampleData() async {
     const List<GYWDrawing> drawings = <GYWDrawing>[
-      BlankScreen(color: "ffffffff"),
+      BlankScreen(color: Colors.white),
       IconDrawing(GYWIcon.up, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
