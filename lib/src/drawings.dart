@@ -519,8 +519,8 @@ class RectangleDrawing extends GYWDrawing {
   final Color? color;
 
   const RectangleDrawing({
-    required super.left,
-    required super.top,
+    super.left,
+    super.top,
     required this.width,
     required this.height,
     this.color,
@@ -611,8 +611,8 @@ class SpinnerDrawing extends GYWDrawing {
   final double spinsPerSecond;
 
   const SpinnerDrawing({
-    required super.left,
-    required super.top,
+    super.left,
+    super.top,
     this.scale = 1.0,
     this.color,
     this.animationTimingFunction = AnimationTimingFunction.linear,
