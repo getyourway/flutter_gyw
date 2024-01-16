@@ -29,9 +29,9 @@ Uint8List uint16Bytes(
 
 /// Converts a uint32 into bytes
 Uint8List uint32Bytes(
-    int value, {
-      Endian endian = Endian.little,
-    }) =>
+  int value, {
+  Endian endian = Endian.little,
+}) =>
     Uint8List(4)..buffer.asByteData().setUint32(0, value, endian);
 
 /// Converts a Color to an RGBA8888 bytes array
@@ -84,8 +84,7 @@ Color? colorFromHex(String? value) {
 }
 
 String hexFromColor(Color color) {
-  return "${color.alpha.toRadixString(16).padLeft(2, "0")}"
-      "${color.red.toRadixString(16).padLeft(2, "0")}"
-      "${color.green.toRadixString(16).padLeft(2, "0")}"
-      "${color.blue.toRadixString(16).padLeft(2, "0")}";
+  return [color.alpha, color.red, color.green, color.blue]
+      .map((channel) => channel.toRadixString(16).padLeft(2, "0"))
+      .join();
 }
