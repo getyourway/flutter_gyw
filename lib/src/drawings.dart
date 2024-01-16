@@ -193,7 +193,7 @@ class TextDrawing extends GYWDrawing {
           top == other.top &&
           font == other.font &&
           size == other.size &&
-          color == other.color &&
+          color.value == other.color.value &&
           maxWidth == other.maxWidth &&
           maxLines == other.maxLines;
     } else {
@@ -334,7 +334,7 @@ class BlankScreen extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: blank screen";
+    return "Drawing: blank screen $color";
   }
 
   /// Deserializes a [BlankScreen] from JSON data
@@ -355,7 +355,7 @@ class BlankScreen extends GYWDrawing {
   @override
   bool operator ==(Object other) {
     if (other is BlankScreen) {
-      return color == other.color;
+      return color?.value == other.color?.value;
     } else {
       return false;
     }
@@ -442,7 +442,7 @@ class IconDrawing extends GYWDrawing {
   bool operator ==(Object other) {
     if (other is IconDrawing) {
       return iconFilename == other.iconFilename &&
-          color == other.color &&
+          color.value == other.color.value &&
           left == other.left &&
           top == other.top &&
           scale == other.scale;
@@ -558,7 +558,7 @@ class RectangleDrawing extends GYWDrawing {
           top == other.top &&
           width == other.width &&
           height == other.height &&
-          color == other.color;
+          color?.value == other.color?.value;
 
   @override
   int get hashCode => Object.hash(
@@ -663,7 +663,7 @@ SpinnerDrawing{
           left == other.left &&
           top == other.top &&
           scale == other.scale &&
-          color == other.color &&
+          color?.value == other.color?.value &&
           animationTimingFunction == other.animationTimingFunction &&
           spinsPerSecond == other.spinsPerSecond;
 
