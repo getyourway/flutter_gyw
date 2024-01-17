@@ -162,7 +162,7 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    final shortColor = [color.red, color.green, color.blue, color.alpha]
+    final shortColor = [color.alpha, color.red, color.green, color.blue]
         .map((channel) => (channel ~/ 16).toRadixString(16))
         .join();
 
