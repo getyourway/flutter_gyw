@@ -6,6 +6,7 @@
 * [FIX] Fix custom icon filenames not constructed properly
 * [IMP] Replace string colors with Flutter Color objects
 * [FIX] Fix position encoding for rectangles and spinners
+* [IMP] Encode positions as signed integers
 
 ## 1.2.0
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
