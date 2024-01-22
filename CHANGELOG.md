@@ -6,6 +6,7 @@
 * [FIX] Fix custom icon filenames not constructed properly
 * [IMP] Replace string colors with Flutter Color objects
 * [FIX] Fix position encoding for rectangles and spinners
+* [IMP] Encode positions as signed integers
 * [ADD] Add the following icons: folder, person, cloud_done, cloud_backup, wifi_off, settings
 
 ## 1.2.0
