@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +13,7 @@ void main() {
     });
 
     test('blank screen w/ color', () {
-      const GYWDrawing drawing = BlankScreen(color: "ffff0000");
+      const GYWDrawing drawing = BlankScreen(color: Colors.red);
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
@@ -84,7 +85,7 @@ void main() {
         icon,
         left: 120,
         top: 220,
-        color: "ff00ff00",
+        color: Colors.green,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);

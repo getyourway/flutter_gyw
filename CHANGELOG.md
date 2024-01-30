@@ -1,5 +1,15 @@
-## 1.2.0
+## 1.2.1
+* [ADD] Add spinner image
+* [FIX] Fix incorrect spinner serialization
+* [IMP] Change field types from num to double
+* [IMP] Convert legacy WhiteScreen into BlankScreen
+* [FIX] Fix custom icon filenames not constructed properly
+* [IMP] Replace string colors with Flutter Color objects
+* [FIX] Fix position encoding for rectangles and spinners
+* [IMP] Encode positions as signed integers
+* [ADD] Add the following icons: folder, person, cloud_done, cloud_backup, wifi_off, settings
 
+## 1.2.0
 * [FIX] Make icon scale deserialization work also with integers, not only doubles
 * [ADD] Add a new drawing for colored rectangles which allows for partially clearing the screen
 * [FIX] Fix blank.svg not rendering

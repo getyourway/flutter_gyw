@@ -114,7 +114,7 @@ Here is a list of the different elements that can be shown on the screen. For mo
 Fills the screen with a solid color. If no color is given, the screen will be filled with the last color used, useful for erasing parts of the screen.
 
 ```dart
-final drawing = BlankScreen(color: "FF0000FF");
+final drawing = BlankScreen(color: Colors.white);
 ```
 
 ### 2. TextDrawing
@@ -127,6 +127,7 @@ final drawing = TextDrawing(
   left: 220,
   top: 50,
   font: GYWFont.large,
+  color: Colors.black,
   size: 34,
   maxWidth: 200,
   maxLines: 2,
@@ -142,7 +143,7 @@ final drawing = IconDrawing(
   icon: GYWIcon.checkbox,
   left: 220,
   top: 50,
-  color: "FF0000FF",
+  color: Colors.blue,
   scale: 1.5,
 );
 ```
@@ -157,7 +158,7 @@ final drawing = RectangleDrawing(
   top: 50,
   width: 100,
   height: 100,
-  color: "FF0000FF",
+  color: Colors.red,
 );
 ```
 
@@ -170,7 +171,7 @@ final drawing = SpinnerDrawing(
   left: 300,
   top: 200,
   scale: 2.5,
-  color: "ffff00ff",
+  color: Colors.blue,
   animationTimingFunction: AnimationTimingFunction.ease_out,
   spinsPerSecond: 1.5,
 );
@@ -228,18 +229,6 @@ If you encounter issues with connecting to your GYW device, here are a few thing
 5. If the device is not listed, switch it off and then back on, and start a scan again.
 6. Restart your app.
 7. If you continue to have issues, please contact our support team for further assistance at [support@getyourway.be](mailto:support@getyourway.be)
-
-### What is the format of the `color` parameter of the `GYWDrawing`  ?
-
-The `color` parameter of a drawing must be 8 characters long and represents the color in the **ORGB format**.
-
-The ORGB format is a hexadecimal color format used in Flutter that represents the color components of an opaque or transparent color as four two-digit hexadecimal numbers, in the order of **opacity** (**alpha**), **red**, **green**, and **blue**. It is an 8-digit color code that ranges from `00000000` (fully transparent black) to `FFFFFFFF` (fully opaque white).
-
-In Flutter, you can convert a Material Color to this format with this piece of code:
-
-```dart
-color.value.toRadixString(16).padLeft(8, "0");
-```
 
 ### How can I send multiple drawings at the same time ?
 

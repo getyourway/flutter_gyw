@@ -3,10 +3,10 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gyw/src/helpers.dart';
 
 import 'commands.dart';
 import 'fonts.dart';
-import 'helpers.dart';
 import 'icons.dart';
 import 'screen.dart';
 
@@ -33,13 +33,15 @@ abstract class GYWDrawing {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
       case WhiteScreen.type:
-        return WhiteScreen.fromJson(data);
+        return const BlankScreen(color: Colors.white);
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
         return IconDrawing.fromJson(data);
       case RectangleDrawing.type:
         return RectangleDrawing.fromJson(data);
+      case SpinnerDrawing.type:
+        return SpinnerDrawing.fromJson(data);
       default:
         throw UnsupportedError("Type '${data['type']}' is not supported.");
     }
@@ -69,8 +71,8 @@ class TextDrawing extends GYWDrawing {
   /// The text size. Overrides the font size.
   final int? size;
 
-  /// The color of the text (in 8-characters ORGB format)
-  final String? color;
+  /// The color of the text.
+  final Color color;
 
   /// The maximum width (in pixels) of the text.
   ///
@@ -87,7 +89,7 @@ class TextDrawing extends GYWDrawing {
     required this.text,
     this.font,
     this.size,
-    this.color,
+    this.color = Colors.black,
     this.maxWidth,
     this.maxLines = 1,
     super.left = 0,
@@ -160,10 +162,10 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    String shortColor = "NULL";
-    if (color != null) {
-      shortColor = color![0] + color![2] + color![4] + color![6];
-    }
+    final shortColor = [color.alpha, color.red, color.green, color.blue]
+        .map((channel) => (channel ~/ 16).toRadixString(16))
+        .join();
+
     controlBytes.add(utf8.encode(shortColor));
 
     return [
@@ -191,7 +193,7 @@ class TextDrawing extends GYWDrawing {
           top == other.top &&
           font == other.font &&
           size == other.size &&
-          color == other.color &&
+          color.value == other.color.value &&
           maxWidth == other.maxWidth &&
           maxLines == other.maxLines;
     } else {
@@ -229,7 +231,7 @@ class TextDrawing extends GYWDrawing {
       text: data["data"] as String? ?? data["text"] as String,
       font: font,
       size: data["size"] as int?,
-      color: data["color"] as String?,
+      color: colorFromHex(data["color"] as String?) ?? Colors.black,
       maxWidth: data["max_width"] as int?,
       maxLines: data["max_lines"] as int? ?? 1,
     );
@@ -246,7 +248,7 @@ class TextDrawing extends GYWDrawing {
       "text": text,
       if (font != null) "font": font!.index,
       "size": size,
-      "color": color,
+      "color": hexFromColor(color),
       "max_width": maxWidth,
       "max_lines": maxLines,
     };
@@ -307,8 +309,8 @@ class BlankScreen extends GYWDrawing {
   /// The type of the [BlankScreen] drawing
   static const String type = "blank_screen";
 
-  /// The hexadecimal code of the background color
-  final String? color;
+  /// The background color. If null, the screen will be cleared with the latest background color used.
+  final Color? color;
 
   const BlankScreen({this.color});
 
@@ -319,7 +321,7 @@ class BlankScreen extends GYWDrawing {
 
     if (color != null) {
       // Add color value
-      controlBytes.add(utf8.encode(color!));
+      controlBytes.add(utf8.encode(hexFromColor(color!)));
     }
 
     return [
@@ -332,13 +334,13 @@ class BlankScreen extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: blank screen";
+    return "Drawing: blank screen $color";
   }
 
   /// Deserializes a [BlankScreen] from JSON data
   factory BlankScreen.fromJson(Map<String, dynamic> data) {
     return BlankScreen(
-      color: data["color"] as String?,
+      color: colorFromHex(data["color"] as String?),
     );
   }
 
@@ -346,14 +348,14 @@ class BlankScreen extends GYWDrawing {
   Map<String, dynamic> toJson() {
     return {
       "type": type,
-      "color": color,
+      "color": color != null ? hexFromColor(color!) : null,
     };
   }
 
   @override
   bool operator ==(Object other) {
     if (other is BlankScreen) {
-      return color == other.color;
+      return color?.value == other.color?.value;
     } else {
       return false;
     }
@@ -384,7 +386,7 @@ class IconDrawing extends GYWDrawing {
   final String? customIconFilename;
 
   /// Hexadecimal code of the icon fill color
-  final String? color;
+  final Color color;
 
   /// The icon scaling factor.
   ///
@@ -395,7 +397,7 @@ class IconDrawing extends GYWDrawing {
     GYWIcon this.icon, {
     super.top,
     super.left,
-    this.color,
+    this.color = Colors.black,
     this.scale = 1.0,
   }) : customIconFilename = null;
 
@@ -404,7 +406,7 @@ class IconDrawing extends GYWDrawing {
     String this.customIconFilename, {
     super.top,
     super.left,
-    this.color,
+    this.color = Colors.black,
     this.scale = 1.0,
   }) : icon = null;
 
@@ -414,13 +416,15 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
-    controlBytes.add(utf8.encode(color ?? "NULLNULL"));
+    controlBytes.add(utf8.encode(hexFromColor(color)));
     controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("$iconFilename.bin"),
+        const Utf8Encoder().convert(
+          isCustom ? iconFilename : "$iconFilename.svg",
+        ),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -438,7 +442,7 @@ class IconDrawing extends GYWDrawing {
   bool operator ==(Object other) {
     if (other is IconDrawing) {
       return iconFilename == other.iconFilename &&
-          color == other.color &&
+          color.value == other.color.value &&
           left == other.left &&
           top == other.top &&
           scale == other.scale;
@@ -471,7 +475,7 @@ class IconDrawing extends GYWDrawing {
         gywIcon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: data["color"] as String?,
+        color: colorFromHex(data["color"] as String?) ?? Colors.black,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
@@ -479,7 +483,7 @@ class IconDrawing extends GYWDrawing {
         icon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: data["color"] as String?,
+        color: colorFromHex(data["color"] as String?) ?? Colors.black,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
@@ -494,7 +498,7 @@ class IconDrawing extends GYWDrawing {
       // Deprecated: "icon" key will be deprecated in future versions
       "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
-      "color": color,
+      "color": hexFromColor(color),
       "scale": scale,
     };
   }
@@ -512,11 +516,11 @@ class RectangleDrawing extends GYWDrawing {
   final int height;
 
   /// The fill color. If null, the rectangle will use the current background color.
-  final String? color;
+  final Color? color;
 
   const RectangleDrawing({
-    required super.left,
-    required super.top,
+    super.left,
+    super.top,
     required this.width,
     required this.height,
     this.color,
@@ -526,11 +530,11 @@ class RectangleDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(uint16Bytes(left))
-      ..add(uint16Bytes(top))
+      ..add(int32Bytes(left))
+      ..add(int32Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
-      ..add(rgba8888BytesFromColorString(color));
+      ..add(rgba8888BytesFromColor(color));
 
     return [
       GYWBtCommand(
@@ -554,7 +558,7 @@ class RectangleDrawing extends GYWDrawing {
           top == other.top &&
           width == other.width &&
           height == other.height &&
-          color == other.color;
+          color?.value == other.color?.value;
 
   @override
   int get hashCode => Object.hash(
@@ -572,7 +576,7 @@ class RectangleDrawing extends GYWDrawing {
       top: data["top"] as int,
       width: data["width"] as int,
       height: data["height"] as int,
-      color: data["color"] as String?,
+      color: colorFromHex(data["color"] as String?),
     );
   }
 
@@ -584,7 +588,7 @@ class RectangleDrawing extends GYWDrawing {
       "top": top,
       "width": width,
       "height": height,
-      "color": color,
+      "color": color != null ? hexFromColor(color!) : null,
     };
   }
 }
@@ -595,33 +599,33 @@ class SpinnerDrawing extends GYWDrawing {
   static const String type = "spinner";
 
   /// The scale of the image.
-  final num scale;
+  final double scale;
 
   /// The fill color. If null, the image colors will be preserved.
-  final String? color;
+  final Color? color;
 
   /// The curve applied while spinning.
   final AnimationTimingFunction animationTimingFunction;
 
   /// How many rotations per second.
-  final num spinsPerSecond;
+  final double spinsPerSecond;
 
   const SpinnerDrawing({
-    required super.left,
-    required super.top,
-    this.scale = 1,
+    super.left,
+    super.top,
+    this.scale = 1.0,
     this.color,
     this.animationTimingFunction = AnimationTimingFunction.linear,
-    this.spinsPerSecond = 1,
+    this.spinsPerSecond = 1.0,
   });
 
   @override
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(uint16Bytes(left))
-      ..add(uint16Bytes(top))
-      ..add(rgba8888BytesFromColorString(color))
+      ..add(int32Bytes(left))
+      ..add(int32Bytes(top))
+      ..add(rgba8888BytesFromColor(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))
       ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
@@ -659,7 +663,7 @@ SpinnerDrawing{
           left == other.left &&
           top == other.top &&
           scale == other.scale &&
-          color == other.color &&
+          color?.value == other.color?.value &&
           animationTimingFunction == other.animationTimingFunction &&
           spinsPerSecond == other.spinsPerSecond;
 
@@ -678,12 +682,12 @@ SpinnerDrawing{
     return SpinnerDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
-      scale: data["scale"] as num,
-      color: data["color"] as String?,
+      scale: (data["scale"] as num).toDouble(),
+      color: colorFromHex(data["color"] as String?),
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),
-      spinsPerSecond: data["spins_per_second"] as num,
+      spinsPerSecond: (data["spins_per_second"] as num).toDouble(),
     );
   }
 
@@ -694,7 +698,7 @@ SpinnerDrawing{
       "left": left,
       "top": top,
       "scale": scale,
-      "color": color,
+      "color": color != null ? hexFromColor(color!) : null,
       "animation_timing_function": animationTimingFunction.name,
       "spins_per_second": spinsPerSecond,
     };
