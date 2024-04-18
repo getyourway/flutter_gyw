@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
+import 'package:flutter_gyw/src/fonts.dart';
 
 class GYWExampleScreen extends StatefulWidget {
   const GYWExampleScreen({super.key});
@@ -24,14 +25,14 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
   }
 
   Future<void> _sendExampleData() async {
-    const List<GYWDrawing> drawings = <GYWDrawing>[
-      BlankScreen(color: Colors.white),
-      IconDrawing(GYWIcon.up, top: 50, left: 60),
+    final List<GYWDrawing> drawings = <GYWDrawing>[
+      const BlankScreen(color: Colors.white),
+      const IconDrawing(GYWIcon.up, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFont.medium,
+        font: GYWFonts.medium.font,
       ),
     ];
 
