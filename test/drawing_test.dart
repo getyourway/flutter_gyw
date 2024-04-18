@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
+import 'package:flutter_gyw/src/fonts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -35,9 +36,9 @@ void main() {
     });
 
     test('Text with font', () {
-      const GYWFont font = GYWFont.medium;
+      final GYWFont font = GYWFonts.medium.font;
 
-      const GYWDrawing drawing = TextDrawing(
+      final GYWDrawing drawing = TextDrawing(
         text: "Text with font",
         font: font,
       );
@@ -46,9 +47,9 @@ void main() {
     });
 
     test('Text with font and position', () {
-      const font = GYWFont.medium;
+      final font = GYWFonts.medium.font;
 
-      const GYWDrawing drawing = TextDrawing(
+      final GYWDrawing drawing = TextDrawing(
         text: "Text with font and position",
         left: 150,
         top: 250,
