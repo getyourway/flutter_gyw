@@ -32,8 +32,6 @@ abstract class GYWDrawing {
     switch (data["type"]) {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
-      case WhiteScreen.type:
-        return const BlankScreen(color: Colors.white);
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
@@ -255,54 +253,6 @@ class TextDrawing extends GYWDrawing {
   }
 }
 
-/// A drawing to reset the screen of the aRdent device to a white screen
-@Deprecated(
-  "WhiteScreen has been replaced by BlankScreen "
-  "who has a variable background color",
-)
-class WhiteScreen extends GYWDrawing {
-  /// The type of the [WhiteScreen] drawing
-  static const String type = "white_screen";
-
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  const WhiteScreen();
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    return [
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        int8Bytes(GYWControlCode.clear.value),
-      ),
-    ];
-  }
-
-  @override
-  String toString() {
-    return "Drawing: white screen";
-  }
-
-  /// Deserializes a [WhiteScreen] from JSON data
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  // ignore: avoid_unused_constructor_parameters
-  factory WhiteScreen.fromJson(Map<String, dynamic> data) {
-    return const WhiteScreen();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-    };
-  }
-}
-
 /// A drawing to reset the content of the screen and its background color
 @immutable
 class BlankScreen extends GYWDrawing {
@@ -463,7 +413,7 @@ class IconDrawing extends GYWDrawing {
   /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     // Deprecated "icon" key will be deprecated in future versions
-    final String icon = data["data"] as String? ?? data["icon"] as String;
+    final String icon = data["data"] as String;
 
     final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
           (element) => element!.filename == icon || element.name == icon,
@@ -495,8 +445,6 @@ class IconDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
-      // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
       "color": hexFromColor(color),
       "scale": scale,
