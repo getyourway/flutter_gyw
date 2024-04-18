@@ -215,9 +215,11 @@ class TextDrawing extends GYWDrawing {
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
     try {
-      font = GYWFonts.values.firstWhere(
-        (e) => e.font.name == data["font"],
-      ).font;
+      font = GYWFonts.values
+          .firstWhere(
+            (e) => e.font.name == data["font"],
+          )
+          .font;
     } on StateError {
       font = null;
     }
@@ -411,10 +413,14 @@ class IconDrawing extends GYWDrawing {
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     final String icon = data["data"] as String;
 
-    final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
-          (element) => element!.filename == icon || element.name == icon,
+    final GYWIcon? gywIcon = GYWIcons.values
+        .cast<GYWIcons?>()
+        .firstWhere(
+          (element) =>
+              element!.icon.filename == icon || element.icon.name == icon,
           orElse: () => null,
-        );
+        )
+        ?.icon;
 
     if (gywIcon != null) {
       return IconDrawing(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
 import 'package:flutter_gyw/src/fonts.dart';
+import 'package:flutter_gyw/src/icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -60,17 +61,17 @@ void main() {
     });
 
     test('Icon', () {
-      const GYWIcon icon = GYWIcon.checkbox;
+      final GYWIcon icon = GYWIcons.checkbox.icon;
 
-      const GYWDrawing drawing = IconDrawing(icon);
+      final GYWDrawing drawing = IconDrawing(icon);
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
     test('Icon with position', () {
-      const GYWIcon icon = GYWIcon.up;
+      final GYWIcon icon = GYWIcons.up.icon;
 
-      const GYWDrawing drawing = IconDrawing(
+      final GYWDrawing drawing = IconDrawing(
         icon,
         left: 120,
         top: 220,
@@ -80,9 +81,9 @@ void main() {
     });
 
     test('Icon with color', () {
-      const GYWIcon icon = GYWIcon.left;
+      final GYWIcon icon = GYWIcons.left.icon;
 
-      const GYWDrawing drawing = IconDrawing(
+      final GYWDrawing drawing = IconDrawing(
         icon,
         left: 120,
         top: 220,
@@ -106,20 +107,20 @@ void main() {
     test('All icons', () {
       final assetFolderPath = Platform.environment['UNIT_TEST_ASSETS'];
 
-      for (final GYWIcon icon in GYWIcon.values) {
-        if (icon == GYWIcon.key_num) {
+      for (final GYWIcons icon in GYWIcons.values) {
+        if (icon == GYWIcons.key_num) {
           // # symbol is not managed correctly
           continue;
         }
 
         expect(
-          File("$assetFolderPath/${icon.pathPng}").existsSync(),
+          File("$assetFolderPath/${icon.icon.pathPng}").existsSync(),
           isTrue,
           reason: "File of $icon is missing",
         );
 
         expect(
-          File("$assetFolderPath/${icon.pathSvg}").existsSync(),
+          File("$assetFolderPath/${icon.icon.pathSvg}").existsSync(),
           isTrue,
           reason: "File of $icon is missing",
         );
