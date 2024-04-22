@@ -6,18 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group("JSON", () {
-    test('blank screen w/o color', () {
-      const GYWDrawing drawing = BlankScreen();
-
-      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
-    });
-
-    test('blank screen w/ color', () {
-      const GYWDrawing drawing = BlankScreen(color: Colors.red);
-
-      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
-    });
-
     test('Text', () {
       const GYWDrawing drawing = TextDrawing(text: "Text");
 

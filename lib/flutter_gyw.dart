@@ -9,7 +9,6 @@ export 'src/bt_device.dart' show GYWBtDevice;
 export 'src/bt_manager.dart' show GYWBtManager;
 export 'src/drawings.dart'
     show
-        BlankScreen,
         GYWDrawing,
         IconDrawing,
         TextDrawing,
