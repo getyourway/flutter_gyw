@@ -1,5 +1,6 @@
 ## 2.0.0
 * [DEL] Remove deprecated functionality
+* [REFACTOR] Convert BlankScreen class into the clearScreen method
 
 ## 1.2.1
 * [ADD] Add spinner image
