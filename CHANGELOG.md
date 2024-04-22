@@ -1,3 +1,6 @@
+## 2.0.0
+* [REFACTOR] Convert GYWIcon and GYWFont from enums to classes
+
 ## 1.2.1
 * [ADD] Add spinner image
 * [FIX] Fix incorrect spinner serialization
