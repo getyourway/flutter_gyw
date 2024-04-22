@@ -1,3 +1,6 @@
+## 2.0.0
+* [DEL] Remove deprecated functionality
+
 ## 1.2.1
 * [ADD] Add spinner image
 * [FIX] Fix incorrect spinner serialization
