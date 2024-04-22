@@ -162,11 +162,7 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
 
-    final shortColor = [color.alpha, color.red, color.green, color.blue]
-        .map((channel) => (channel ~/ 16).toRadixString(16))
-        .join();
-
-    controlBytes.add(utf8.encode(shortColor));
+    controlBytes.add(rgba8888BytesFromColor(color));
 
     return [
       GYWBtCommand(
@@ -321,7 +317,7 @@ class BlankScreen extends GYWDrawing {
 
     if (color != null) {
       // Add color value
-      controlBytes.add(utf8.encode(hexFromColor(color!)));
+      controlBytes.add(rgba8888BytesFromColor(color));
     }
 
     return [
@@ -416,7 +412,7 @@ class IconDrawing extends GYWDrawing {
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
     controlBytes.add(int32Bytes(left));
     controlBytes.add(int32Bytes(top));
-    controlBytes.add(utf8.encode(hexFromColor(color)));
+    controlBytes.add(rgba8888BytesFromColor(color));
     controlBytes.add(byteFromScale(scale));
 
     return <GYWBtCommand>[
