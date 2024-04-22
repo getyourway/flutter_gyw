@@ -1,3 +1,6 @@
+## 2.0.0
+[REFACTOR] Encode all colors in RGBA8888 when sending them to the glasses
+
 ## 1.2.1
 * [ADD] Add spinner image
 * [FIX] Fix incorrect spinner serialization
