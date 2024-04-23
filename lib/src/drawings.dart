@@ -32,8 +32,6 @@ abstract class GYWDrawing {
     switch (data["type"]) {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
-      case WhiteScreen.type:
-        return const BlankScreen(color: Colors.white);
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
@@ -156,8 +154,8 @@ class TextDrawing extends GYWDrawing {
     final controlBytes = BytesBuilder();
 
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
 
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
@@ -253,54 +251,6 @@ class TextDrawing extends GYWDrawing {
       "color": hexFromColor(color),
       "max_width": maxWidth,
       "max_lines": maxLines,
-    };
-  }
-}
-
-/// A drawing to reset the screen of the aRdent device to a white screen
-@Deprecated(
-  "WhiteScreen has been replaced by BlankScreen "
-  "who has a variable background color",
-)
-class WhiteScreen extends GYWDrawing {
-  /// The type of the [WhiteScreen] drawing
-  static const String type = "white_screen";
-
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  const WhiteScreen();
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    return [
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        int8Bytes(GYWControlCode.clear.value),
-      ),
-    ];
-  }
-
-  @override
-  String toString() {
-    return "Drawing: white screen";
-  }
-
-  /// Deserializes a [WhiteScreen] from JSON data
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  // ignore: avoid_unused_constructor_parameters
-  factory WhiteScreen.fromJson(Map<String, dynamic> data) {
-    return const WhiteScreen();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
     };
   }
 }
@@ -416,8 +366,8 @@ class IconDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
     controlBytes.add(utf8.encode(hexFromColor(color)));
     controlBytes.add(byteFromScale(scale));
 
@@ -465,7 +415,7 @@ class IconDrawing extends GYWDrawing {
   /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     // Deprecated "icon" key will be deprecated in future versions
-    final String icon = data["data"] as String? ?? data["icon"] as String;
+    final String icon = data["data"] as String;
 
     final GYWIcon? gywIcon = GYWIcons.values
         .cast<GYWIcons?>()
@@ -501,8 +451,6 @@ class IconDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
-      // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
       "color": hexFromColor(color),
       "scale": scale,
@@ -536,8 +484,8 @@ class RectangleDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
       ..add(rgba8888BytesFromColor(color));
@@ -629,8 +577,8 @@ class SpinnerDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(rgba8888BytesFromColor(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))

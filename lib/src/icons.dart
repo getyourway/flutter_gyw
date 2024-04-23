@@ -18,10 +18,6 @@ class GYWIcon {
     required this.height,
   });
 
-  /// The path of the associated file in the assets folder
-  @Deprecated("Use pathPng instead")
-  String get path => "assets/icons/$filename.png";
-
   /// The path of the associated PNG file in the assets folder
   String get pathPng => "assets/icons/$filename.png";
 
