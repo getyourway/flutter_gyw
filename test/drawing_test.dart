@@ -112,7 +112,13 @@ void main() {
         }
 
         expect(
-          File("$assetFolderPath/${icon.path}").existsSync(),
+          File("$assetFolderPath/${icon.pathPng}").existsSync(),
+          isTrue,
+          reason: "File of $icon is missing",
+        );
+
+        expect(
+          File("$assetFolderPath/${icon.pathSvg}").existsSync(),
           isTrue,
           reason: "File of $icon is missing",
         );

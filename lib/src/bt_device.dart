@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -38,6 +37,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   ///
   /// By setting the lastRssi, the lastSeen value is also updated
   int get lastRssi => _lastRssi;
+
   set lastRssi(int lastRssi) {
     _lastRssi = lastRssi;
     lastSeen = DateTime.now();
@@ -175,68 +175,18 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Sends data to the aRdent device to display a [GYWDrawing]
-  Future<void> sendDrawing(
-    GYWDrawing drawing, {
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
+  Future<void> sendDrawing(GYWDrawing drawing) async {
     final commands = drawing.toCommands();
 
     for (final GYWBtCommand command in commands) {
       await _sendBTCommand(command);
-      if (delay != 0) {
-        await Future<void>.delayed(Duration(milliseconds: delay));
-      }
-    }
-  }
-
-  /// Sends data to the aRdent device to display a [GYWDrawing]
-  @Deprecated("This method is going to be replaced by sendDrawing")
-  Future<void> displayDrawing(
-    GYWDrawing drawing, {
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
-    final commands = drawing.toCommands();
-
-    for (final GYWBtCommand command in commands) {
-      await _sendBTCommand(command);
-      if (delay != 0) {
-        await Future<void>.delayed(Duration(milliseconds: delay));
-      }
-    }
-  }
-
-  /// Sets the default font on the aRdent to display the next [TextDrawing]
-  @Deprecated("Set the font when drawing text with `TextDrawing`")
-  Future<void> setFont(
-    GYWFont font, {
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
-    final commands = <GYWBtCommand>[
-      GYWBtCommand(
-        GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(font.prefix),
-      ),
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        int8Bytes(GYWControlCode.setFont.value),
-      ),
-    ];
-
-    for (final GYWBtCommand command in commands) {
-      await _sendBTCommand(command);
-      if (delay != 0) {
-        await Future<void>.delayed(Duration(milliseconds: delay));
-      }
     }
   }
 
   /// Sets the screen brightness.
   ///
   /// The value must be between 0 and 1.
-  Future<void> setBrightness(
-    double value, {
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
+  Future<void> setBrightness(double value) async {
     assert(value >= 0 && value <= 1);
 
     final controlBytes = BytesBuilder()
@@ -249,18 +199,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    if (delay != 0) {
-      await Future<void>.delayed(Duration(milliseconds: delay));
-    }
   }
 
   /// Sets the screen contrast.
   ///
   /// The value must be between 0 and 1.
-  Future<void> setContrast(
-    double value, {
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
+  Future<void> setContrast(double value) async {
     assert(value >= 0 && value <= 1);
 
     final controlBytes = BytesBuilder()
@@ -273,9 +217,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    if (delay != 0) {
-      await Future<void>.delayed(Duration(milliseconds: delay));
-    }
   }
 
   /// Enables or disables the screen autorotation.
@@ -331,9 +272,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// Turns the screen on and initializes it for future drawings.
   ///
   /// This method must be called once before performing display operations.
-  Future<void> startDisplay({
-    @Deprecated("Delay is no longer needed") int delay = 0,
-  }) async {
+  Future<void> startDisplay() async {
     if (_screenOn) {
       // Skip the command
       return;
@@ -345,9 +284,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     );
 
     await _sendBTCommand(command);
-    if (delay != 0) {
-      await Future<void>.delayed(Duration(milliseconds: delay));
-    }
 
     _screenOn = true;
   }
