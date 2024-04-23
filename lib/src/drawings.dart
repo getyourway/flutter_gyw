@@ -96,7 +96,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   List<GYWBtCommand> toCommands() {
-    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
     final int charHeight = (fontSize * 1.33).ceil();
 
     final List<GYWBtCommand> commands = [];
@@ -125,7 +125,7 @@ class TextDrawing extends GYWDrawing {
       textWidth = maxWidth;
     }
 
-    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
     final int charWidth = (fontSize * 0.6).ceil();
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
@@ -215,9 +215,11 @@ class TextDrawing extends GYWDrawing {
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
     try {
-      font = GYWFont.values.firstWhere(
-        (e) => e.index == data["font"] || e.name == data["font"],
-      );
+      font = GYWFonts.values
+          .firstWhere(
+            (e) => e.font.name == data["font"],
+          )
+          .font;
     } on StateError {
       font = null;
     }
@@ -244,7 +246,7 @@ class TextDrawing extends GYWDrawing {
       "data": text,
       // Deprecated: "text" key will be deprecated in future version
       "text": text,
-      if (font != null) "font": font!.index,
+      if (font != null) "font": font!.prefix,
       "size": size,
       "color": hexFromColor(color),
       "max_width": maxWidth,
@@ -415,10 +417,14 @@ class IconDrawing extends GYWDrawing {
     // Deprecated "icon" key will be deprecated in future versions
     final String icon = data["data"] as String;
 
-    final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
-          (element) => element!.filename == icon || element.name == icon,
+    final GYWIcon? gywIcon = GYWIcons.values
+        .cast<GYWIcons?>()
+        .firstWhere(
+          (element) =>
+              element!.icon.filename == icon || element.icon.name == icon,
           orElse: () => null,
-        );
+        )
+        ?.icon;
 
     if (gywIcon != null) {
       return IconDrawing(
