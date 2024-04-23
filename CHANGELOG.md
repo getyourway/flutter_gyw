@@ -1,5 +1,6 @@
 ## 2.0.0
 * [DEL] Remove deprecated functionality
+* [REFACTOR] Encode positions as int16 instead of int32
 
 ## 1.2.1
 * [ADD] Add spinner image

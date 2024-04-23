@@ -154,8 +154,8 @@ class TextDrawing extends GYWDrawing {
     final controlBytes = BytesBuilder();
 
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
 
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
@@ -364,8 +364,8 @@ class IconDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
     controlBytes.add(utf8.encode(hexFromColor(color)));
     controlBytes.add(byteFromScale(scale));
 
@@ -478,8 +478,8 @@ class RectangleDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
       ..add(rgba8888BytesFromColor(color));
@@ -571,8 +571,8 @@ class SpinnerDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(rgba8888BytesFromColor(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))
