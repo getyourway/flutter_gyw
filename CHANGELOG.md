@@ -1,5 +1,6 @@
 ## 2.0.0
 * [DEL] Remove deprecated functionality
+* [REFACTOR] Encode positions as int16 instead of int32
 * [REFACTOR] Convert BlankScreen class into the clearScreen method
 
 ## 1.2.1
