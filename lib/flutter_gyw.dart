@@ -16,6 +16,6 @@ export 'src/drawings.dart'
         SpinnerDrawing,
         AnimationTimingFunction;
 export 'src/exceptions.dart' show GYWException, GYWStatusException;
-export 'src/fonts.dart' show GYWFont;
-export 'src/icons.dart' show GYWIcon;
+export 'src/fonts.dart' show GYWFont, GYWFonts;
+export 'src/icons.dart' show GYWIcon, GYWIcons;
 export 'src/screen.dart' show GYWScreenParameters;
