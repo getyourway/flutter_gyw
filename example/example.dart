@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
-import 'package:flutter_gyw/src/fonts.dart';
-import 'package:flutter_gyw/src/icons.dart';
 
 class GYWExampleScreen extends StatefulWidget {
   const GYWExampleScreen({super.key});

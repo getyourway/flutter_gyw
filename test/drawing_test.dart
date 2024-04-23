@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gyw/flutter_gyw.dart';
-import 'package:flutter_gyw/src/fonts.dart';
-import 'package:flutter_gyw/src/icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
