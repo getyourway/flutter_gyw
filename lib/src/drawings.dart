@@ -32,8 +32,6 @@ abstract class GYWDrawing {
     switch (data["type"]) {
       case TextDrawing.type:
         return TextDrawing.fromJson(data);
-      case WhiteScreen.type:
-        return const BlankScreen(color: Colors.white);
       case BlankScreen.type:
         return BlankScreen.fromJson(data);
       case IconDrawing.type:
@@ -98,7 +96,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   List<GYWBtCommand> toCommands() {
-    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
     final int charHeight = (fontSize * 1.33).ceil();
 
     final List<GYWBtCommand> commands = [];
@@ -127,7 +125,7 @@ class TextDrawing extends GYWDrawing {
       textWidth = maxWidth;
     }
 
-    final int fontSize = size ?? font?.size ?? GYWFont.small.size;
+    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
     final int charWidth = (fontSize * 0.6).ceil();
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
@@ -156,8 +154,8 @@ class TextDrawing extends GYWDrawing {
     final controlBytes = BytesBuilder();
 
     controlBytes.add(int8Bytes(GYWControlCode.displayText.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
 
     controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
     controlBytes.add(int8Bytes(size ?? 0));
@@ -213,9 +211,11 @@ class TextDrawing extends GYWDrawing {
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
     try {
-      font = GYWFont.values.firstWhere(
-        (e) => e.index == data["font"] || e.name == data["font"],
-      );
+      font = GYWFonts.values
+          .firstWhere(
+            (e) => e.font.name == data["font"],
+          )
+          .font;
     } on StateError {
       font = null;
     }
@@ -242,59 +242,11 @@ class TextDrawing extends GYWDrawing {
       "data": text,
       // Deprecated: "text" key will be deprecated in future version
       "text": text,
-      if (font != null) "font": font!.index,
+      if (font != null) "font": font!.prefix,
       "size": size,
       "color": hexFromColor(color),
       "max_width": maxWidth,
       "max_lines": maxLines,
-    };
-  }
-}
-
-/// A drawing to reset the screen of the aRdent device to a white screen
-@Deprecated(
-  "WhiteScreen has been replaced by BlankScreen "
-  "who has a variable background color",
-)
-class WhiteScreen extends GYWDrawing {
-  /// The type of the [WhiteScreen] drawing
-  static const String type = "white_screen";
-
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  const WhiteScreen();
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    return [
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        int8Bytes(GYWControlCode.clear.value),
-      ),
-    ];
-  }
-
-  @override
-  String toString() {
-    return "Drawing: white screen";
-  }
-
-  /// Deserializes a [WhiteScreen] from JSON data
-  @Deprecated(
-    "WhiteScreen has been replaced by BlankScreen "
-    "who has a variable background color",
-  )
-  // ignore: avoid_unused_constructor_parameters
-  factory WhiteScreen.fromJson(Map<String, dynamic> data) {
-    return const WhiteScreen();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
     };
   }
 }
@@ -410,8 +362,8 @@ class IconDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
-    controlBytes.add(int32Bytes(left));
-    controlBytes.add(int32Bytes(top));
+    controlBytes.add(int16Bytes(left));
+    controlBytes.add(int16Bytes(top));
     controlBytes.add(rgba8888BytesFromColor(color));
     controlBytes.add(byteFromScale(scale));
 
@@ -459,12 +411,16 @@ class IconDrawing extends GYWDrawing {
   /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     // Deprecated "icon" key will be deprecated in future versions
-    final String icon = data["data"] as String? ?? data["icon"] as String;
+    final String icon = data["data"] as String;
 
-    final GYWIcon? gywIcon = GYWIcon.values.cast<GYWIcon?>().firstWhere(
-          (element) => element!.filename == icon || element.name == icon,
+    final GYWIcon? gywIcon = GYWIcons.values
+        .cast<GYWIcons?>()
+        .firstWhere(
+          (element) =>
+              element!.icon.filename == icon || element.icon.name == icon,
           orElse: () => null,
-        );
+        )
+        ?.icon;
 
     if (gywIcon != null) {
       return IconDrawing(
@@ -491,8 +447,6 @@ class IconDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
-      // Deprecated: "icon" key will be deprecated in future versions
-      "icon": icon?.name ?? customIconFilename,
       "data": iconFilename,
       "color": hexFromColor(color),
       "scale": scale,
@@ -526,8 +480,8 @@ class RectangleDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(uint16Bytes(width))
       ..add(uint16Bytes(height))
       ..add(rgba8888BytesFromColor(color));
@@ -619,8 +573,8 @@ class SpinnerDrawing extends GYWDrawing {
   List<GYWBtCommand> toCommands() {
     final controlBytes = BytesBuilder()
       ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(int32Bytes(left))
-      ..add(int32Bytes(top))
+      ..add(int16Bytes(left))
+      ..add(int16Bytes(top))
       ..add(rgba8888BytesFromColor(color))
       ..add(byteFromScale(scale))
       ..add(uint8Bytes(animationTimingFunction.id))

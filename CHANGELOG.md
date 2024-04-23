@@ -1,5 +1,8 @@
 ## 2.0.0
-[REFACTOR] Encode all colors in RGBA8888 when sending them to the glasses
+* [DEL] Remove deprecated functionality
+* [REFACTOR] Encode positions as int16 instead of int32
+* [REFACTOR] Convert GYWIcon and GYWFont from enums to classes
+* [REFACTOR] Encode all colors in RGBA8888 when sending them to the glasses
 
 ## 1.2.1
 * [ADD] Add spinner image
