@@ -303,6 +303,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     await _sendBTCommand(command);
   }
 
+  /// Reset the content of the screen and its background color.
   Future<void> clearScreen({Color? color}) {
     final controlBytes = BytesBuilder();
     controlBytes.add(int8Bytes(GYWControlCode.clear.value));
