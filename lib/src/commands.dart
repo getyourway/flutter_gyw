@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 /// A class gathering the characteristics used on aRdent
 enum GYWCharacteristic {
   /// Characterisitic to control the display
-  ctrlDisplay("00004c31-0000-1000-8000-00805f9b34fb"),
+  ctrlDisplay("9f3443f3-5149-4d53-9b92-35def7b82e52"),
 
   /// Characteristic to give data to the display
-  nameDisplay("00004c32-0000-1000-8000-00805f9b34fb");
+  nameDisplay("9f3443f3-5149-4d53-9b92-35def7b82e53");
 
   /// The UUID of the characteristic
   final String uuid;
