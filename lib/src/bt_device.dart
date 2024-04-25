@@ -1,13 +1,13 @@
-import 'dart:async';
-import 'dart:developer';
-import 'dart:typed_data';
+import "dart:async";
+import "dart:developer";
+import "dart:typed_data";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fb;
-import 'package:flutter_gyw/flutter_gyw.dart';
+import "package:flutter/material.dart";
+import "package:flutter_blue_plus/flutter_blue_plus.dart" as fb;
+import "package:flutter_gyw/flutter_gyw.dart";
 
-import 'commands.dart';
-import 'helpers.dart';
+import "commands.dart";
+import "helpers.dart";
 
 /// The representation of a Bluetooth device in the library
 class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
@@ -49,6 +49,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   Map<String, fb.BluetoothCharacteristic?> _characteristics =
       <String, fb.BluetoothCharacteristic?>{};
 
+  /// Creates a bluetooth device.
   GYWBtDevice({
     required this.fbDevice,
     required int lastRssi,

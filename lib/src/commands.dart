@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+import "package:flutter/services.dart";
 
 /// A class gathering the characteristics used on aRdent
 enum GYWCharacteristic {
@@ -63,5 +63,6 @@ class GYWBtCommand {
   /// The data to write on the characteristic
   final Uint8List data;
 
+  /// Creates a Bluetooth command.
   const GYWBtCommand(this.characteristic, this.data);
 }

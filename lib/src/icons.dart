@@ -1,3 +1,4 @@
+/// A icon element that can be used on aRdent smart glasses.
 class GYWIcon {
   /// The name of the icon
   final String name;
@@ -11,6 +12,7 @@ class GYWIcon {
   /// The height (in pixels) of the icon
   final double height;
 
+  /// Creates an icon.
   const GYWIcon({
     required this.name,
     required this.filename,
@@ -25,7 +27,7 @@ class GYWIcon {
   String get pathSvg => "assets/icons/$filename.svg";
 }
 
-/// The icons supported by aRdent smart glasses
+/// The [GYWIcon] icons supported by default on aRdent smart glasses.
 enum GYWIcons {
   blank(
     GYWIcon(
@@ -388,6 +390,7 @@ enum GYWIcons {
     ),
   );
 
+  /// The [GYWIcon] object to use to communicate with aRdent.
   final GYWIcon icon;
 
   const GYWIcons(this.icon);
