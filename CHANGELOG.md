@@ -2,6 +2,8 @@
 * [DEL] Remove deprecated functionality
 * [REFACTOR] Encode positions as int16 instead of int32
 * [REFACTOR] Convert GYWIcon and GYWFont from enums to classes
+* [REFACTOR] Encode all colors in RGBA8888 when sending them to the glasses
+* [REFACTOR] Convert BlankScreen class into the clearScreen method
 * [REFACTOR] Update UUIDs of BLE characteristics
 
 ## 1.2.1

@@ -303,6 +303,24 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     await _sendBTCommand(command);
   }
 
+  /// Reset the content of the screen and its background color.
+  Future<void> clearScreen({Color? color}) {
+    final controlBytes = BytesBuilder();
+    controlBytes.add(int8Bytes(GYWControlCode.clear.value));
+
+    if (color != null) {
+      // Add color value
+      controlBytes.add(rgba8888BytesFromColor(color));
+    }
+
+    final command = GYWBtCommand(
+      GYWCharacteristic.ctrlDisplay,
+      controlBytes.toBytes(),
+    );
+
+    return _sendBTCommand(command);
+  }
+
   /// Compares this [GYWBtDevice] to another based on signal strength
   @override
   int compareTo(GYWBtDevice? other) {
