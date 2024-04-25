@@ -25,458 +25,376 @@ class GYWIcon {
     this.pathPng = "assets/icons/unknown.png",
     this.pathSvg = "assets/icons/unknown.png",
   });
+
+  const GYWIcon._library({
+    required this.name,
+    required this.filename,
+    required this.width,
+    required this.height,
+  })  : pathPng = "assets/icons/$filename.png",
+        pathSvg = "assets/icons/$filename.svg";
 }
 
 /// The icons supported by aRdent smart glasses
 enum GYWIcons {
   blank(
-    GYWIcon(
+    GYWIcon._library(
       name: "Blank",
       filename: "blank",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/blank.png",
-      pathSvg: "assets/icons/blank.svg",
     ),
   ),
   build(
-    GYWIcon(
+    GYWIcon._library(
       name: "Build",
       filename: "build",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/build.png",
-      pathSvg: "assets/icons/build.svg",
     ),
   ),
   camera(
-    GYWIcon(
+    GYWIcon._library(
       name: "Camera",
       filename: "camera",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/camera.png",
-      pathSvg: "assets/icons/camera.svg",
     ),
   ),
   chat(
-    GYWIcon(
+    GYWIcon._library(
       name: "Chat",
       filename: "chat",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/chat.png",
-      pathSvg: "assets/icons/chat.svg",
     ),
   ),
   checkbox(
-    GYWIcon(
+    GYWIcon._library(
       name: "Checkbox checked",
       filename: "check",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/check.png",
-      pathSvg: "assets/icons/check.svg",
     ),
   ),
   checkboxEmpty(
-    GYWIcon(
+    GYWIcon._library(
       name: "Checkbox empty",
       filename: "uncheck",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/uncheck.png",
-      pathSvg: "assets/icons/uncheck.svg",
     ),
   ),
   cloud_backup(
-    GYWIcon(
+    GYWIcon._library(
       name: "Cloud backup",
       filename: "cloud_backup",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/cloud_backup.png",
-      pathSvg: "assets/icons/cloud_backup.svg",
     ),
   ),
   cloud_done(
-    GYWIcon(
+    GYWIcon._library(
       name: "Cloud done",
       filename: "cloud_done",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/cloud_done.png",
-      pathSvg: "assets/icons/cloud_done.svg",
     ),
   ),
   done(
-    GYWIcon(
+    GYWIcon._library(
       name: "Done",
       filename: "done",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/done.png",
-      pathSvg: "assets/icons/done.svg",
     ),
   ),
   down(
-    GYWIcon(
+    GYWIcon._library(
       name: "Down",
       filename: "down",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/down.png",
-      pathSvg: "assets/icons/down.svg",
     ),
   ),
   edit(
-    GYWIcon(
+    GYWIcon._library(
       name: "Edit",
       filename: "edit",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/edit.png",
-      pathSvg: "assets/icons/edit.svg",
     ),
   ),
   file(
-    GYWIcon(
+    GYWIcon._library(
       name: "File",
       filename: "file",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/file.png",
-      pathSvg: "assets/icons/file.svg",
     ),
   ),
   folder(
-    GYWIcon(
+    GYWIcon._library(
       name: "Folder",
       filename: "folder",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/folder.png",
-      pathSvg: "assets/icons/folder.svg",
     ),
   ),
   gyw(
-    GYWIcon(
+    GYWIcon._library(
       name: "GYW",
       filename: "GYW",
       width: 121,
       height: 48,
-      pathPng: "assets/icons/GYW.png",
-      pathSvg: "assets/icons/GYW.svg",
     ),
   ),
   help(
-    GYWIcon(
+    GYWIcon._library(
       name: "Help",
       filename: "help",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/help.png",
-      pathSvg: "assets/icons/help.svg",
     ),
   ),
   info(
-    GYWIcon(
+    GYWIcon._library(
       name: "Information",
       filename: "info",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/info.png",
-      pathSvg: "assets/icons/info.svg",
     ),
   ),
   left(
-    GYWIcon(
+    GYWIcon._library(
       name: "Left",
       filename: "left",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/left.png",
-      pathSvg: "assets/icons/left.svg",
     ),
   ),
   location(
-    GYWIcon(
+    GYWIcon._library(
       name: "Location",
       filename: "location",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/location.png",
-      pathSvg: "assets/icons/location.svg",
     ),
   ),
   next(
-    GYWIcon(
+    GYWIcon._library(
       name: "Next",
       filename: "next",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/next.png",
-      pathSvg: "assets/icons/next.svg",
     ),
   ),
   nfc(
-    GYWIcon(
+    GYWIcon._library(
       name: "NFC",
       filename: "nfc",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/nfc.png",
-      pathSvg: "assets/icons/nfc.svg",
     ),
   ),
   person(
-    GYWIcon(
+    GYWIcon._library(
       name: "Person",
       filename: "person",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/person.png",
-      pathSvg: "assets/icons/person.svg",
     ),
   ),
   previous(
-    GYWIcon(
+    GYWIcon._library(
       name: "Previous",
       filename: "prev",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/prev.png",
-      pathSvg: "assets/icons/prev.svg",
     ),
   ),
   rename(
-    GYWIcon(
+    GYWIcon._library(
       name: "Rename",
       filename: "rename",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/rename.png",
-      pathSvg: "assets/icons/rename.svg",
     ),
   ),
   right(
-    GYWIcon(
+    GYWIcon._library(
       name: "Right",
       filename: "right",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/right.png",
-      pathSvg: "assets/icons/right.svg",
     ),
   ),
   settings(
-    GYWIcon(
+    GYWIcon._library(
       name: "Settings",
       filename: "settings",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/settings.png",
-      pathSvg: "assets/icons/settings.svg",
     ),
   ),
   up(
-    GYWIcon(
+    GYWIcon._library(
       name: "Up",
       filename: "up",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/up.png",
-      pathSvg: "assets/icons/up.svg",
     ),
   ),
   warning(
-    GYWIcon(
+    GYWIcon._library(
       name: "Warning",
       filename: "warning",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/warning.png",
-      pathSvg: "assets/icons/warning.svg",
     ),
   ),
   wifi(
-    GYWIcon(
+    GYWIcon._library(
       name: "Wi-Fi",
       filename: "wifi",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/wifi.png",
-      pathSvg: "assets/icons/wifi.svg",
     ),
   ),
   wifi_off(
-    GYWIcon(
+    GYWIcon._library(
       name: "Wi-Fi off",
       filename: "wifi_off",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/wifi_off.png",
-      pathSvg: "assets/icons/wifi_off.svg",
     ),
   ),
   key_0(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 0",
       filename: "key_0",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_0.png",
-      pathSvg: "assets/icons/key_0.svg",
     ),
   ),
   key_1(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 1",
       filename: "key_1",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_1.png",
-      pathSvg: "assets/icons/key_1.svg",
     ),
   ),
   key_2(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 2",
       filename: "key_2",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_2.png",
-      pathSvg: "assets/icons/key_2.svg",
     ),
   ),
   key_3(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 3",
       filename: "key_3",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_3.png",
-      pathSvg: "assets/icons/key_3.svg",
     ),
   ),
   key_4(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 4",
       filename: "key_4",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_4.png",
-      pathSvg: "assets/icons/key_4.svg",
     ),
   ),
   key_5(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 5",
       filename: "key_5",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_5.png",
-      pathSvg: "assets/icons/key_5.svg",
     ),
   ),
   key_6(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 6",
       filename: "key_6",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_6.png",
-      pathSvg: "assets/icons/key_6.svg",
     ),
   ),
   key_7(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 7",
       filename: "key_7",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_7.png",
-      pathSvg: "assets/icons/key_7.svg",
     ),
   ),
   key_8(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 8",
       filename: "key_8",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_8.png",
-      pathSvg: "assets/icons/key_8.svg",
     ),
   ),
   key_9(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key 9",
       filename: "key_9",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_9.png",
-      pathSvg: "assets/icons/key_9.svg",
     ),
   ),
   key_A(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key A",
       filename: "key_A",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_A.png",
-      pathSvg: "assets/icons/key_A.svg",
     ),
   ),
   key_B(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key B",
       filename: "key_B",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_B.png",
-      pathSvg: "assets/icons/key_B.svg",
     ),
   ),
   key_C(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key C",
       filename: "key_C",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_C.png",
-      pathSvg: "assets/icons/key_C.svg",
     ),
   ),
   key_D(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key D",
       filename: "key_D",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_D.png",
-      pathSvg: "assets/icons/key_D.svg",
     ),
   ),
   key_star(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key *",
       filename: "key_star",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_star.png",
-      pathSvg: "assets/icons/key_star.svg",
     ),
   ),
   key_num(
-    GYWIcon(
+    GYWIcon._library(
       name: "Key #",
       filename: "key_#",
       width: 48,
       height: 48,
-      pathPng: "assets/icons/key_#.png",
-      pathSvg: "assets/icons/key_#.svg",
     ),
   );
 
