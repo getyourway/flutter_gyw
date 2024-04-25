@@ -11,18 +11,20 @@ class GYWIcon {
   /// The height (in pixels) of the icon
   final double height;
 
+  /// The path to the PNG file
+  final String pathPng;
+
+  /// The path to the SVG file
+  final String pathSvg;
+
   const GYWIcon({
     required this.name,
     required this.filename,
     required this.width,
     required this.height,
+    this.pathPng = "assets/icons/unknown.png",
+    this.pathSvg = "assets/icons/unknown.png",
   });
-
-  /// The path of the associated PNG file in the assets folder
-  String get pathPng => "assets/icons/$filename.png";
-
-  /// The path of the associated SVG file in the assets folder
-  String get pathSvg => "assets/icons/$filename.svg";
 }
 
 /// The icons supported by aRdent smart glasses
@@ -33,6 +35,8 @@ enum GYWIcons {
       filename: "blank",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/blank.png",
+      pathSvg: "assets/icons/blank.svg",
     ),
   ),
   build(
@@ -41,6 +45,8 @@ enum GYWIcons {
       filename: "build",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/build.png",
+      pathSvg: "assets/icons/build.svg",
     ),
   ),
   camera(
@@ -49,6 +55,8 @@ enum GYWIcons {
       filename: "camera",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/camera.png",
+      pathSvg: "assets/icons/camera.svg",
     ),
   ),
   chat(
@@ -57,6 +65,8 @@ enum GYWIcons {
       filename: "chat",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/chat.png",
+      pathSvg: "assets/icons/chat.svg",
     ),
   ),
   checkbox(
@@ -65,6 +75,8 @@ enum GYWIcons {
       filename: "check",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/check.png",
+      pathSvg: "assets/icons/check.svg",
     ),
   ),
   checkboxEmpty(
@@ -73,6 +85,8 @@ enum GYWIcons {
       filename: "uncheck",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/uncheck.png",
+      pathSvg: "assets/icons/uncheck.svg",
     ),
   ),
   cloud_backup(
@@ -81,6 +95,8 @@ enum GYWIcons {
       filename: "cloud_backup",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/cloud_backup.png",
+      pathSvg: "assets/icons/cloud_backup.svg",
     ),
   ),
   cloud_done(
@@ -89,6 +105,8 @@ enum GYWIcons {
       filename: "cloud_done",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/cloud_done.png",
+      pathSvg: "assets/icons/cloud_done.svg",
     ),
   ),
   done(
@@ -97,6 +115,8 @@ enum GYWIcons {
       filename: "done",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/done.png",
+      pathSvg: "assets/icons/done.svg",
     ),
   ),
   down(
@@ -105,6 +125,8 @@ enum GYWIcons {
       filename: "down",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/down.png",
+      pathSvg: "assets/icons/down.svg",
     ),
   ),
   edit(
@@ -113,6 +135,8 @@ enum GYWIcons {
       filename: "edit",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/edit.png",
+      pathSvg: "assets/icons/edit.svg",
     ),
   ),
   file(
@@ -121,6 +145,8 @@ enum GYWIcons {
       filename: "file",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/file.png",
+      pathSvg: "assets/icons/file.svg",
     ),
   ),
   folder(
@@ -129,6 +155,8 @@ enum GYWIcons {
       filename: "folder",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/folder.png",
+      pathSvg: "assets/icons/folder.svg",
     ),
   ),
   gyw(
@@ -137,6 +165,8 @@ enum GYWIcons {
       filename: "GYW",
       width: 121,
       height: 48,
+      pathPng: "assets/icons/GYW.png",
+      pathSvg: "assets/icons/GYW.svg",
     ),
   ),
   help(
@@ -145,6 +175,8 @@ enum GYWIcons {
       filename: "help",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/help.png",
+      pathSvg: "assets/icons/help.svg",
     ),
   ),
   info(
@@ -153,6 +185,8 @@ enum GYWIcons {
       filename: "info",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/info.png",
+      pathSvg: "assets/icons/info.svg",
     ),
   ),
   left(
@@ -161,6 +195,8 @@ enum GYWIcons {
       filename: "left",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/left.png",
+      pathSvg: "assets/icons/left.svg",
     ),
   ),
   location(
@@ -169,6 +205,8 @@ enum GYWIcons {
       filename: "location",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/location.png",
+      pathSvg: "assets/icons/location.svg",
     ),
   ),
   next(
@@ -177,6 +215,8 @@ enum GYWIcons {
       filename: "next",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/next.png",
+      pathSvg: "assets/icons/next.svg",
     ),
   ),
   nfc(
@@ -185,6 +225,8 @@ enum GYWIcons {
       filename: "nfc",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/nfc.png",
+      pathSvg: "assets/icons/nfc.svg",
     ),
   ),
   person(
@@ -193,6 +235,8 @@ enum GYWIcons {
       filename: "person",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/person.png",
+      pathSvg: "assets/icons/person.svg",
     ),
   ),
   previous(
@@ -201,6 +245,8 @@ enum GYWIcons {
       filename: "prev",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/prev.png",
+      pathSvg: "assets/icons/prev.svg",
     ),
   ),
   rename(
@@ -209,6 +255,8 @@ enum GYWIcons {
       filename: "rename",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/rename.png",
+      pathSvg: "assets/icons/rename.svg",
     ),
   ),
   right(
@@ -217,6 +265,8 @@ enum GYWIcons {
       filename: "right",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/right.png",
+      pathSvg: "assets/icons/right.svg",
     ),
   ),
   settings(
@@ -225,6 +275,8 @@ enum GYWIcons {
       filename: "settings",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/settings.png",
+      pathSvg: "assets/icons/settings.svg",
     ),
   ),
   up(
@@ -233,6 +285,8 @@ enum GYWIcons {
       filename: "up",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/up.png",
+      pathSvg: "assets/icons/up.svg",
     ),
   ),
   warning(
@@ -241,6 +295,8 @@ enum GYWIcons {
       filename: "warning",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/warning.png",
+      pathSvg: "assets/icons/warning.svg",
     ),
   ),
   wifi(
@@ -249,6 +305,8 @@ enum GYWIcons {
       filename: "wifi",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/wifi.png",
+      pathSvg: "assets/icons/wifi.svg",
     ),
   ),
   wifi_off(
@@ -257,6 +315,8 @@ enum GYWIcons {
       filename: "wifi_off",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/wifi_off.png",
+      pathSvg: "assets/icons/wifi_off.svg",
     ),
   ),
   key_0(
@@ -265,6 +325,8 @@ enum GYWIcons {
       filename: "key_0",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_0.png",
+      pathSvg: "assets/icons/key_0.svg",
     ),
   ),
   key_1(
@@ -273,6 +335,8 @@ enum GYWIcons {
       filename: "key_1",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_1.png",
+      pathSvg: "assets/icons/key_1.svg",
     ),
   ),
   key_2(
@@ -281,6 +345,8 @@ enum GYWIcons {
       filename: "key_2",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_2.png",
+      pathSvg: "assets/icons/key_2.svg",
     ),
   ),
   key_3(
@@ -289,6 +355,8 @@ enum GYWIcons {
       filename: "key_3",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_3.png",
+      pathSvg: "assets/icons/key_3.svg",
     ),
   ),
   key_4(
@@ -297,6 +365,8 @@ enum GYWIcons {
       filename: "key_4",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_4.png",
+      pathSvg: "assets/icons/key_4.svg",
     ),
   ),
   key_5(
@@ -305,6 +375,8 @@ enum GYWIcons {
       filename: "key_5",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_5.png",
+      pathSvg: "assets/icons/key_5.svg",
     ),
   ),
   key_6(
@@ -313,6 +385,8 @@ enum GYWIcons {
       filename: "key_6",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_6.png",
+      pathSvg: "assets/icons/key_6.svg",
     ),
   ),
   key_7(
@@ -321,6 +395,8 @@ enum GYWIcons {
       filename: "key_7",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_7.png",
+      pathSvg: "assets/icons/key_7.svg",
     ),
   ),
   key_8(
@@ -329,6 +405,8 @@ enum GYWIcons {
       filename: "key_8",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_8.png",
+      pathSvg: "assets/icons/key_8.svg",
     ),
   ),
   key_9(
@@ -337,6 +415,8 @@ enum GYWIcons {
       filename: "key_9",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_9.png",
+      pathSvg: "assets/icons/key_9.svg",
     ),
   ),
   key_A(
@@ -345,6 +425,8 @@ enum GYWIcons {
       filename: "key_A",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_A.png",
+      pathSvg: "assets/icons/key_A.svg",
     ),
   ),
   key_B(
@@ -353,6 +435,8 @@ enum GYWIcons {
       filename: "key_B",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_B.png",
+      pathSvg: "assets/icons/key_B.svg",
     ),
   ),
   key_C(
@@ -361,6 +445,8 @@ enum GYWIcons {
       filename: "key_C",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_C.png",
+      pathSvg: "assets/icons/key_C.svg",
     ),
   ),
   key_D(
@@ -369,6 +455,8 @@ enum GYWIcons {
       filename: "key_D",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_D.png",
+      pathSvg: "assets/icons/key_D.svg",
     ),
   ),
   key_star(
@@ -377,6 +465,8 @@ enum GYWIcons {
       filename: "key_star",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_star.png",
+      pathSvg: "assets/icons/key_star.svg",
     ),
   ),
   key_num(
@@ -385,6 +475,8 @@ enum GYWIcons {
       filename: "key_#",
       width: 48,
       height: 48,
+      pathPng: "assets/icons/key_#.png",
+      pathSvg: "assets/icons/key_#.svg",
     ),
   );
 
