@@ -1,5 +1,4 @@
 import "dart:convert";
-import "dart:math";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
@@ -116,7 +115,7 @@ class TextDrawing extends GYWDrawing {
         this.maxWidth != null && this.maxWidth! >= 1 ? this.maxWidth : null;
 
     final int? maxLines =
-        this.maxLines != null && this.maxLines! >= 1 ? this.maxLines! : null;
+        this.maxLines != null && this.maxLines! >= 1 ? this.maxLines : null;
 
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
