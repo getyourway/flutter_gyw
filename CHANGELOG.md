@@ -6,7 +6,7 @@
 * [REFACTOR] Convert BlankScreen class into the clearScreen method
 * [IMP] Update lint lists and improve documentation
 * [REFACTOR] Update UUIDs of BLE characteristics
-* [REFACTOR] Image paths can be set when creating a custom icon
+* [REFACTOR] Simplify the use of user-defined icons
 
 ## 1.2.1
 * [ADD] Add spinner image
