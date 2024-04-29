@@ -24,8 +24,8 @@ class GYWIcon {
     required this.filename,
     required this.width,
     required this.height,
-    this.pathPng = "assets/icons/help_center.png",
-    this.pathSvg = "assets/icons/help_center.svg",
+    this.pathPng = "assets/icons/unknown.png",
+    this.pathSvg = "assets/icons/unknown.svg",
   });
 
   const GYWIcon._library({
@@ -179,16 +179,6 @@ enum GYWIcons {
     ),
   ),
 
-  /// Help center icon
-  helpCenter(
-    GYWIcon._library(
-      name: "Help center",
-      filename: "help_center",
-      width: 48,
-      height: 48,
-    ),
-  ),
-
   /// Info icon
   info(
     GYWIcon._library(
@@ -284,6 +274,16 @@ enum GYWIcons {
     GYWIcon._library(
       name: "Settings",
       filename: "settings",
+      width: 48,
+      height: 48,
+    ),
+  ),
+
+  /// Unknown icon
+  unknown(
+    GYWIcon._library(
+      name: "Unknown",
+      filename: "unknown",
       width: 48,
       height: 48,
     ),
