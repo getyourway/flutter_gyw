@@ -37,14 +37,6 @@ class GYWIcon {
 
 /// The icons supported by aRdent smart glasses
 enum GYWIcons {
-  blank(
-    GYWIcon._library(
-      name: "Blank",
-      filename: "blank",
-      width: 48,
-      height: 48,
-    ),
-  ),
   build(
     GYWIcon._library(
       name: "Build",
