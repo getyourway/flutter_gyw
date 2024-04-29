@@ -1,5 +1,5 @@
-import 'dart:typed_data';
-import 'dart:ui';
+import "dart:typed_data";
+import "dart:ui";
 
 /// Converts an int16 into bytes
 Uint8List int16Bytes(
@@ -35,17 +35,22 @@ Uint8List rgba8888BytesFromColor(Color? color) {
   return Uint8List.fromList([color.red, color.green, color.blue, color.alpha]);
 }
 
-/// Allows to compare Comparable object using inequality signs
+/// Extension on Comparable objects allowing comparison using inequality signs.
 extension Compare<T> on Comparable<T> {
+  /// Returns true if this object is greater than [other].
   bool operator >(T other) => compareTo(other) > 0;
 
+  /// Returns true if this object is less than [other].
   bool operator <(T other) => compareTo(other) < 0;
 
+  /// Returns true if this object is greater than or equal to [other].
   bool operator >=(T other) => compareTo(other) >= 0;
 
+  /// Returns true if this object is less than or equal to [other].
   bool operator <=(T other) => compareTo(other) <= 0;
 }
 
+/// Converts a double into bytes understood by aRdent communication protocol.
 List<int> byteFromScale(double scale) {
   scale = scale.clamp(0.01, 13.7);
   int scaleByte;
@@ -62,7 +67,7 @@ List<int> byteFromScale(double scale) {
   return int8Bytes(scaleByte);
 }
 
-/// Converts an hexadecimal string of length 8 into a Flutter color
+/// Converts an hexadecimal string of length 8 into a Flutter color.
 Color? colorFromHex(String? value) {
   if ((value?.length ?? 0) != 8) {
     return null;
@@ -76,6 +81,7 @@ Color? colorFromHex(String? value) {
   return Color(colorValue);
 }
 
+/// Converts a Flutter color into an hexadecimal string of length 8.
 String hexFromColor(Color color) {
   return [color.alpha, color.red, color.green, color.blue]
       .map((channel) => channel.toRadixString(16).padLeft(2, "0"))
