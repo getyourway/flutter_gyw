@@ -5,6 +5,7 @@
 * [REFACTOR] Encode all colors in RGBA8888 when sending them to the glasses
 * [REFACTOR] Convert BlankScreen class into the clearScreen method
 * [IMP] Update lint lists and improve documentation
+* [REFACTOR] Update UUIDs of BLE characteristics
 
 ## 1.2.1
 * [ADD] Add spinner image
