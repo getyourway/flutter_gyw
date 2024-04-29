@@ -3,6 +3,7 @@ class GYWException implements Exception {
   /// The description of the cause of the error
   final String cause;
 
+  /// Creates an exception.
   const GYWException(this.cause);
 
   @override
@@ -20,5 +21,6 @@ class GYWException implements Exception {
 /// For example, trying to connect a device while a connection is already
 /// in progress
 class GYWStatusException extends GYWException {
+  /// Creates a status exception.
   const GYWStatusException(super.cause);
 }

@@ -1,7 +1,7 @@
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import "package:flutter_blue_plus/flutter_blue_plus.dart";
 
-import 'bt_device.dart';
-import 'exceptions.dart';
+import "bt_device.dart";
+import "exceptions.dart";
 
 /// A class used to interact with Bluetooth devices
 class GYWBtManager {
@@ -26,7 +26,7 @@ class GYWBtManager {
   /// The list of devices available for a Bluetooth connection
   List<GYWBtDevice> devices = [];
 
-  /// whether the manager is searching around for devices
+  /// Whether the manager is searching around for devices
   bool _isScanning = false;
 
   /// Whether the Bluetooth is active

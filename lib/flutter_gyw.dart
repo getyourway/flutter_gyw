@@ -5,17 +5,17 @@
 /// This library can be used to control the display.
 library flutter_gyw;
 
-export 'src/bt_device.dart' show GYWBtDevice;
-export 'src/bt_manager.dart' show GYWBtManager;
-export 'src/drawings.dart'
+export "src/bt_device.dart" show GYWBtDevice;
+export "src/bt_manager.dart" show GYWBtManager;
+export "src/drawings.dart"
     show
+        AnimationTimingFunction,
         GYWDrawing,
         IconDrawing,
-        TextDrawing,
         RectangleDrawing,
         SpinnerDrawing,
-        AnimationTimingFunction;
-export 'src/exceptions.dart' show GYWException, GYWStatusException;
-export 'src/fonts.dart' show GYWFont, GYWFonts;
-export 'src/icons.dart' show GYWIcon, GYWIcons;
-export 'src/screen.dart' show GYWScreenParameters;
+        TextDrawing;
+export "src/exceptions.dart" show GYWException, GYWStatusException;
+export "src/fonts.dart" show GYWFont, GYWFonts;
+export "src/icons.dart" show GYWIcon, GYWIcons;
+export "src/screen.dart" show GYWScreenParameters;

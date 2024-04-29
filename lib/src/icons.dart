@@ -1,3 +1,4 @@
+/// A icon element that can be used on aRdent smart glasses.
 class GYWIcon {
   /// The name of the icon
   final String name;
@@ -11,12 +12,13 @@ class GYWIcon {
   /// The height (in pixels) of the icon
   final double height;
 
-  /// The path to the PNG file
+  /// The path of the associated PNG file in the assets folder
   final String pathPng;
 
-  /// The path to the SVG file
+  /// The path of the associated SVG file in the assets folder
   final String pathSvg;
 
+  /// Creates an icon.
   const GYWIcon({
     required this.name,
     required this.filename,
@@ -35,8 +37,9 @@ class GYWIcon {
         pathSvg = "assets/icons/$filename.svg";
 }
 
-/// The icons supported by aRdent smart glasses
+/// The [GYWIcon] icons supported by default on aRdent smart glasses.
 enum GYWIcons {
+  /// Build icon
   build(
     GYWIcon._library(
       name: "Build",
@@ -45,6 +48,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Camera icon
   camera(
     GYWIcon._library(
       name: "Camera",
@@ -53,6 +58,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Chat icon
   chat(
     GYWIcon._library(
       name: "Chat",
@@ -61,6 +68,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Filled checkbox icon
   checkbox(
     GYWIcon._library(
       name: "Checkbox checked",
@@ -69,6 +78,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Empty checkbox icon
   checkboxEmpty(
     GYWIcon._library(
       name: "Checkbox empty",
@@ -77,6 +88,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Cloud with backup icon
   cloud_backup(
     GYWIcon._library(
       name: "Cloud backup",
@@ -85,6 +98,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Cloud with check icon
   cloud_done(
     GYWIcon._library(
       name: "Cloud done",
@@ -93,6 +108,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Done icon
   done(
     GYWIcon._library(
       name: "Done",
@@ -101,6 +118,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Arrow down icon
   down(
     GYWIcon._library(
       name: "Down",
@@ -109,6 +128,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Edit icon
   edit(
     GYWIcon._library(
       name: "Edit",
@@ -117,6 +138,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// File icon
   file(
     GYWIcon._library(
       name: "File",
@@ -125,6 +148,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Folder icon
   folder(
     GYWIcon._library(
       name: "Folder",
@@ -133,6 +158,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Get Your Way logo
   gyw(
     GYWIcon._library(
       name: "GYW",
@@ -141,6 +168,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Help icon
   help(
     GYWIcon._library(
       name: "Help",
@@ -149,6 +178,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Help center icon
   helpCenter(
     GYWIcon._library(
       name: "Help center",
@@ -157,6 +188,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Info icon
   info(
     GYWIcon._library(
       name: "Information",
@@ -165,6 +198,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Arrow left icon
   left(
     GYWIcon._library(
       name: "Left",
@@ -173,6 +208,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Location pin icon
   location(
     GYWIcon._library(
       name: "Location",
@@ -181,6 +218,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Next icon
   next(
     GYWIcon._library(
       name: "Next",
@@ -189,6 +228,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// NFC icon
   nfc(
     GYWIcon._library(
       name: "NFC",
@@ -197,6 +238,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// User icon
   person(
     GYWIcon._library(
       name: "Person",
@@ -205,6 +248,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Previous icon
   previous(
     GYWIcon._library(
       name: "Previous",
@@ -213,6 +258,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Rename icon
   rename(
     GYWIcon._library(
       name: "Rename",
@@ -221,6 +268,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Arrow right icon
   right(
     GYWIcon._library(
       name: "Right",
@@ -229,6 +278,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Settings icon
   settings(
     GYWIcon._library(
       name: "Settings",
@@ -237,6 +288,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Arrow up icon
   up(
     GYWIcon._library(
       name: "Up",
@@ -245,6 +298,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Warning icon
   warning(
     GYWIcon._library(
       name: "Warning",
@@ -253,6 +308,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Wifi icon
   wifi(
     GYWIcon._library(
       name: "Wi-Fi",
@@ -261,6 +318,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// Crossed off wifi icon
   wifi_off(
     GYWIcon._library(
       name: "Wi-Fi off",
@@ -269,6 +328,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '0' keypad key icon
   key_0(
     GYWIcon._library(
       name: "Key 0",
@@ -277,6 +338,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '1' keypad key icon
   key_1(
     GYWIcon._library(
       name: "Key 1",
@@ -285,6 +348,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '2' keypad key icon
   key_2(
     GYWIcon._library(
       name: "Key 2",
@@ -293,6 +358,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '3' keypad key icon
   key_3(
     GYWIcon._library(
       name: "Key 3",
@@ -301,6 +368,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '4' keypad key icon
   key_4(
     GYWIcon._library(
       name: "Key 4",
@@ -309,6 +378,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '5' keypad key icon
   key_5(
     GYWIcon._library(
       name: "Key 5",
@@ -317,6 +388,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '6' keypad key icon
   key_6(
     GYWIcon._library(
       name: "Key 6",
@@ -325,6 +398,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '7' keypad key icon
   key_7(
     GYWIcon._library(
       name: "Key 7",
@@ -333,6 +408,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '8' keypad key icon
   key_8(
     GYWIcon._library(
       name: "Key 8",
@@ -341,6 +418,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '9' keypad key icon
   key_9(
     GYWIcon._library(
       name: "Key 9",
@@ -349,6 +428,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// 'A' keypad key icon
   key_A(
     GYWIcon._library(
       name: "Key A",
@@ -357,6 +438,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// 'B' keypad key icon
   key_B(
     GYWIcon._library(
       name: "Key B",
@@ -365,6 +448,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// 'C' keypad key icon
   key_C(
     GYWIcon._library(
       name: "Key C",
@@ -373,6 +458,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// 'D' keypad key icon
   key_D(
     GYWIcon._library(
       name: "Key D",
@@ -381,6 +468,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '*' keypad key icon
   key_star(
     GYWIcon._library(
       name: "Key *",
@@ -389,6 +478,8 @@ enum GYWIcons {
       height: 48,
     ),
   ),
+
+  /// '#' keypad key icon
   key_num(
     GYWIcon._library(
       name: "Key #",
@@ -398,6 +489,7 @@ enum GYWIcons {
     ),
   );
 
+  /// The [GYWIcon] object to use to communicate with aRdent.
   final GYWIcon icon;
 
   const GYWIcons(this.icon);

@@ -1,14 +1,14 @@
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
+import "dart:convert";
+import "dart:math";
+import "dart:typed_data";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_gyw/src/helpers.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gyw/src/helpers.dart";
 
-import 'commands.dart';
-import 'fonts.dart';
-import 'icons.dart';
-import 'screen.dart';
+import "commands.dart";
+import "fonts.dart";
+import "icons.dart";
+import "screen.dart";
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
 @immutable
@@ -19,6 +19,7 @@ abstract class GYWDrawing {
   /// The distance (in pixels) from the left side of the screen
   final int left;
 
+  /// Abstract const contructor.
   const GYWDrawing({
     this.top = 0,
     this.left = 0,
@@ -81,6 +82,7 @@ class TextDrawing extends GYWDrawing {
   /// The value 0 is special and disables the limit.
   final int maxLines;
 
+  /// Creates a text element.
   const TextDrawing({
     required this.text,
     this.font,
@@ -174,7 +176,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: Text $text at ($left, $top)";
+    return "Drawing: Text '$text' with $font at ($left, $top)";
   }
 
   @override
@@ -211,7 +213,7 @@ class TextDrawing extends GYWDrawing {
     try {
       font = GYWFonts.values
           .firstWhere(
-            (e) => e.font.name == data["font"],
+            (e) => e.font.prefix == data["font"],
           )
           .font;
     } on StateError {
@@ -255,7 +257,7 @@ class IconDrawing extends GYWDrawing {
   /// The type of the [IconDrawing]
   static const String type = "icon";
 
-  /// whether the drawings uses a icon that is not part of the library
+  /// Whether the drawings uses a icon that is not part of the library
   bool get isCustom => icon == null;
 
   /// The filename of the icon.
@@ -277,6 +279,7 @@ class IconDrawing extends GYWDrawing {
   /// Minimum is 0.01, maximum is 13.7.
   final double scale;
 
+  /// Creates an icon element.
   const IconDrawing(
     GYWIcon this.icon, {
     super.top,
@@ -390,6 +393,7 @@ class IconDrawing extends GYWDrawing {
   }
 }
 
+/// A drawing to display a rectangle on an aRdent device
 @immutable
 class RectangleDrawing extends GYWDrawing {
   /// The type of the [RectangleDrawing].
@@ -404,6 +408,7 @@ class RectangleDrawing extends GYWDrawing {
   /// The fill color. If null, the rectangle will use the current background color.
   final Color? color;
 
+  /// Creates a rectangle element.
   const RectangleDrawing({
     super.left,
     super.top,
@@ -432,7 +437,7 @@ class RectangleDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return 'RectangleDrawing{left: $left, top: $top, width: $width, height: $height, color: $color}';
+    return "RectangleDrawing{left: $left, top: $top, width: $width, height: $height, color: $color}";
   }
 
   @override
@@ -479,6 +484,7 @@ class RectangleDrawing extends GYWDrawing {
   }
 }
 
+/// A drawing to display a spinner on an aRdent device
 @immutable
 class SpinnerDrawing extends GYWDrawing {
   /// The type of the [SpinnerDrawing].
@@ -496,6 +502,7 @@ class SpinnerDrawing extends GYWDrawing {
   /// How many rotations per second.
   final double spinsPerSecond;
 
+  /// Creates a spinner element.
   const SpinnerDrawing({
     super.left,
     super.top,
@@ -530,7 +537,7 @@ class SpinnerDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return '''
+    return """
 SpinnerDrawing{
   left: $left,
   top: $top,
@@ -538,7 +545,7 @@ SpinnerDrawing{
   scale: $scale,
   animationTimingFunction: $animationTimingFunction,
   spinsPerSecond: $spinsPerSecond,
-}''';
+}""";
   }
 
   @override
@@ -591,11 +598,18 @@ SpinnerDrawing{
   }
 }
 
+/// The animations for spinner rotating behaviour
 enum AnimationTimingFunction {
+  /// Linear timing function
   linear(0),
+
+  /// Ease-in timing function
   ease_in(1),
+
+  /// Ease-out timing function
   ease_out(2);
 
+  /// The value used by aRdent to identify the animation
   final int id;
 
   const AnimationTimingFunction(this.id);
