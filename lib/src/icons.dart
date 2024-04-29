@@ -256,7 +256,7 @@ enum GYWIcons {
   unknown(
     GYWIcon._library(
       name: "Unknown",
-      filename: "unknown",
+      filename: "help",
     ),
   ),
 
