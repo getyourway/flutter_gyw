@@ -115,7 +115,9 @@ class TextDrawing extends GYWDrawing {
     final int? maxWidth =
         this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
 
-    final int? maxLines = this.maxLines != null ? max(1, this.maxLines!) : null;
+    final int? maxLines = this.maxLines != null && this.maxLines! < 1
+        ? max(1, this.maxLines!)
+        : null;
 
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
