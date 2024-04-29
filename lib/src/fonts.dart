@@ -1,4 +1,7 @@
+import "package:flutter/material.dart";
+
 /// The text fonts supported on aRdent smart glasses
+@immutable
 class GYWFont {
   /// The name of the font
   final String name;
@@ -27,6 +30,23 @@ class GYWFont {
     required this.height,
     required this.bold,
   });
+
+  @override
+  String toString() {
+    return "Font '$name' ($prefix)";
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is GYWFont) {
+      return prefix == other.prefix;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => Object.hash(prefix, size);
 }
 
 /// The [GYWFont] fonts supported by default on aRdent smart glasses.

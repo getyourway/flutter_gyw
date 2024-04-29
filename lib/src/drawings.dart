@@ -176,7 +176,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: Text $text at ($left, $top)";
+    return "Drawing: Text '$text' with $font at ($left, $top)";
   }
 
   @override
@@ -213,7 +213,7 @@ class TextDrawing extends GYWDrawing {
     try {
       font = GYWFonts.values
           .firstWhere(
-            (e) => e.font.name == data["font"],
+            (e) => e.font.prefix == data["font"],
           )
           .font;
     } on StateError {
