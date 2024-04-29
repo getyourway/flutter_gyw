@@ -347,7 +347,7 @@ class IconDrawing extends GYWDrawing {
       );
     } else {
       return IconDrawing(
-        GYWIcon(name: icon, filename: icon, width: 48, height: 48),
+        GYWIcon(name: icon, filename: icon),
         left: data["left"] as int,
         top: data["top"] as int,
         color: colorFromHex(data["color"] as String?) ?? Colors.black,
