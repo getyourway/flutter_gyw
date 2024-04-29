@@ -9,8 +9,11 @@ class GYWIcon {
   /// The filename on the GYW device
   final String filename;
 
-  /// The size (in pixels) of the icon
-  final Size size;
+  /// The width (in pixels) of the icon
+  final double width;
+
+  /// The height (in pixels) of the icon
+  final double height;
 
   /// The path of the associated PNG file in the assets folder
   final String pathPng;
@@ -22,7 +25,8 @@ class GYWIcon {
   const GYWIcon({
     required this.name,
     required this.filename,
-    this.size = const Size(48, 48),
+    this.width = 48,
+    this.height = 48,
     this.pathPng = "assets/icons/unknown.png",
     this.pathSvg = "assets/icons/unknown.svg",
   });
@@ -30,7 +34,9 @@ class GYWIcon {
   const GYWIcon._library({
     required this.name,
     required this.filename,
-    this.size = const Size(48, 48),
+    this.width = 48,
+    // ignore: unused_element
+    this.height = 48,
   })  : pathPng = "assets/icons/$filename.png",
         pathSvg = "assets/icons/$filename.svg";
 
@@ -41,7 +47,8 @@ class GYWIcon {
           runtimeType == other.runtimeType &&
           name == other.name &&
           filename == other.filename &&
-          size == other.size &&
+          width == other.width &&
+          height == other.height &&
           pathPng == other.pathPng &&
           pathSvg == other.pathSvg;
 
@@ -49,7 +56,8 @@ class GYWIcon {
   int get hashCode => Object.hash(
         name,
         filename,
-        size,
+        width,
+        height,
         pathPng,
         pathSvg,
       );
@@ -158,7 +166,7 @@ enum GYWIcons {
     GYWIcon._library(
       name: "GYW",
       filename: "GYW",
-      size: Size(121, 48),
+      width: 121,
     ),
   ),
 
