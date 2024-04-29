@@ -250,14 +250,6 @@ enum GYWIcons {
     ),
   ),
 
-  /// Unknown icon
-  unknown(
-    GYWIcon._library(
-      name: "Unknown",
-      filename: "help",
-    ),
-  ),
-
   /// Arrow up icon
   up(
     GYWIcon._library(
