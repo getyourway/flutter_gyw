@@ -1,4 +1,7 @@
+import "package:flutter/foundation.dart";
+
 /// A icon element that can be used on aRdent smart glasses.
+@immutable
 class GYWIcon {
   /// The name of the icon
   final String name;
@@ -35,6 +38,28 @@ class GYWIcon {
     required this.height,
   })  : pathPng = "assets/icons/$filename.png",
         pathSvg = "assets/icons/$filename.svg";
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GYWIcon &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          filename == other.filename &&
+          width == other.width &&
+          height == other.height &&
+          pathPng == other.pathPng &&
+          pathSvg == other.pathSvg;
+
+  @override
+  int get hashCode => Object.hash(
+        name,
+        filename,
+        width,
+        height,
+        pathPng,
+        pathSvg,
+      );
 }
 
 /// The [GYWIcon] icons supported by default on aRdent smart glasses.
