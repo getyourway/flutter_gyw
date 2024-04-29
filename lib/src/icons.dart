@@ -22,8 +22,8 @@ class GYWIcon {
     required this.filename,
     required this.width,
     required this.height,
-    this.pathPng = "assets/icons/unknown.png",
-    this.pathSvg = "assets/icons/unknown.png",
+    this.pathPng = "assets/icons/help_center.png",
+    this.pathSvg = "assets/icons/help_center.svg",
   });
 
   const GYWIcon._library({
@@ -145,6 +145,14 @@ enum GYWIcons {
     GYWIcon._library(
       name: "Help",
       filename: "help",
+      width: 48,
+      height: 48,
+    ),
+  ),
+  helpCenter(
+    GYWIcon._library(
+      name: "Help center",
+      filename: "help_center",
       width: 48,
       height: 48,
     ),
