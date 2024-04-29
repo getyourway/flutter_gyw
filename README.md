@@ -20,9 +20,9 @@ Note that this package is still in development and is currently private. As such
 
 * Display a text at a given postion
 * Font selection
-  * See `fonts.dart` [documentation](flutter_gyw/GYWFont-class.html) for available fonts
+  * See `fonts.dart` [documentation](flutter_gyw/GYWFonts.html) for available fonts
 * Display a 48x48 icon at a given position
-  * See `icons.dart` [documentation](flutter_gyw/GYWIcons-class.html) for available icons
+  * See `icons.dart` [documentation](flutter_gyw/GYWIcons.html) for available icons
 * Provide the specification of the GYW aRdent device screen
   * See `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
 
