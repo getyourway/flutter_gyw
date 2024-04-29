@@ -1,7 +1,7 @@
-import 'dart:developer';
+import "dart:developer";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_gyw/flutter_gyw.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gyw/flutter_gyw.dart";
 
 class GYWExampleScreen extends StatefulWidget {
   const GYWExampleScreen({super.key});
