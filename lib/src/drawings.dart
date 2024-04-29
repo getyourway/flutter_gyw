@@ -113,11 +113,10 @@ class TextDrawing extends GYWDrawing {
   Iterable<String> _wrapText() sync* {
     // An invalid value will be considered as unconstrained.
     final int? maxWidth =
-        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+        this.maxWidth != null && this.maxWidth! >= 1 ? this.maxWidth : null;
 
-    final int? maxLines = this.maxLines != null && this.maxLines! < 1
-        ? max(1, this.maxLines!)
-        : null;
+    final int? maxLines =
+        this.maxLines != null && this.maxLines! >= 1 ? this.maxLines! : null;
 
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
