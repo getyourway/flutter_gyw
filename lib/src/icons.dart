@@ -1,6 +1,4 @@
-import "dart:ui";
-
-import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
 
 /// A icon element that can be used on aRdent smart glasses.
 @immutable
