@@ -35,14 +35,18 @@ Uint8List rgba8888BytesFromColor(Color? color) {
   return Uint8List.fromList([color.red, color.green, color.blue, color.alpha]);
 }
 
-/// Allows to compare Comparable object using inequality signs
+/// Extension on Comparable objects allowing comparison using inequality signs.
 extension Compare<T> on Comparable<T> {
+  /// Returns true if this object is greater than [other].
   bool operator >(T other) => compareTo(other) > 0;
 
+  /// Returns true if this object is less than [other].
   bool operator <(T other) => compareTo(other) < 0;
 
+  /// Returns true if this object is greater than or equal to [other].
   bool operator >=(T other) => compareTo(other) >= 0;
 
+  /// Returns true if this object is less than or equal to [other].
   bool operator <=(T other) => compareTo(other) <= 0;
 }
 

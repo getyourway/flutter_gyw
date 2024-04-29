@@ -600,8 +600,13 @@ SpinnerDrawing{
 
 /// The animations for spinner rotating behaviour
 enum AnimationTimingFunction {
+  /// Linear timing function
   linear(0),
+
+  /// Ease-in timing function
   ease_in(1),
+
+  /// Ease-out timing function
   ease_out(2);
 
   /// The value used by aRdent to identify the animation
