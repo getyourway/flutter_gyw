@@ -1,5 +1,4 @@
 import "dart:convert";
-import "dart:math";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
@@ -74,13 +73,14 @@ class TextDrawing extends GYWDrawing {
   /// The maximum width (in pixels) of the text.
   ///
   /// It will be wrapped on multiple lines if it is too long.
+  /// Null disables the limit.
   final int? maxWidth;
 
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
-  final int maxLines;
+  /// Null disables the limit.
+  final int? maxLines;
 
   /// Creates a text element.
   const TextDrawing({
@@ -112,9 +112,10 @@ class TextDrawing extends GYWDrawing {
   Iterable<String> _wrapText() sync* {
     // An invalid value will be considered as unconstrained.
     final int? maxWidth =
-        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+        this.maxWidth != null && this.maxWidth! >= 1 ? this.maxWidth : null;
 
-    final int maxLines = max(0, this.maxLines);
+    final int? maxLines =
+        this.maxLines != null && this.maxLines! >= 1 ? this.maxLines : null;
 
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
@@ -137,7 +138,7 @@ class TextDrawing extends GYWDrawing {
       if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
         yield line.toString();
         lines++;
-        if (maxLines != 0 && lines >= maxLines) {
+        if (maxLines != null && lines >= maxLines) {
           return;
         }
         line.clear();
