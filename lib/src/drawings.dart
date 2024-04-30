@@ -208,7 +208,7 @@ class TextDrawing extends GYWDrawing {
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     final font = GYWFonts.values
         .firstWhere(
-          (e) => e.font.name == data["font"],
+          (e) => e.font.filename == data["font"],
           orElse: () => GYWFonts.robotoMonoNormal,
         )
         .font;
@@ -232,7 +232,7 @@ class TextDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       "data": text,
-      "font": font.name,
+      "font": font.filename,
       "size": size,
       "color": hexFromColor(color),
       "max_width": maxWidth,
