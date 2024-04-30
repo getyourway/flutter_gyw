@@ -153,7 +153,7 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(int16Bytes(left));
     controlBytes.add(int16Bytes(top));
 
-    controlBytes.add(utf8.encode(font.filename));
+    controlBytes.add(utf8.encode(font.filename.padRight(5, "\u0000")));
     controlBytes.add(int8Bytes(size));
 
     controlBytes.add(rgba8888BytesFromColor(color));
