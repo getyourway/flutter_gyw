@@ -36,13 +36,14 @@ mixin _$TextDrawing {
   /// The maximum width (in pixels) of the text.
   ///
   /// It will be wrapped on multiple lines if it is too long.
+  /// Null disables the limit.
   int? get maxWidth => throw _privateConstructorUsedError;
 
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
-  int get maxLines => throw _privateConstructorUsedError;
+  /// Null disables the limit.
+  int? get maxLines => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TextDrawingCopyWith<TextDrawing> get copyWith =>
@@ -63,7 +64,7 @@ abstract class $TextDrawingCopyWith<$Res> {
       int? size,
       Color color,
       int? maxWidth,
-      int maxLines});
+      int? maxLines});
 }
 
 /// @nodoc
@@ -86,7 +87,7 @@ class _$TextDrawingCopyWithImpl<$Res, $Val extends TextDrawing>
     Object? size = freezed,
     Object? color = null,
     Object? maxWidth = freezed,
-    Object? maxLines = null,
+    Object? maxLines = freezed,
   }) {
     return _then(_value.copyWith(
       top: null == top
@@ -117,10 +118,10 @@ class _$TextDrawingCopyWithImpl<$Res, $Val extends TextDrawing>
           ? _value.maxWidth
           : maxWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      maxLines: null == maxLines
+      maxLines: freezed == maxLines
           ? _value.maxLines
           : maxLines // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -141,7 +142,7 @@ abstract class _$$TextDrawingImplCopyWith<$Res>
       int? size,
       Color color,
       int? maxWidth,
-      int maxLines});
+      int? maxLines});
 }
 
 /// @nodoc
@@ -162,7 +163,7 @@ class __$$TextDrawingImplCopyWithImpl<$Res>
     Object? size = freezed,
     Object? color = null,
     Object? maxWidth = freezed,
-    Object? maxLines = null,
+    Object? maxLines = freezed,
   }) {
     return _then(_$TextDrawingImpl(
       top: null == top
@@ -193,10 +194,10 @@ class __$$TextDrawingImplCopyWithImpl<$Res>
           ? _value.maxWidth
           : maxWidth // ignore: cast_nullable_to_non_nullable
               as int?,
-      maxLines: null == maxLines
+      maxLines: freezed == maxLines
           ? _value.maxLines
           : maxLines // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -212,7 +213,7 @@ class _$TextDrawingImpl extends _TextDrawing {
       this.size,
       this.color = Colors.black,
       this.maxWidth,
-      this.maxLines = 1})
+      this.maxLines})
       : super._();
 
   @override
@@ -244,16 +245,16 @@ class _$TextDrawingImpl extends _TextDrawing {
   /// The maximum width (in pixels) of the text.
   ///
   /// It will be wrapped on multiple lines if it is too long.
+  /// Null disables the limit.
   @override
   final int? maxWidth;
 
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
+  /// Null disables the limit.
   @override
-  @JsonKey()
-  final int maxLines;
+  final int? maxLines;
 
   @override
   String toString() {
@@ -297,7 +298,7 @@ abstract class _TextDrawing extends TextDrawing {
       final int? size,
       final Color color,
       final int? maxWidth,
-      final int maxLines}) = _$TextDrawingImpl;
+      final int? maxLines}) = _$TextDrawingImpl;
   const _TextDrawing._() : super._();
 
   @override
@@ -327,14 +328,15 @@ abstract class _TextDrawing extends TextDrawing {
   /// The maximum width (in pixels) of the text.
   ///
   /// It will be wrapped on multiple lines if it is too long.
+  /// Null disables the limit.
   int? get maxWidth;
   @override
 
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
-  int get maxLines;
+  /// Null disables the limit.
+  int? get maxLines;
   @override
   @JsonKey(ignore: true)
   _$$TextDrawingImplCopyWith<_$TextDrawingImpl> get copyWith =>
