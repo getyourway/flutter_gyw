@@ -84,7 +84,7 @@ class TextDrawing extends GYWDrawing {
   const TextDrawing({
     required this.text,
     required this.font,
-    required this.size,
+    this.size = 24,
     this.color = Colors.black,
     this.maxWidth,
     this.maxLines = 1,
