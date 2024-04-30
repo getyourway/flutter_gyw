@@ -12,12 +12,18 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_blue_plus: ^1.31.4
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
-  dartdoc: ^6.3.0
+  analyzer: ^6.4.1
+  build_runner: ^2.4.9
+  dartdoc: ^8.0.8
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
 
 flutter:
   assets:

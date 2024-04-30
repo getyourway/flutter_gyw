@@ -3,27 +3,21 @@ import "dart:math";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
+import "package:flutter_gyw/flutter_gyw.dart";
 import "package:flutter_gyw/src/helpers.dart";
+import "package:freezed_annotation/freezed_annotation.dart";
 
 import "commands.dart";
-import "fonts.dart";
-import "icons.dart";
-import "screen.dart";
+
+part "drawings.freezed.dart";
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
-@immutable
-abstract class GYWDrawing {
+abstract interface class GYWDrawing {
   /// The distance (in pixels) from the top of the screen
-  final int top;
+  int get top;
 
   /// The distance (in pixels) from the left side of the screen
-  final int left;
-
-  /// Abstract const contructor.
-  const GYWDrawing({
-    this.top = 0,
-    this.left = 0,
-  });
+  int get left;
 
   /// Converts the drawing into a list of commands understood by the device
   List<GYWBtCommand> toCommands();
@@ -49,50 +43,46 @@ abstract class GYWDrawing {
 }
 
 /// A drawing to display text on an aRdent device
-@immutable
-class TextDrawing extends GYWDrawing {
+@freezed
+class TextDrawing with _$TextDrawing implements GYWDrawing {
   /// The type of the [TextDrawing] drawing
   static const String type = "text";
 
-  /// The text that must be displayed
-  final String text;
+  /// Factory constructor for creating a new [TextDrawing] instance
+  const factory TextDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
+
+    /// The text that must be displayed
+    required String text,
+
+    /// The [GYWFont] to use
+    ///
+    /// If no font is given, it uses the most recent one
+    GYWFont? font,
+
+    /// The text size. Overrides the font size.
+    int? size,
+
+    /// The color of the text.
+    @Default(Colors.black) Color color,
+
+    /// The maximum width (in pixels) of the text.
+    ///
+    /// It will be wrapped on multiple lines if it is too long.
+    int? maxWidth,
+
+    /// The maximum number of lines the text can be wrapped on.
+    ///
+    /// All extra lines will be ignored.
+    /// The value 0 is special and disables the limit.
+    @Default(1) int maxLines,
+  }) = _TextDrawing;
+
+  const TextDrawing._();
 
   /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
   String get wrappedText => _wrapText().join("\n");
-
-  /// The [GYWFont] to use
-  ///
-  /// If no font is given, it uses the most recent one
-  final GYWFont? font;
-
-  /// The text size. Overrides the font size.
-  final int? size;
-
-  /// The color of the text.
-  final Color color;
-
-  /// The maximum width (in pixels) of the text.
-  ///
-  /// It will be wrapped on multiple lines if it is too long.
-  final int? maxWidth;
-
-  /// The maximum number of lines the text can be wrapped on.
-  ///
-  /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
-  final int maxLines;
-
-  /// Creates a text element.
-  const TextDrawing({
-    required this.text,
-    this.font,
-    this.size,
-    this.color = Colors.black,
-    this.maxWidth,
-    this.maxLines = 1,
-    super.left = 0,
-    super.top = 0,
-  });
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -174,39 +164,6 @@ class TextDrawing extends GYWDrawing {
     ];
   }
 
-  @override
-  String toString() {
-    return "Drawing: Text '$text' with $font at ($left, $top)";
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is TextDrawing) {
-      return text == other.text &&
-          left == other.left &&
-          top == other.top &&
-          font == other.font &&
-          size == other.size &&
-          color.value == other.color.value &&
-          maxWidth == other.maxWidth &&
-          maxLines == other.maxLines;
-    } else {
-      return false;
-    }
-  }
-
-  @override
-  int get hashCode => Object.hash(
-        text,
-        font,
-        left,
-        top,
-        size,
-        color,
-        maxWidth,
-        maxLines,
-      );
-
   /// Deserializes a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
     GYWFont? font;
@@ -252,30 +209,27 @@ class TextDrawing extends GYWDrawing {
 }
 
 /// A drawing to display an icon on an aRdent device
-@immutable
-class IconDrawing extends GYWDrawing {
+@freezed
+class IconDrawing with _$IconDrawing implements GYWDrawing {
   /// The type of the [IconDrawing]
   static const String type = "icon";
 
-  /// The displayed [GYWIcon]
-  final GYWIcon icon;
+  /// Factory constructor for creating a new [IconDrawing] instance
+  const factory IconDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
 
-  /// Hexadecimal code of the icon fill color
-  final Color color;
+    /// The displayed [GYWIcon]
+    required GYWIcon icon,
 
-  /// The icon scaling factor.
-  ///
-  /// Minimum is 0.01, maximum is 13.7.
-  final double scale;
+    /// Hexadecimal code of the icon fill color
+    @Default(Colors.black) Color color,
 
-  /// Creates an icon element.
-  const IconDrawing(
-    this.icon, {
-    super.top,
-    super.left,
-    this.color = Colors.black,
-    this.scale = 1.0,
-  });
+    /// The icon scaling factor.
+    @Default(1.0) double scale,
+  }) = _IconDrawing;
+
+  const IconDrawing._();
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -298,33 +252,6 @@ class IconDrawing extends GYWDrawing {
     ];
   }
 
-  @override
-  String toString() {
-    return "Drawing: ${icon.name} at ($left, $top)";
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is IconDrawing) {
-      return icon == other.icon &&
-          color.value == other.color.value &&
-          left == other.left &&
-          top == other.top &&
-          scale == other.scale;
-    } else {
-      return false;
-    }
-  }
-
-  @override
-  int get hashCode => Object.hash(
-        icon,
-        left,
-        top,
-        color,
-        scale,
-      );
-
   /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
     final String icon = data["data"] as String;
@@ -339,7 +266,7 @@ class IconDrawing extends GYWDrawing {
 
     if (gywIcon != null) {
       return IconDrawing(
-        gywIcon,
+        icon: gywIcon,
         left: data["left"] as int,
         top: data["top"] as int,
         color: colorFromHex(data["color"] as String?) ?? Colors.black,
@@ -347,7 +274,7 @@ class IconDrawing extends GYWDrawing {
       );
     } else {
       return IconDrawing(
-        GYWIcon(name: icon, filename: icon),
+        icon: GYWIcon(name: icon, filename: icon),
         left: data["left"] as int,
         top: data["top"] as int,
         color: colorFromHex(data["color"] as String?) ?? Colors.black,
@@ -370,28 +297,27 @@ class IconDrawing extends GYWDrawing {
 }
 
 /// A drawing to display a rectangle on an aRdent device
-@immutable
-class RectangleDrawing extends GYWDrawing {
+@freezed
+class RectangleDrawing with _$RectangleDrawing implements GYWDrawing {
   /// The type of the [RectangleDrawing].
   static const String type = "rectangle";
 
-  /// The rectangle width.
-  final int width;
+  /// Factory constructor for creating a new [RectangleDrawing] instance
+  const factory RectangleDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
 
-  /// The rectangle height.
-  final int height;
+    /// The rectangle width.
+    required int width,
 
-  /// The fill color. If null, the rectangle will use the current background color.
-  final Color? color;
+    /// The rectangle height.
+    required int height,
 
-  /// Creates a rectangle element.
-  const RectangleDrawing({
-    super.left,
-    super.top,
-    required this.width,
-    required this.height,
-    this.color,
-  });
+    /// The fill color. If null, the rectangle will use the current background color.
+    Color? color,
+  }) = _RectangleDrawing;
+
+  const RectangleDrawing._();
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -410,31 +336,6 @@ class RectangleDrawing extends GYWDrawing {
       ),
     ];
   }
-
-  @override
-  String toString() {
-    return "RectangleDrawing{left: $left, top: $top, width: $width, height: $height, color: $color}";
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RectangleDrawing &&
-          runtimeType == other.runtimeType &&
-          left == other.left &&
-          top == other.top &&
-          width == other.width &&
-          height == other.height &&
-          color?.value == other.color?.value;
-
-  @override
-  int get hashCode => Object.hash(
-        left,
-        top,
-        width,
-        height,
-        color,
-      );
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
@@ -461,32 +362,31 @@ class RectangleDrawing extends GYWDrawing {
 }
 
 /// A drawing to display a spinner on an aRdent device
-@immutable
-class SpinnerDrawing extends GYWDrawing {
+@freezed
+class SpinnerDrawing with _$SpinnerDrawing implements GYWDrawing {
   /// The type of the [SpinnerDrawing].
   static const String type = "spinner";
 
-  /// The scale of the image.
-  final double scale;
+  /// Factory constructor for creating a new [SpinnerDrawing] instance
+  const factory SpinnerDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
 
-  /// The fill color. If null, the image colors will be preserved.
-  final Color? color;
+    /// The scale of the image.
+    @Default(1.0) double scale,
 
-  /// The curve applied while spinning.
-  final AnimationTimingFunction animationTimingFunction;
+    /// The fill color. If null, the image colors will be preserved.
+    Color? color,
 
-  /// How many rotations per second.
-  final double spinsPerSecond;
+    /// The curve applied while spinning.
+    @Default(AnimationTimingFunction.linear)
+    AnimationTimingFunction animationTimingFunction,
 
-  /// Creates a spinner element.
-  const SpinnerDrawing({
-    super.left,
-    super.top,
-    this.scale = 1.0,
-    this.color,
-    this.animationTimingFunction = AnimationTimingFunction.linear,
-    this.spinsPerSecond = 1.0,
-  });
+    /// How many rotations per second.
+    @Default(1.0) double spinsPerSecond,
+  }) = _SpinnerDrawing;
+
+  const SpinnerDrawing._();
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -510,41 +410,6 @@ class SpinnerDrawing extends GYWDrawing {
       ),
     ];
   }
-
-  @override
-  String toString() {
-    return """
-SpinnerDrawing{
-  left: $left,
-  top: $top,
-  color: $color,
-  scale: $scale,
-  animationTimingFunction: $animationTimingFunction,
-  spinsPerSecond: $spinsPerSecond,
-}""";
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SpinnerDrawing &&
-          runtimeType == other.runtimeType &&
-          left == other.left &&
-          top == other.top &&
-          scale == other.scale &&
-          color?.value == other.color?.value &&
-          animationTimingFunction == other.animationTimingFunction &&
-          spinsPerSecond == other.spinsPerSecond;
-
-  @override
-  int get hashCode => Object.hash(
-        left,
-        top,
-        scale,
-        color,
-        animationTimingFunction,
-        spinsPerSecond,
-      );
 
   /// Deserializes a [RectangleDrawing] from JSON data
   factory SpinnerDrawing.fromJson(Map<String, dynamic> data) {

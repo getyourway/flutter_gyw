@@ -27,7 +27,7 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
     await connectedDevice?.clearScreen(color: Colors.white);
 
     final List<GYWDrawing> drawings = <GYWDrawing>[
-      IconDrawing(GYWIcons.up.icon, top: 50, left: 60),
+      IconDrawing(icon: GYWIcons.up.icon, top: 50, left: 60),
       TextDrawing(
         text: "Hello world",
         top: 50,

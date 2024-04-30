@@ -49,7 +49,7 @@ void main() {
     test("Icon", () {
       final GYWIcon icon = GYWIcons.checkbox.icon;
 
-      final GYWDrawing drawing = IconDrawing(icon);
+      final GYWDrawing drawing = IconDrawing(icon: icon);
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
@@ -58,7 +58,7 @@ void main() {
       final GYWIcon icon = GYWIcons.up.icon;
 
       final GYWDrawing drawing = IconDrawing(
-        icon,
+        icon: icon,
         left: 120,
         top: 220,
       );
@@ -70,10 +70,10 @@ void main() {
       final GYWIcon icon = GYWIcons.left.icon;
 
       final GYWDrawing drawing = IconDrawing(
-        icon,
+        icon: icon,
         left: 120,
         top: 220,
-        color: Colors.green,
+        color: Colors.green.shade500,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
