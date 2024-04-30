@@ -6,6 +6,8 @@
 * [REFACTOR] Convert BlankScreen class into the clearScreen method
 * [IMP] Update lint lists and improve documentation
 * [REFACTOR] Update UUIDs of BLE characteristics
+* [REFACTOR] Make `maxLines` nullable
+* [REFACTOR] Simplify the use of user-defined icons
 * [REFACTOR] Remove font prefixes
 
 ## 1.2.1

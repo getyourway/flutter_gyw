@@ -20,9 +20,9 @@ Note that this package is still in development and is currently private. As such
 
 * Display a text at a given postion
 * Font selection
-  * See `fonts.dart` [documentation](flutter_gyw/GYWFont-class.html) for available fonts
+  * See `fonts.dart` [documentation](flutter_gyw/GYWFonts.html) for available fonts
 * Display a 48x48 icon at a given position
-  * See `icons.dart` [documentation](flutter_gyw/GYWIcon-class.html) for available icons
+  * See `icons.dart` [documentation](flutter_gyw/GYWIcons.html) for available icons
 * Provide the specification of the GYW aRdent device screen
   * See `screen.dart` [documentation](flutter_gyw/GYWScreenParameters-class.html) for details
 
@@ -140,11 +140,31 @@ Displays an icon on the screen.
 
 ```dart
 final drawing = IconDrawing(
-  icon: GYWIcon.checkbox,
+  icon: GYWIcons.checkbox.icon,
   left: 220,
   top: 50,
   color: Colors.blue,
   scale: 1.5,
+);
+```
+
+Custom icons can also be displayed by instantiating an `GYWIcon`:
+
+```dart
+final myIcon = GYWIcon(
+  name: "My Icon",
+  // Make sure you have a file named "my_icon.svg" on the flash memory of the GYW glasses.
+  filename: "my_icon",
+  width: 48,
+  height: 48,
+);
+
+final drawing = IconDrawing(
+  icon: myIcon,
+  left: 220,
+  top: 50,
+  color: Colors.blue,
+  scale: 1.5
 );
 ```
 
@@ -212,11 +232,6 @@ Note that through this drawing, you can change the background color.
 ### How can I have bigger icons?
 
 IconDrawing has a scale parameter that allows you to scale the icon up or down. If the icon is 48x48, a scale factor of 2.0 will result in a 96x96 icon. The scale factor has a range between 0.01 and 13.7. Any scale factor outside of this range will be clamped to the nearest value within the range.
-
-### What is a "custom" IconDrawing?
-
-A custom `IconDrawing` is an icon that is not part of the default set of icons provided by the package.
-Custom icons will be shown on the GYW device if it contains the corresponding icon file in its internal storage.
 
 ### How can I troubleshoot connection issues with my GYW device?
 

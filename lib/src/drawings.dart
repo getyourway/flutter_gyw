@@ -1,5 +1,4 @@
 import "dart:convert";
-import "dart:math";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
@@ -72,13 +71,14 @@ class TextDrawing extends GYWDrawing {
   /// The maximum width (in pixels) of the text.
   ///
   /// It will be wrapped on multiple lines if it is too long.
+  /// Null disables the limit.
   final int? maxWidth;
 
   /// The maximum number of lines the text can be wrapped on.
   ///
   /// All extra lines will be ignored.
-  /// The value 0 is special and disables the limit.
-  final int maxLines;
+  /// Null disables the limit.
+  final int? maxLines;
 
   /// Creates a text element.
   const TextDrawing({
@@ -109,9 +109,10 @@ class TextDrawing extends GYWDrawing {
   Iterable<String> _wrapText() sync* {
     // An invalid value will be considered as unconstrained.
     final int? maxWidth =
-        this.maxWidth != null && this.maxWidth! < 1 ? null : this.maxWidth;
+        this.maxWidth != null && this.maxWidth! >= 1 ? this.maxWidth : null;
 
-    final int maxLines = max(0, this.maxLines);
+    final int? maxLines =
+        this.maxLines != null && this.maxLines! >= 1 ? this.maxLines : null;
 
     int textWidth;
     final int availableWidth = GYWScreenParameters.width - left;
@@ -133,7 +134,7 @@ class TextDrawing extends GYWDrawing {
       if (line.isNotEmpty && line.length + 1 + word.length > maxCharsPerLine) {
         yield line.toString();
         lines++;
-        if (maxLines != 0 && lines >= maxLines) {
+        if (maxLines != null && lines >= maxLines) {
           return;
         }
         line.clear();
@@ -245,19 +246,8 @@ class IconDrawing extends GYWDrawing {
   /// The type of the [IconDrawing]
   static const String type = "icon";
 
-  /// Whether the drawings uses a icon that is not part of the library
-  bool get isCustom => icon == null;
-
-  /// The filename of the icon.
-  String get iconFilename => icon?.filename ?? customIconFilename!;
-
   /// The displayed [GYWIcon]
-  final GYWIcon? icon;
-
-  /// If [icon] is null, this is a custom icon the library doesn't know about.
-  ///
-  /// The name of this icon will be stored in this field instead.
-  final String? customIconFilename;
+  final GYWIcon icon;
 
   /// Hexadecimal code of the icon fill color
   final Color color;
@@ -269,21 +259,12 @@ class IconDrawing extends GYWDrawing {
 
   /// Creates an icon element.
   const IconDrawing(
-    GYWIcon this.icon, {
+    this.icon, {
     super.top,
     super.left,
     this.color = Colors.black,
     this.scale = 1.0,
-  }) : customIconFilename = null;
-
-  /// Creates a custom icon, i.e. an icon whose image is not in the library
-  const IconDrawing.custom(
-    String this.customIconFilename, {
-    super.top,
-    super.left,
-    this.color = Colors.black,
-    this.scale = 1.0,
-  }) : icon = null;
+  });
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -297,9 +278,7 @@ class IconDrawing extends GYWDrawing {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(
-          isCustom ? iconFilename : "$iconFilename.svg",
-        ),
+        const Utf8Encoder().convert("${icon.filename}.svg"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -310,13 +289,13 @@ class IconDrawing extends GYWDrawing {
 
   @override
   String toString() {
-    return "Drawing: ${icon?.name ?? customIconFilename} at ($left, $top)";
+    return "Drawing: ${icon.name} at ($left, $top)";
   }
 
   @override
   bool operator ==(Object other) {
     if (other is IconDrawing) {
-      return iconFilename == other.iconFilename &&
+      return icon == other.icon &&
           color.value == other.color.value &&
           left == other.left &&
           top == other.top &&
@@ -328,7 +307,7 @@ class IconDrawing extends GYWDrawing {
 
   @override
   int get hashCode => Object.hash(
-        iconFilename,
+        icon,
         left,
         top,
         color,
@@ -337,14 +316,12 @@ class IconDrawing extends GYWDrawing {
 
   /// Deserializes an [IconDrawing] from JSON data
   factory IconDrawing.fromJson(Map<String, dynamic> data) {
-    // Deprecated "icon" key will be deprecated in future versions
     final String icon = data["data"] as String;
 
     final GYWIcon? gywIcon = GYWIcons.values
         .cast<GYWIcons?>()
         .firstWhere(
-          (element) =>
-              element!.icon.filename == icon || element.icon.name == icon,
+          (element) => element!.icon.filename == icon,
           orElse: () => null,
         )
         ?.icon;
@@ -358,8 +335,8 @@ class IconDrawing extends GYWDrawing {
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
-      return IconDrawing.custom(
-        icon,
+      return IconDrawing(
+        GYWIcon(name: icon, filename: icon),
         left: data["left"] as int,
         top: data["top"] as int,
         color: colorFromHex(data["color"] as String?) ?? Colors.black,
@@ -374,7 +351,7 @@ class IconDrawing extends GYWDrawing {
       "type": type,
       "left": left,
       "top": top,
-      "data": iconFilename,
+      "data": icon.filename,
       "color": hexFromColor(color),
       "scale": scale,
     };
