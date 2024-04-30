@@ -13,7 +13,7 @@ class GYWFont {
   const GYWFont({
     required this.name,
     required this.filename,
-  });
+  }) : assert(filename.length == 5);
 
   @override
   String toString() {

@@ -10,7 +10,6 @@ void main() {
       final GYWDrawing drawing = TextDrawing(
         text: "Text",
         font: GYWFonts.robotoMonoNormal.font,
-        size: 32,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
