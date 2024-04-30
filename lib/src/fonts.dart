@@ -63,6 +63,16 @@ enum GYWFonts {
       pathTtf: "assets/fonts/RobotoMono-Bold.ttf",
       bold: true,
     ),
+  ),
+
+  /// Roboto Mono Italic
+  robotoMonoItalic(
+    GYWFont(
+      name: "Roboto Mono Italic",
+      filename: "robmi",
+      pathTtf: "assets/fonts/RobotoMono-Italic.ttf",
+      italic: true,
+    ),
   );
 
   /// The [GYWFont] object to use for aRdent communication.
