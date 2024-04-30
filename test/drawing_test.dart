@@ -6,41 +6,26 @@ import "package:flutter_test/flutter_test.dart";
 
 void main() {
   group("JSON", () {
-    test("Text", () {
-      const GYWDrawing drawing = TextDrawing(text: "Text");
+    test("Text without optional values", () {
+      final GYWDrawing drawing = TextDrawing(
+        text: "Text",
+        font: GYWFonts.robotoMonoNormal.font,
+        size: 32,
+      );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Text with position", () {
-      const GYWDrawing drawing = TextDrawing(
-        text: "Text with position",
+    test("Text with optional values", () {
+      final GYWDrawing drawing = TextDrawing(
         left: 100,
         top: 200,
-      );
-
-      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
-    });
-
-    test("Text with font", () {
-      final GYWFont font = GYWFonts.medium.font;
-
-      final GYWDrawing drawing = TextDrawing(
-        text: "Text with font",
-        font: font,
-      );
-
-      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
-    });
-
-    test("Text with font and position", () {
-      final font = GYWFonts.medium.font;
-
-      final GYWDrawing drawing = TextDrawing(
-        text: "Text with font and position",
-        left: 150,
-        top: 250,
-        font: font,
+        text: "Text with position",
+        font: GYWFonts.robotoMonoBold.font,
+        size: 48,
+        color: const Color(0x12345678),
+        maxWidth: 300,
+        maxLines: 3,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
