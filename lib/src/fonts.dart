@@ -9,10 +9,18 @@ class GYWFont {
   /// The font filename on the GYW device
   final String filename;
 
+  /// Whether the fontweight is bold (w700) or normal (w400)
+  final bool bold;
+
+  /// Whether the font style is italic.
+  final bool italic;
+
   /// Creates a font.
   const GYWFont({
     required this.name,
     required this.filename,
+    this.bold = false,
+    this.italic = false,
   }) : assert(filename.length == 5);
 
   @override
@@ -48,6 +56,7 @@ enum GYWFonts {
     GYWFont(
       name: "Roboto Mono Bold",
       filename: "robmb",
+      bold: true,
     ),
   );
 
