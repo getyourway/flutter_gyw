@@ -15,10 +15,13 @@ class GYWFont {
   /// Whether the font style is italic.
   final bool italic;
 
+  final String pathTtf;
+
   /// Creates a font.
   const GYWFont({
     required this.name,
     required this.filename,
+    required this.pathTtf,
     this.bold = false,
     this.italic = false,
   }) : assert(filename.length == 5);
@@ -48,6 +51,7 @@ enum GYWFonts {
     GYWFont(
       name: "Roboto Mono Normal",
       filename: "robmn",
+      pathTtf: "assets/fonts/RobotoMono-Regular.ttf",
     ),
   ),
 
@@ -56,6 +60,7 @@ enum GYWFonts {
     GYWFont(
       name: "Roboto Mono Bold",
       filename: "robmb",
+      pathTtf: "assets/fonts/RobotoMono-Bold.ttf",
       bold: true,
     ),
   );
