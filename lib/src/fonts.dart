@@ -3,18 +3,19 @@ import "package:flutter/material.dart";
 /// The text fonts supported on aRdent smart glasses
 @immutable
 class GYWFont {
-  /// The name of the font
+  /// The name of the font.
   final String name;
 
-  /// The font filename on the GYW device
+  /// The font filename on the GYW device.
   final String filename;
 
-  /// Whether the fontweight is bold (w700) or normal (w400)
+  /// Whether the fontweight is bold (w700) or normal (w400).
   final bool bold;
 
   /// Whether the font style is italic.
   final bool italic;
 
+  /// The path to the TTF file in the assets folder.
   final String pathTtf;
 
   /// Creates a font.
