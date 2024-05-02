@@ -9,7 +9,7 @@ const double pixelsPerPoint = 96.0 / 72.0; // 1.333(3)
 /// The text fonts supported on aRdent smart glasses
 @immutable
 class GYWFont {
-  /// The font filename on the GYW device (5 characters-long and no type extension).
+  /// The font filename on the GYW device (5 characters long and no type extension).
   final String filename;
 
   /// The name of the font.
@@ -35,7 +35,7 @@ class GYWFont {
     this.charWidth = 0.6,
     this.bold = false,
     this.italic = false,
-  }) : assert(filename.length == 5);
+  }) : assert(filename.length == 5, "The filename must be 5 characters long");
 
   @override
   String toString() {
