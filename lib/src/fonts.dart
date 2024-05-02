@@ -13,10 +13,10 @@ class GYWFont {
   final String filename;
 
   /// The name of the font.
-  final String name;
+  final String? name;
 
   /// The font family name.
-  final String fontFamily;
+  final String? fontFamily;
 
   /// The width of a character at 1pt.
   final double charWidth;
@@ -30,8 +30,8 @@ class GYWFont {
   /// Creates a font.
   const GYWFont({
     required this.filename,
-    this.name = "Custom Font",
-    this.fontFamily = "Custom Font",
+    this.name,
+    this.fontFamily,
     this.charWidth = 0.6,
     this.bold = false,
     this.italic = false,
