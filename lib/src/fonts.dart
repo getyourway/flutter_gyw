@@ -58,7 +58,7 @@ class GYWFont {
 /// The [GYWFont] fonts supported by default on aRdent smart glasses.
 enum GYWFonts {
   /// Roboto Mono Normal
-  robotoMonoNormal(
+  robotoMono(
     GYWFont(
       name: "Roboto Mono Normal",
       filename: "robmn",

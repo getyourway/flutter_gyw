@@ -9,7 +9,7 @@ void main() {
     test("Text without optional values", () {
       final GYWDrawing drawing = TextDrawing(
         text: "Text",
-        font: GYWFonts.robotoMonoNormal.font,
+        font: GYWFonts.robotoMono.font,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);

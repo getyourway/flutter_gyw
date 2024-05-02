@@ -209,7 +209,7 @@ class TextDrawing extends GYWDrawing {
     final font = GYWFonts.values
         .firstWhere(
           (e) => e.font.filename == data["font"],
-          orElse: () => GYWFonts.robotoMonoNormal,
+          orElse: () => GYWFonts.robotoMono,
         )
         .font;
 
