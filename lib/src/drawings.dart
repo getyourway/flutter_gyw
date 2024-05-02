@@ -123,7 +123,7 @@ class TextDrawing extends GYWDrawing {
       textWidth = maxWidth;
     }
 
-    final int charWidth = (size * font.aspectRatio * pixelsPerPoint).ceil();
+    final int charWidth = (size * font.charWidth).ceil();
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
     final List<String> words = text.split(" ");
