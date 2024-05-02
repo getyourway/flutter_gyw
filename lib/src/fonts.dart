@@ -60,7 +60,7 @@ enum GYWFonts {
   /// Roboto Mono Normal
   robotoMono(
     GYWFont(
-      name: "Roboto Mono Normal",
+      name: "Roboto Mono",
       filename: "robmn",
       pathTtf: "assets/fonts/RobotoMono-Regular.ttf",
       aspectRatio: 0.45,
