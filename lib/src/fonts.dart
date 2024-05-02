@@ -6,7 +6,7 @@ class GYWFont {
   /// The name of the font.
   final String name;
 
-  /// The font filename on the GYW device.
+  /// The font filename on the GYW device (5 characters-long and no type extension).
   final String filename;
 
   /// Whether the fontweight is bold (w700) or normal (w400).
