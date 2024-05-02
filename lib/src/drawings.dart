@@ -94,7 +94,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   List<GYWBtCommand> toCommands() {
-    final int charHeight = (size * 1.33).ceil();
+    final int charHeight = (size * pixelsPerPoint).ceil();
 
     final List<GYWBtCommand> commands = [];
 
@@ -123,7 +123,7 @@ class TextDrawing extends GYWDrawing {
       textWidth = maxWidth;
     }
 
-    final int charWidth = (size * 0.6).ceil();
+    final int charWidth = (size * font.aspectRatio * pixelsPerPoint).ceil();
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
     final List<String> words = text.split(" ");

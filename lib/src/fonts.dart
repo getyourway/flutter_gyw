@@ -1,5 +1,11 @@
 import "package:flutter/material.dart";
 
+/// Pixels per point constant.
+/// In CSS:
+/// pt = 1/72 inch
+/// px = 1/96 inch
+const double pixelsPerPoint = 96.0 / 72.0; // 1.333(3)
+
 /// The text fonts supported on aRdent smart glasses
 @immutable
 class GYWFont {
@@ -18,11 +24,15 @@ class GYWFont {
   /// The path to the TTF file in the assets folder.
   final String pathTtf;
 
+  /// The aspect ratio of the font.
+  final double aspectRatio;
+
   /// Creates a font.
   const GYWFont({
     required this.name,
     required this.filename,
     required this.pathTtf,
+    required this.aspectRatio,
     this.bold = false,
     this.italic = false,
   }) : assert(filename.length == 5);
@@ -53,6 +63,7 @@ enum GYWFonts {
       name: "Roboto Mono Normal",
       filename: "robmn",
       pathTtf: "assets/fonts/RobotoMono-Regular.ttf",
+      aspectRatio: 0.45,
     ),
   ),
 
@@ -63,6 +74,7 @@ enum GYWFonts {
       filename: "robmb",
       pathTtf: "assets/fonts/RobotoMono-Bold.ttf",
       bold: true,
+      aspectRatio: 0.45,
     ),
   ),
 
@@ -73,6 +85,7 @@ enum GYWFonts {
       filename: "robmi",
       pathTtf: "assets/fonts/RobotoMono-Italic.ttf",
       italic: true,
+      aspectRatio: 0.45,
     ),
   );
 
