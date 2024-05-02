@@ -15,24 +15,24 @@ class GYWFont {
   /// The font filename on the GYW device (5 characters-long and no type extension).
   final String filename;
 
+  /// The font family name.
+  final String fontFamily;
+
   /// Whether the fontweight is bold (w700) or normal (w400).
   final bool bold;
 
   /// Whether the font style is italic.
   final bool italic;
 
-  /// The path to the TTF file in the assets folder.
-  final String pathTtf;
-
   /// The aspect ratio of the font.
   final double aspectRatio;
 
   /// Creates a font.
   const GYWFont({
-    required this.name,
     required this.filename,
-    required this.pathTtf,
-    required this.aspectRatio,
+    this.name = "Custom Font",
+    this.fontFamily = "Custom Font",
+    this.aspectRatio = 0.45,
     this.bold = false,
     this.italic = false,
   }) : assert(filename.length == 5);
@@ -60,32 +60,29 @@ enum GYWFonts {
   /// Roboto Mono Normal
   robotoMono(
     GYWFont(
-      name: "Roboto Mono",
       filename: "robmn",
-      pathTtf: "assets/fonts/RobotoMono-Regular.ttf",
-      aspectRatio: 0.45,
+      name: "Roboto Mono",
+      fontFamily: "Roboto Mono",
     ),
   ),
 
   /// Roboto Mono Bold
   robotoMonoBold(
     GYWFont(
-      name: "Roboto Mono Bold",
       filename: "robmb",
-      pathTtf: "assets/fonts/RobotoMono-Bold.ttf",
+      name: "Roboto Mono Bold",
+      fontFamily: "Roboto Mono",
       bold: true,
-      aspectRatio: 0.45,
     ),
   ),
 
   /// Roboto Mono Italic
   robotoMonoItalic(
     GYWFont(
-      name: "Roboto Mono Italic",
       filename: "robmi",
-      pathTtf: "assets/fonts/RobotoMono-Italic.ttf",
+      name: "Roboto Mono Italic",
+      fontFamily: "Roboto Mono",
       italic: true,
-      aspectRatio: 0.45,
     ),
   );
 
