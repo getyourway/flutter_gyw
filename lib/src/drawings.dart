@@ -2,8 +2,10 @@ import "dart:convert";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
-import "package:flutter_gyw/flutter_gyw.dart";
+import "package:flutter_gyw/src/fonts.dart";
 import "package:flutter_gyw/src/helpers.dart";
+import "package:flutter_gyw/src/icons.dart";
+import "package:flutter_gyw/src/screen.dart";
 import "package:freezed_annotation/freezed_annotation.dart";
 
 import "commands.dart";
@@ -69,8 +71,8 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
     /// The maximum width (in pixels) of the text.
     ///
     /// It will be wrapped on multiple lines if it is too long.
-  /// Null disables the limit.
-  int? maxWidth,
+    /// Null disables the limit.
+    int? maxWidth,
 
     /// The maximum number of lines the text can be wrapped on.
     ///
