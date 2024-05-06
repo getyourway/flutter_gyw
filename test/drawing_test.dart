@@ -3,6 +3,7 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_gyw/flutter_gyw.dart";
 import "package:flutter_test/flutter_test.dart";
+import "package:json_annotation/json_annotation.dart";
 
 void main() {
   group("JSON", () {
@@ -85,7 +86,10 @@ void main() {
         "data": "Test",
       };
 
-      expect(() => GYWDrawing.fromJson(json), throwsA(isA<UnsupportedError>()));
+      expect(
+        () => GYWDrawing.fromJson(json),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
     });
   });
 

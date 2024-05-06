@@ -12,9 +12,13 @@ export "src/drawings.dart"
         AnimationTimingFunction,
         GYWDrawing,
         IconDrawing,
+        IconDrawingExtension,
         RectangleDrawing,
+        RectangleDrawingExtension,
         SpinnerDrawing,
-        TextDrawing;
+        SpinnerDrawingExtension,
+        TextDrawing,
+        TextDrawingExtension;
 export "src/exceptions.dart" show GYWException, GYWStatusException;
 export "src/fonts.dart" show GYWFont, GYWFonts;
 export "src/icons.dart" show GYWIcon, GYWIcons;

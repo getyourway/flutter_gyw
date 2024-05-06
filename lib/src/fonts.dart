@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:json_annotation/json_annotation.dart";
 
 /// The text fonts supported on aRdent smart glasses
 @immutable
@@ -103,4 +104,24 @@ enum GYWFonts {
   final GYWFont font;
 
   const GYWFonts(this.font);
+}
+
+/// Converts a [GYWFont] object to and from JSON.
+class GYWFontJsonConverter
+    implements JsonConverter<GYWFont, Map<String, dynamic>> {
+  /// Constructor.
+  const GYWFontJsonConverter();
+
+  @override
+  GYWFont fromJson(Map<String, dynamic> json) {
+    // TODO(arosca): Rewrite these functions once the PR on removing font prefixes gets merged.
+    return GYWFonts.values
+        .firstWhere((element) => element.font.prefix == json["prefix"])
+        .font;
+  }
+
+  @override
+  Map<String, dynamic> toJson(GYWFont object) {
+    return {"prefix": object.prefix};
+  }
 }

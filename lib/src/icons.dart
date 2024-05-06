@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:json_annotation/json_annotation.dart";
 
 /// A icon element that can be used on aRdent smart glasses.
 @immutable
@@ -61,6 +62,42 @@ class GYWIcon {
         pathPng,
         pathSvg,
       );
+}
+
+/// Converts a [GYWIcon] object to and from JSON.
+class GYWIconJsonConverter
+    implements JsonConverter<GYWIcon, Map<String, dynamic>> {
+  /// Constructor.
+  const GYWIconJsonConverter();
+
+  @override
+  GYWIcon fromJson(Map<String, dynamic> json) {
+    final String icon = json["filename"] as String;
+
+    final GYWIcon? gywIcon = GYWIcons.values
+        .cast<GYWIcons?>()
+        .firstWhere(
+          (element) => element!.icon.filename == icon,
+          orElse: () => null,
+        )
+        ?.icon;
+
+    if (gywIcon != null) {
+      return gywIcon;
+    }
+
+    return GYWIcon(
+      filename: icon,
+      name: icon,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(GYWIcon object) {
+    return <String, dynamic>{
+      "filename": object.filename,
+    };
+  }
 }
 
 /// The [GYWIcon] icons supported by default on aRdent smart glasses.

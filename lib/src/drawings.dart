@@ -2,55 +2,22 @@ import "dart:convert";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
+import "package:flutter_gyw/flutter_gyw.dart";
 import "package:flutter_gyw/src/fonts.dart";
 import "package:flutter_gyw/src/helpers.dart";
 import "package:flutter_gyw/src/icons.dart";
-import "package:flutter_gyw/src/screen.dart";
 import "package:freezed_annotation/freezed_annotation.dart";
 
 import "commands.dart";
 
 part "drawings.freezed.dart";
 
-/// A drawing that can be displayed on a pair of aRdent smart glasses
-abstract interface class GYWDrawing {
-  /// The distance (in pixels) from the top of the screen
-  int get top;
-
-  /// The distance (in pixels) from the left side of the screen
-  int get left;
-
-  /// Converts the drawing into a list of commands understood by the device
-  List<GYWBtCommand> toCommands();
-
-  /// Deserializes a [GYWDrawing] from JSON data
-  factory GYWDrawing.fromJson(Map<String, dynamic> data) {
-    switch (data["type"]) {
-      case TextDrawing.type:
-        return TextDrawing.fromJson(data);
-      case IconDrawing.type:
-        return IconDrawing.fromJson(data);
-      case RectangleDrawing.type:
-        return RectangleDrawing.fromJson(data);
-      case SpinnerDrawing.type:
-        return SpinnerDrawing.fromJson(data);
-      default:
-        throw UnsupportedError("Type '${data['type']}' is not supported.");
-    }
-  }
-
-  /// Serializes a drawing to JSON data
-  Map<String, dynamic> toJson();
-}
+part "drawings.g.dart";
 
 /// A drawing to display text on an aRdent device
-@freezed
-class TextDrawing with _$TextDrawing implements GYWDrawing {
-  /// The type of the [TextDrawing] drawing
-  static const String type = "text";
-
-  /// Factory constructor for creating a new [TextDrawing] instance
-  const factory TextDrawing({
+@Freezed(unionValueCase: FreezedUnionCase.pascal)
+sealed class GYWDrawing with _$GYWDrawing {
+  const factory GYWDrawing.textDrawing({
     @Default(0) int top,
     @Default(0) int left,
 
@@ -60,7 +27,7 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
     /// The [GYWFont] to use
     ///
     /// If no font is given, it uses the most recent one
-    GYWFont? font,
+    @GYWFontJsonConverter() GYWFont? font,
 
     /// The text size. Overrides the font size.
     int? size,
@@ -79,30 +46,160 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
     /// All extra lines will be ignored.
     /// Null disables the limit.
     int? maxLines,
-  }) = _TextDrawing;
+  }) = TextDrawing;
 
-  const TextDrawing._();
+  const factory GYWDrawing.iconDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
 
+    /// The displayed [GYWIcon]
+    @GYWIconJsonConverter() required GYWIcon icon,
+
+    /// Hexadecimal code of the icon fill color
+    @Default(0xFF000000 /* black */) int colorHex,
+
+    /// The icon scaling factor.
+    @Default(1.0) double scale,
+  }) = IconDrawing;
+
+  const factory GYWDrawing.rectangleDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
+
+    /// The rectangle width.
+    required int width,
+
+    /// The rectangle height.
+    required int height,
+
+    /// The fill color. If null, the rectangle will use the current background color.
+    int? colorHex,
+  }) = RectangleDrawing;
+
+  const factory GYWDrawing.spinnerDrawing({
+    @Default(0) int top,
+    @Default(0) int left,
+
+    /// The scale of the image.
+    @Default(1.0) double scale,
+
+    /// The fill color. If null, the image colors will be preserved.
+    int? colorHex,
+
+    /// The curve applied while spinning.
+    @Default(AnimationTimingFunction.linear)
+    AnimationTimingFunction animationTimingFunction,
+
+    /// How many rotations per second.
+    @Default(1.0) double spinsPerSecond,
+  }) = SpinnerDrawing;
+
+  const GYWDrawing._();
+
+  factory GYWDrawing.fromJson(Map<String, dynamic> json) =>
+      _$GYWDrawingFromJson(json);
+
+  /// Converts the drawing to a list of aRdent commands.
+  List<GYWBtCommand> toCommands() {
+    // Dart can only downcast local variables, not `this`.
+    final drawing = this;
+
+    switch (drawing) {
+      case TextDrawing(
+          :final font,
+          :final size,
+        ):
+        final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
+        final int charHeight = (fontSize * 1.33).ceil();
+
+        final List<GYWBtCommand> commands = [];
+
+        int currentTop = top;
+        for (final String line in drawing._wrapText()) {
+          commands.addAll(drawing._lineToCommands(line, currentTop));
+          currentTop += charHeight;
+        }
+        return commands;
+
+      case IconDrawing(
+          :final color,
+          :final scale,
+          :final icon,
+        ):
+        final controlBytes = BytesBuilder();
+        controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
+        controlBytes.add(int16Bytes(left));
+        controlBytes.add(int16Bytes(top));
+        controlBytes.add(rgba8888BytesFromColor(color));
+        controlBytes.add(byteFromScale(scale));
+
+        return <GYWBtCommand>[
+          GYWBtCommand(
+            GYWCharacteristic.nameDisplay,
+            const Utf8Encoder().convert("${icon.filename}.svg"),
+          ),
+          GYWBtCommand(
+            GYWCharacteristic.ctrlDisplay,
+            controlBytes.toBytes(),
+          ),
+        ];
+
+      case RectangleDrawing(
+          :final width,
+          :final height,
+          :final color,
+        ):
+        final controlBytes = BytesBuilder()
+          ..add(int8Bytes(GYWControlCode.drawRectangle.value))
+          ..add(int16Bytes(left))
+          ..add(int16Bytes(top))
+          ..add(uint16Bytes(width))
+          ..add(uint16Bytes(height))
+          ..add(rgba8888BytesFromColor(color));
+
+        return [
+          GYWBtCommand(
+            GYWCharacteristic.ctrlDisplay,
+            controlBytes.toBytes(),
+          ),
+        ];
+
+      case SpinnerDrawing(
+          :final scale,
+          :final color,
+          :final animationTimingFunction,
+          :final spinsPerSecond,
+        ):
+        final controlBytes = BytesBuilder()
+          ..add(int8Bytes(GYWControlCode.displaySpinner.value))
+          ..add(int16Bytes(left))
+          ..add(int16Bytes(top))
+          ..add(rgba8888BytesFromColor(color))
+          ..add(byteFromScale(scale))
+          ..add(uint8Bytes(animationTimingFunction.id))
+          ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
+
+        return [
+          GYWBtCommand(
+            GYWCharacteristic.nameDisplay,
+            const Utf8Encoder().convert("spinner_1.svg"),
+          ),
+          GYWBtCommand(
+            GYWCharacteristic.ctrlDisplay,
+            controlBytes.toBytes(),
+          ),
+        ];
+    }
+  }
+}
+
+/// Helper functions for the [TextDrawing] class.
+extension TextDrawingExtension on TextDrawing {
   /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
   String get wrappedText => _wrapText().join("\n");
 
   /// Returns a Flutter Color from the hexadecimal color code.
   Color get color => Color(colorHex);
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
-    final int charHeight = (fontSize * 1.33).ceil();
-
-    final List<GYWBtCommand> commands = [];
-
-    int currentTop = top;
-    for (final String line in _wrapText()) {
-      commands.addAll(_lineToCommands(line, currentTop));
-      currentTop += charHeight;
-    }
-    return commands;
-  }
 
   Iterable<String> _wrapText() sync* {
     // An invalid value will be considered as unconstrained.
@@ -169,292 +266,24 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
       ),
     ];
   }
-
-  /// Deserializes a [TextDrawing] from JSON data
-  factory TextDrawing.fromJson(Map<String, dynamic> data) {
-    GYWFont? font;
-    try {
-      font = GYWFonts.values
-          .firstWhere(
-            (e) => e.font.prefix == data["font"],
-          )
-          .font;
-    } on StateError {
-      font = null;
-    }
-
-    return TextDrawing(
-      left: data["left"] as int,
-      top: data["top"] as int,
-      // Deprecated: "text" key will be deprecated in future version
-      text: data["data"] as String? ?? data["text"] as String,
-      font: font,
-      size: data["size"] as int?,
-      colorHex:
-          colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
-      maxWidth: data["max_width"] as int?,
-      maxLines: data["max_lines"] as int?,
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-      "left": left,
-      "top": top,
-      "data": text,
-      // Deprecated: "text" key will be deprecated in future version
-      "text": text,
-      if (font != null) "font": font!.prefix,
-      "size": size,
-      "color": hexFromColor(color),
-      "max_width": maxWidth,
-      "max_lines": maxLines,
-    };
-  }
 }
 
-/// A drawing to display an icon on an aRdent device
-@freezed
-class IconDrawing with _$IconDrawing implements GYWDrawing {
-  /// The type of the [IconDrawing]
-  static const String type = "icon";
-
-  /// Factory constructor for creating a new [IconDrawing] instance
-  const factory IconDrawing({
-    @Default(0) int top,
-    @Default(0) int left,
-
-    /// The displayed [GYWIcon]
-    required GYWIcon icon,
-
-    /// Hexadecimal code of the icon fill color
-    @Default(0xFF000000 /* black */) int colorHex,
-
-    /// The icon scaling factor.
-    @Default(1.0) double scale,
-  }) = _IconDrawing;
-
-  const IconDrawing._();
-
+/// Helper functions for the [IconDrawing] class.
+extension IconDrawingExtension on IconDrawing {
   /// Returns a Flutter Color from the hexadecimal color code.
   Color get color => Color(colorHex);
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    final controlBytes = BytesBuilder();
-    controlBytes.add(int8Bytes(GYWControlCode.displayImage.value));
-    controlBytes.add(int16Bytes(left));
-    controlBytes.add(int16Bytes(top));
-    controlBytes.add(rgba8888BytesFromColor(color));
-    controlBytes.add(byteFromScale(scale));
-
-    return <GYWBtCommand>[
-      GYWBtCommand(
-        GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.svg"),
-      ),
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        controlBytes.toBytes(),
-      ),
-    ];
-  }
-
-  /// Deserializes an [IconDrawing] from JSON data
-  factory IconDrawing.fromJson(Map<String, dynamic> data) {
-    final String icon = data["data"] as String;
-
-    final GYWIcon? gywIcon = GYWIcons.values
-        .cast<GYWIcons?>()
-        .firstWhere(
-          (element) => element!.icon.filename == icon,
-          orElse: () => null,
-        )
-        ?.icon;
-
-    if (gywIcon != null) {
-      return IconDrawing(
-        icon: gywIcon,
-        left: data["left"] as int,
-        top: data["top"] as int,
-        colorHex:
-            colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
-        scale: (data["scale"] as num? ?? 1.0).toDouble(),
-      );
-    } else {
-      return IconDrawing(
-        icon: GYWIcon(name: icon, filename: icon),
-        left: data["left"] as int,
-        top: data["top"] as int,
-        colorHex:
-            colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
-        scale: (data["scale"] as num? ?? 1.0).toDouble(),
-      );
-    }
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-      "left": left,
-      "top": top,
-      "data": icon.filename,
-      "color": hexFromColor(color),
-      "scale": scale,
-    };
-  }
 }
 
-/// A drawing to display a rectangle on an aRdent device
-@freezed
-class RectangleDrawing with _$RectangleDrawing implements GYWDrawing {
-  /// The type of the [RectangleDrawing].
-  static const String type = "rectangle";
-
-  /// Factory constructor for creating a new [RectangleDrawing] instance
-  const factory RectangleDrawing({
-    @Default(0) int top,
-    @Default(0) int left,
-
-    /// The rectangle width.
-    required int width,
-
-    /// The rectangle height.
-    required int height,
-
-    /// The fill color. If null, the rectangle will use the current background color.
-    int? colorHex,
-  }) = _RectangleDrawing;
-
-  const RectangleDrawing._();
-
+/// Helper functions for the [RectangleDrawing] class.
+extension RectangleDrawingExtension on RectangleDrawing {
   /// Returns a Flutter Color from the hexadecimal color code.
   Color? get color => colorHex != null ? Color(colorHex!) : null;
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    final controlBytes = BytesBuilder()
-      ..add(int8Bytes(GYWControlCode.drawRectangle.value))
-      ..add(int16Bytes(left))
-      ..add(int16Bytes(top))
-      ..add(uint16Bytes(width))
-      ..add(uint16Bytes(height))
-      ..add(rgba8888BytesFromColor(color));
-
-    return [
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        controlBytes.toBytes(),
-      ),
-    ];
-  }
-
-  /// Deserializes a [RectangleDrawing] from JSON data
-  factory RectangleDrawing.fromJson(Map<String, dynamic> data) {
-    return RectangleDrawing(
-      left: data["left"] as int,
-      top: data["top"] as int,
-      width: data["width"] as int,
-      height: data["height"] as int,
-      colorHex: colorFromHex(data["color"] as String?)?.value,
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-      "left": left,
-      "top": top,
-      "width": width,
-      "height": height,
-      "color": color != null ? hexFromColor(color!) : null,
-    };
-  }
 }
 
-/// A drawing to display a spinner on an aRdent device
-@freezed
-class SpinnerDrawing with _$SpinnerDrawing implements GYWDrawing {
-  /// The type of the [SpinnerDrawing].
-  static const String type = "spinner";
-
-  /// Factory constructor for creating a new [SpinnerDrawing] instance
-  const factory SpinnerDrawing({
-    @Default(0) int top,
-    @Default(0) int left,
-
-    /// The scale of the image.
-    @Default(1.0) double scale,
-
-    /// The fill color. If null, the image colors will be preserved.
-    int? colorHex,
-
-    /// The curve applied while spinning.
-    @Default(AnimationTimingFunction.linear)
-    AnimationTimingFunction animationTimingFunction,
-
-    /// How many rotations per second.
-    @Default(1.0) double spinsPerSecond,
-  }) = _SpinnerDrawing;
-
-  const SpinnerDrawing._();
-
+/// Helper functions for the [SpinnerDrawing] class.
+extension SpinnerDrawingExtension on SpinnerDrawing {
   /// Returns a Flutter Color from the hexadecimal color code.
   Color? get color => colorHex != null ? Color(colorHex!) : null;
-
-  @override
-  List<GYWBtCommand> toCommands() {
-    final controlBytes = BytesBuilder()
-      ..add(int8Bytes(GYWControlCode.displaySpinner.value))
-      ..add(int16Bytes(left))
-      ..add(int16Bytes(top))
-      ..add(rgba8888BytesFromColor(color))
-      ..add(byteFromScale(scale))
-      ..add(uint8Bytes(animationTimingFunction.id))
-      ..add(uint8Bytes((spinsPerSecond.clamp(0.0, 25.5) * 10.0).toInt()));
-
-    return [
-      GYWBtCommand(
-        GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("spinner_1.svg"),
-      ),
-      GYWBtCommand(
-        GYWCharacteristic.ctrlDisplay,
-        controlBytes.toBytes(),
-      ),
-    ];
-  }
-
-  /// Deserializes a [RectangleDrawing] from JSON data
-  factory SpinnerDrawing.fromJson(Map<String, dynamic> data) {
-    return SpinnerDrawing(
-      left: data["left"] as int,
-      top: data["top"] as int,
-      scale: (data["scale"] as num).toDouble(),
-      colorHex: colorFromHex(data["color"] as String?)?.value,
-      animationTimingFunction: AnimationTimingFunction.values.byName(
-        data["animation_timing_function"] as String,
-      ),
-      spinsPerSecond: (data["spins_per_second"] as num).toDouble(),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      "type": type,
-      "left": left,
-      "top": top,
-      "scale": scale,
-      "color": color != null ? hexFromColor(color!) : null,
-      "animation_timing_function": animationTimingFunction.name,
-      "spins_per_second": spinsPerSecond,
-    };
-  }
 }
 
 /// The animations for spinner rotating behaviour
