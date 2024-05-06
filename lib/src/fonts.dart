@@ -55,16 +55,18 @@ class GYWFont {
   int get hashCode => Object.hash(name, filename);
 }
 
+/// Roboto Mono Normal
+/// Work around https://github.com/dart-lang/language/issues/2374
+const robotoMonoFont = GYWFont(
+  filename: "robmn",
+  name: "Roboto Mono",
+  fontFamily: "Roboto Mono",
+);
+
 /// The [GYWFont] fonts supported by default on aRdent smart glasses.
 enum GYWFonts {
   /// Roboto Mono Normal
-  robotoMono(
-    GYWFont(
-      filename: "robmn",
-      name: "Roboto Mono",
-      fontFamily: "Roboto Mono",
-    ),
-  ),
+  robotoMono(robotoMonoFont),
 
   /// Roboto Mono Bold
   robotoMonoBold(

@@ -83,7 +83,7 @@ class TextDrawing extends GYWDrawing {
   /// Creates a text element.
   const TextDrawing({
     required this.text,
-    required this.font,
+    this.font = robotoMonoFont,
     this.size = 24,
     this.color = Colors.black,
     this.maxWidth,
