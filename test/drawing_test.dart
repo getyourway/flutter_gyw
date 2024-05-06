@@ -73,7 +73,7 @@ void main() {
         icon: icon,
         left: 120,
         top: 220,
-        color: Colors.green.shade500,
+        colorHex: Colors.green.value,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);

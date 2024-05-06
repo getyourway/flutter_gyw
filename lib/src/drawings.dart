@@ -66,7 +66,7 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
     int? size,
 
     /// The color of the text.
-    @Default(Colors.black) Color color,
+    @Default(0xFF000000 /* black */) int colorHex,
 
     /// The maximum width (in pixels) of the text.
     ///
@@ -85,6 +85,9 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
 
   /// Returns the text wrapped on multiple lines constrained by [maxWidth] and [maxLines].
   String get wrappedText => _wrapText().join("\n");
+
+  /// Returns a Flutter Color from the hexadecimal color code.
+  Color get color => Color(colorHex);
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -187,7 +190,8 @@ class TextDrawing with _$TextDrawing implements GYWDrawing {
       text: data["data"] as String? ?? data["text"] as String,
       font: font,
       size: data["size"] as int?,
-      color: colorFromHex(data["color"] as String?) ?? Colors.black,
+      colorHex:
+          colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
       maxWidth: data["max_width"] as int?,
       maxLines: data["max_lines"] as int?,
     );
@@ -226,13 +230,16 @@ class IconDrawing with _$IconDrawing implements GYWDrawing {
     required GYWIcon icon,
 
     /// Hexadecimal code of the icon fill color
-    @Default(Colors.black) Color color,
+    @Default(0xFF000000 /* black */) int colorHex,
 
     /// The icon scaling factor.
     @Default(1.0) double scale,
   }) = _IconDrawing;
 
   const IconDrawing._();
+
+  /// Returns a Flutter Color from the hexadecimal color code.
+  Color get color => Color(colorHex);
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -272,7 +279,8 @@ class IconDrawing with _$IconDrawing implements GYWDrawing {
         icon: gywIcon,
         left: data["left"] as int,
         top: data["top"] as int,
-        color: colorFromHex(data["color"] as String?) ?? Colors.black,
+        colorHex:
+            colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     } else {
@@ -280,7 +288,8 @@ class IconDrawing with _$IconDrawing implements GYWDrawing {
         icon: GYWIcon(name: icon, filename: icon),
         left: data["left"] as int,
         top: data["top"] as int,
-        color: colorFromHex(data["color"] as String?) ?? Colors.black,
+        colorHex:
+            colorFromHex(data["color"] as String?)?.value ?? Colors.black.value,
         scale: (data["scale"] as num? ?? 1.0).toDouble(),
       );
     }
@@ -317,10 +326,13 @@ class RectangleDrawing with _$RectangleDrawing implements GYWDrawing {
     required int height,
 
     /// The fill color. If null, the rectangle will use the current background color.
-    Color? color,
+    int? colorHex,
   }) = _RectangleDrawing;
 
   const RectangleDrawing._();
+
+  /// Returns a Flutter Color from the hexadecimal color code.
+  Color? get color => colorHex != null ? Color(colorHex!) : null;
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -347,7 +359,7 @@ class RectangleDrawing with _$RectangleDrawing implements GYWDrawing {
       top: data["top"] as int,
       width: data["width"] as int,
       height: data["height"] as int,
-      color: colorFromHex(data["color"] as String?),
+      colorHex: colorFromHex(data["color"] as String?)?.value,
     );
   }
 
@@ -379,7 +391,7 @@ class SpinnerDrawing with _$SpinnerDrawing implements GYWDrawing {
     @Default(1.0) double scale,
 
     /// The fill color. If null, the image colors will be preserved.
-    Color? color,
+    int? colorHex,
 
     /// The curve applied while spinning.
     @Default(AnimationTimingFunction.linear)
@@ -390,6 +402,9 @@ class SpinnerDrawing with _$SpinnerDrawing implements GYWDrawing {
   }) = _SpinnerDrawing;
 
   const SpinnerDrawing._();
+
+  /// Returns a Flutter Color from the hexadecimal color code.
+  Color? get color => colorHex != null ? Color(colorHex!) : null;
 
   @override
   List<GYWBtCommand> toCommands() {
@@ -420,7 +435,7 @@ class SpinnerDrawing with _$SpinnerDrawing implements GYWDrawing {
       left: data["left"] as int,
       top: data["top"] as int,
       scale: (data["scale"] as num).toDouble(),
-      color: colorFromHex(data["color"] as String?),
+      colorHex: colorFromHex(data["color"] as String?)?.value,
       animationTimingFunction: AnimationTimingFunction.values.byName(
         data["animation_timing_function"] as String,
       ),

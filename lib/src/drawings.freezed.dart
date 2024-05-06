@@ -31,7 +31,7 @@ mixin _$TextDrawing {
   int? get size => throw _privateConstructorUsedError;
 
   /// The color of the text.
-  Color get color => throw _privateConstructorUsedError;
+  int get colorHex => throw _privateConstructorUsedError;
 
   /// The maximum width (in pixels) of the text.
   ///
@@ -62,7 +62,7 @@ abstract class $TextDrawingCopyWith<$Res> {
       String text,
       GYWFont? font,
       int? size,
-      Color color,
+      int colorHex,
       int? maxWidth,
       int? maxLines});
 }
@@ -85,7 +85,7 @@ class _$TextDrawingCopyWithImpl<$Res, $Val extends TextDrawing>
     Object? text = null,
     Object? font = freezed,
     Object? size = freezed,
-    Object? color = null,
+    Object? colorHex = null,
     Object? maxWidth = freezed,
     Object? maxLines = freezed,
   }) {
@@ -110,10 +110,10 @@ class _$TextDrawingCopyWithImpl<$Res, $Val extends TextDrawing>
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
               as int?,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
+      colorHex: null == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int,
       maxWidth: freezed == maxWidth
           ? _value.maxWidth
           : maxWidth // ignore: cast_nullable_to_non_nullable
@@ -140,7 +140,7 @@ abstract class _$$TextDrawingImplCopyWith<$Res>
       String text,
       GYWFont? font,
       int? size,
-      Color color,
+      int colorHex,
       int? maxWidth,
       int? maxLines});
 }
@@ -161,7 +161,7 @@ class __$$TextDrawingImplCopyWithImpl<$Res>
     Object? text = null,
     Object? font = freezed,
     Object? size = freezed,
-    Object? color = null,
+    Object? colorHex = null,
     Object? maxWidth = freezed,
     Object? maxLines = freezed,
   }) {
@@ -186,10 +186,10 @@ class __$$TextDrawingImplCopyWithImpl<$Res>
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
               as int?,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
+      colorHex: null == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int,
       maxWidth: freezed == maxWidth
           ? _value.maxWidth
           : maxWidth // ignore: cast_nullable_to_non_nullable
@@ -211,7 +211,7 @@ class _$TextDrawingImpl extends _TextDrawing {
       required this.text,
       this.font,
       this.size,
-      this.color = Colors.black,
+      this.colorHex = 0xFF000000,
       this.maxWidth,
       this.maxLines})
       : super._();
@@ -240,7 +240,7 @@ class _$TextDrawingImpl extends _TextDrawing {
   /// The color of the text.
   @override
   @JsonKey()
-  final Color color;
+  final int colorHex;
 
   /// The maximum width (in pixels) of the text.
   ///
@@ -258,7 +258,7 @@ class _$TextDrawingImpl extends _TextDrawing {
 
   @override
   String toString() {
-    return 'TextDrawing(top: $top, left: $left, text: $text, font: $font, size: $size, color: $color, maxWidth: $maxWidth, maxLines: $maxLines)';
+    return 'TextDrawing(top: $top, left: $left, text: $text, font: $font, size: $size, colorHex: $colorHex, maxWidth: $maxWidth, maxLines: $maxLines)';
   }
 
   @override
@@ -271,7 +271,8 @@ class _$TextDrawingImpl extends _TextDrawing {
             (identical(other.text, text) || other.text == text) &&
             (identical(other.font, font) || other.font == font) &&
             (identical(other.size, size) || other.size == size) &&
-            (identical(other.color, color) || other.color == color) &&
+            (identical(other.colorHex, colorHex) ||
+                other.colorHex == colorHex) &&
             (identical(other.maxWidth, maxWidth) ||
                 other.maxWidth == maxWidth) &&
             (identical(other.maxLines, maxLines) ||
@@ -280,7 +281,7 @@ class _$TextDrawingImpl extends _TextDrawing {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, top, left, text, font, size, color, maxWidth, maxLines);
+      runtimeType, top, left, text, font, size, colorHex, maxWidth, maxLines);
 
   @JsonKey(ignore: true)
   @override
@@ -296,7 +297,7 @@ abstract class _TextDrawing extends TextDrawing {
       required final String text,
       final GYWFont? font,
       final int? size,
-      final Color color,
+      final int colorHex,
       final int? maxWidth,
       final int? maxLines}) = _$TextDrawingImpl;
   const _TextDrawing._() : super._();
@@ -322,7 +323,7 @@ abstract class _TextDrawing extends TextDrawing {
   @override
 
   /// The color of the text.
-  Color get color;
+  int get colorHex;
   @override
 
   /// The maximum width (in pixels) of the text.
@@ -352,7 +353,7 @@ mixin _$IconDrawing {
   GYWIcon get icon => throw _privateConstructorUsedError;
 
   /// Hexadecimal code of the icon fill color
-  Color get color => throw _privateConstructorUsedError;
+  int get colorHex => throw _privateConstructorUsedError;
 
   /// The icon scaling factor.
   double get scale => throw _privateConstructorUsedError;
@@ -368,7 +369,7 @@ abstract class $IconDrawingCopyWith<$Res> {
           IconDrawing value, $Res Function(IconDrawing) then) =
       _$IconDrawingCopyWithImpl<$Res, IconDrawing>;
   @useResult
-  $Res call({int top, int left, GYWIcon icon, Color color, double scale});
+  $Res call({int top, int left, GYWIcon icon, int colorHex, double scale});
 }
 
 /// @nodoc
@@ -387,7 +388,7 @@ class _$IconDrawingCopyWithImpl<$Res, $Val extends IconDrawing>
     Object? top = null,
     Object? left = null,
     Object? icon = null,
-    Object? color = null,
+    Object? colorHex = null,
     Object? scale = null,
   }) {
     return _then(_value.copyWith(
@@ -403,10 +404,10 @@ class _$IconDrawingCopyWithImpl<$Res, $Val extends IconDrawing>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as GYWIcon,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
+      colorHex: null == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int,
       scale: null == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
@@ -423,7 +424,7 @@ abstract class _$$IconDrawingImplCopyWith<$Res>
       __$$IconDrawingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int top, int left, GYWIcon icon, Color color, double scale});
+  $Res call({int top, int left, GYWIcon icon, int colorHex, double scale});
 }
 
 /// @nodoc
@@ -440,7 +441,7 @@ class __$$IconDrawingImplCopyWithImpl<$Res>
     Object? top = null,
     Object? left = null,
     Object? icon = null,
-    Object? color = null,
+    Object? colorHex = null,
     Object? scale = null,
   }) {
     return _then(_$IconDrawingImpl(
@@ -456,10 +457,10 @@ class __$$IconDrawingImplCopyWithImpl<$Res>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as GYWIcon,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
+      colorHex: null == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int,
       scale: null == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
@@ -475,7 +476,7 @@ class _$IconDrawingImpl extends _IconDrawing {
       {this.top = 0,
       this.left = 0,
       required this.icon,
-      this.color = Colors.black,
+      this.colorHex = 0xFF000000,
       this.scale = 1.0})
       : super._();
 
@@ -493,7 +494,7 @@ class _$IconDrawingImpl extends _IconDrawing {
   /// Hexadecimal code of the icon fill color
   @override
   @JsonKey()
-  final Color color;
+  final int colorHex;
 
   /// The icon scaling factor.
   @override
@@ -502,7 +503,7 @@ class _$IconDrawingImpl extends _IconDrawing {
 
   @override
   String toString() {
-    return 'IconDrawing(top: $top, left: $left, icon: $icon, color: $color, scale: $scale)';
+    return 'IconDrawing(top: $top, left: $left, icon: $icon, colorHex: $colorHex, scale: $scale)';
   }
 
   @override
@@ -513,12 +514,14 @@ class _$IconDrawingImpl extends _IconDrawing {
             (identical(other.top, top) || other.top == top) &&
             (identical(other.left, left) || other.left == left) &&
             (identical(other.icon, icon) || other.icon == icon) &&
-            (identical(other.color, color) || other.color == color) &&
+            (identical(other.colorHex, colorHex) ||
+                other.colorHex == colorHex) &&
             (identical(other.scale, scale) || other.scale == scale));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, top, left, icon, color, scale);
+  int get hashCode =>
+      Object.hash(runtimeType, top, left, icon, colorHex, scale);
 
   @JsonKey(ignore: true)
   @override
@@ -532,7 +535,7 @@ abstract class _IconDrawing extends IconDrawing {
       {final int top,
       final int left,
       required final GYWIcon icon,
-      final Color color,
+      final int colorHex,
       final double scale}) = _$IconDrawingImpl;
   const _IconDrawing._() : super._();
 
@@ -547,7 +550,7 @@ abstract class _IconDrawing extends IconDrawing {
   @override
 
   /// Hexadecimal code of the icon fill color
-  Color get color;
+  int get colorHex;
   @override
 
   /// The icon scaling factor.
@@ -570,7 +573,7 @@ mixin _$RectangleDrawing {
   int get height => throw _privateConstructorUsedError;
 
   /// The fill color. If null, the rectangle will use the current background color.
-  Color? get color => throw _privateConstructorUsedError;
+  int? get colorHex => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RectangleDrawingCopyWith<RectangleDrawing> get copyWith =>
@@ -583,7 +586,7 @@ abstract class $RectangleDrawingCopyWith<$Res> {
           RectangleDrawing value, $Res Function(RectangleDrawing) then) =
       _$RectangleDrawingCopyWithImpl<$Res, RectangleDrawing>;
   @useResult
-  $Res call({int top, int left, int width, int height, Color? color});
+  $Res call({int top, int left, int width, int height, int? colorHex});
 }
 
 /// @nodoc
@@ -603,7 +606,7 @@ class _$RectangleDrawingCopyWithImpl<$Res, $Val extends RectangleDrawing>
     Object? left = null,
     Object? width = null,
     Object? height = null,
-    Object? color = freezed,
+    Object? colorHex = freezed,
   }) {
     return _then(_value.copyWith(
       top: null == top
@@ -622,10 +625,10 @@ class _$RectangleDrawingCopyWithImpl<$Res, $Val extends RectangleDrawing>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color?,
+      colorHex: freezed == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -638,7 +641,7 @@ abstract class _$$RectangleDrawingImplCopyWith<$Res>
       __$$RectangleDrawingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int top, int left, int width, int height, Color? color});
+  $Res call({int top, int left, int width, int height, int? colorHex});
 }
 
 /// @nodoc
@@ -656,7 +659,7 @@ class __$$RectangleDrawingImplCopyWithImpl<$Res>
     Object? left = null,
     Object? width = null,
     Object? height = null,
-    Object? color = freezed,
+    Object? colorHex = freezed,
   }) {
     return _then(_$RectangleDrawingImpl(
       top: null == top
@@ -675,10 +678,10 @@ class __$$RectangleDrawingImplCopyWithImpl<$Res>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color?,
+      colorHex: freezed == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -691,7 +694,7 @@ class _$RectangleDrawingImpl extends _RectangleDrawing {
       this.left = 0,
       required this.width,
       required this.height,
-      this.color})
+      this.colorHex})
       : super._();
 
   @override
@@ -711,11 +714,11 @@ class _$RectangleDrawingImpl extends _RectangleDrawing {
 
   /// The fill color. If null, the rectangle will use the current background color.
   @override
-  final Color? color;
+  final int? colorHex;
 
   @override
   String toString() {
-    return 'RectangleDrawing(top: $top, left: $left, width: $width, height: $height, color: $color)';
+    return 'RectangleDrawing(top: $top, left: $left, width: $width, height: $height, colorHex: $colorHex)';
   }
 
   @override
@@ -727,11 +730,13 @@ class _$RectangleDrawingImpl extends _RectangleDrawing {
             (identical(other.left, left) || other.left == left) &&
             (identical(other.width, width) || other.width == width) &&
             (identical(other.height, height) || other.height == height) &&
-            (identical(other.color, color) || other.color == color));
+            (identical(other.colorHex, colorHex) ||
+                other.colorHex == colorHex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, top, left, width, height, color);
+  int get hashCode =>
+      Object.hash(runtimeType, top, left, width, height, colorHex);
 
   @JsonKey(ignore: true)
   @override
@@ -747,7 +752,7 @@ abstract class _RectangleDrawing extends RectangleDrawing {
       final int left,
       required final int width,
       required final int height,
-      final Color? color}) = _$RectangleDrawingImpl;
+      final int? colorHex}) = _$RectangleDrawingImpl;
   const _RectangleDrawing._() : super._();
 
   @override
@@ -765,7 +770,7 @@ abstract class _RectangleDrawing extends RectangleDrawing {
   @override
 
   /// The fill color. If null, the rectangle will use the current background color.
-  Color? get color;
+  int? get colorHex;
   @override
   @JsonKey(ignore: true)
   _$$RectangleDrawingImplCopyWith<_$RectangleDrawingImpl> get copyWith =>
@@ -781,7 +786,7 @@ mixin _$SpinnerDrawing {
   double get scale => throw _privateConstructorUsedError;
 
   /// The fill color. If null, the image colors will be preserved.
-  Color? get color => throw _privateConstructorUsedError;
+  int? get colorHex => throw _privateConstructorUsedError;
 
   /// The curve applied while spinning.
   AnimationTimingFunction get animationTimingFunction =>
@@ -805,7 +810,7 @@ abstract class $SpinnerDrawingCopyWith<$Res> {
       {int top,
       int left,
       double scale,
-      Color? color,
+      int? colorHex,
       AnimationTimingFunction animationTimingFunction,
       double spinsPerSecond});
 }
@@ -826,7 +831,7 @@ class _$SpinnerDrawingCopyWithImpl<$Res, $Val extends SpinnerDrawing>
     Object? top = null,
     Object? left = null,
     Object? scale = null,
-    Object? color = freezed,
+    Object? colorHex = freezed,
     Object? animationTimingFunction = null,
     Object? spinsPerSecond = null,
   }) {
@@ -843,10 +848,10 @@ class _$SpinnerDrawingCopyWithImpl<$Res, $Val extends SpinnerDrawing>
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color?,
+      colorHex: freezed == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int?,
       animationTimingFunction: null == animationTimingFunction
           ? _value.animationTimingFunction
           : animationTimingFunction // ignore: cast_nullable_to_non_nullable
@@ -871,7 +876,7 @@ abstract class _$$SpinnerDrawingImplCopyWith<$Res>
       {int top,
       int left,
       double scale,
-      Color? color,
+      int? colorHex,
       AnimationTimingFunction animationTimingFunction,
       double spinsPerSecond});
 }
@@ -890,7 +895,7 @@ class __$$SpinnerDrawingImplCopyWithImpl<$Res>
     Object? top = null,
     Object? left = null,
     Object? scale = null,
-    Object? color = freezed,
+    Object? colorHex = freezed,
     Object? animationTimingFunction = null,
     Object? spinsPerSecond = null,
   }) {
@@ -907,10 +912,10 @@ class __$$SpinnerDrawingImplCopyWithImpl<$Res>
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color?,
+      colorHex: freezed == colorHex
+          ? _value.colorHex
+          : colorHex // ignore: cast_nullable_to_non_nullable
+              as int?,
       animationTimingFunction: null == animationTimingFunction
           ? _value.animationTimingFunction
           : animationTimingFunction // ignore: cast_nullable_to_non_nullable
@@ -930,7 +935,7 @@ class _$SpinnerDrawingImpl extends _SpinnerDrawing {
       {this.top = 0,
       this.left = 0,
       this.scale = 1.0,
-      this.color,
+      this.colorHex,
       this.animationTimingFunction = AnimationTimingFunction.linear,
       this.spinsPerSecond = 1.0})
       : super._();
@@ -949,7 +954,7 @@ class _$SpinnerDrawingImpl extends _SpinnerDrawing {
 
   /// The fill color. If null, the image colors will be preserved.
   @override
-  final Color? color;
+  final int? colorHex;
 
   /// The curve applied while spinning.
   @override
@@ -963,7 +968,7 @@ class _$SpinnerDrawingImpl extends _SpinnerDrawing {
 
   @override
   String toString() {
-    return 'SpinnerDrawing(top: $top, left: $left, scale: $scale, color: $color, animationTimingFunction: $animationTimingFunction, spinsPerSecond: $spinsPerSecond)';
+    return 'SpinnerDrawing(top: $top, left: $left, scale: $scale, colorHex: $colorHex, animationTimingFunction: $animationTimingFunction, spinsPerSecond: $spinsPerSecond)';
   }
 
   @override
@@ -974,7 +979,8 @@ class _$SpinnerDrawingImpl extends _SpinnerDrawing {
             (identical(other.top, top) || other.top == top) &&
             (identical(other.left, left) || other.left == left) &&
             (identical(other.scale, scale) || other.scale == scale) &&
-            (identical(other.color, color) || other.color == color) &&
+            (identical(other.colorHex, colorHex) ||
+                other.colorHex == colorHex) &&
             (identical(
                     other.animationTimingFunction, animationTimingFunction) ||
                 other.animationTimingFunction == animationTimingFunction) &&
@@ -983,7 +989,7 @@ class _$SpinnerDrawingImpl extends _SpinnerDrawing {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, top, left, scale, color,
+  int get hashCode => Object.hash(runtimeType, top, left, scale, colorHex,
       animationTimingFunction, spinsPerSecond);
 
   @JsonKey(ignore: true)
@@ -999,7 +1005,7 @@ abstract class _SpinnerDrawing extends SpinnerDrawing {
       {final int top,
       final int left,
       final double scale,
-      final Color? color,
+      final int? colorHex,
       final AnimationTimingFunction animationTimingFunction,
       final double spinsPerSecond}) = _$SpinnerDrawingImpl;
   const _SpinnerDrawing._() : super._();
@@ -1015,7 +1021,7 @@ abstract class _SpinnerDrawing extends SpinnerDrawing {
   @override
 
   /// The fill color. If null, the image colors will be preserved.
-  Color? get color;
+  int? get colorHex;
   @override
 
   /// The curve applied while spinning.
