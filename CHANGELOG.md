@@ -8,6 +8,7 @@
 * [REFACTOR] Update UUIDs of BLE characteristics
 * [REFACTOR] Make `maxLines` nullable
 * [REFACTOR] Simplify the use of user-defined icons
+* [REFACTOR] Remove font prefixes
 
 ## 1.2.1
 * [ADD] Add spinner image

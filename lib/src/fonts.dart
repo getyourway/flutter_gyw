@@ -1,101 +1,101 @@
 import "package:flutter/material.dart";
 
+/// Pixels per point constant.
+/// In CSS:
+/// pt = 1/72 inch
+/// px = 1/96 inch
+const double pixelsPerPoint = 96.0 / 72.0; // 1.333(3)
+
 /// The text fonts supported on aRdent smart glasses
 @immutable
 class GYWFont {
-  /// The name of the font
-  final String name;
+  /// The font filename on the GYW device (5 characters long and no type extension).
+  final String filename;
 
-  /// The internal prefix of the font
-  final String prefix;
+  /// The name of the font.
+  final String? name;
 
-  /// The size (in points) of a character
-  final int size;
+  /// The font family name.
+  final String? fontFamily;
 
-  /// The width (in pixels) of a character
-  final int width;
+  /// The width of a character at 1pt.
+  final double charWidth;
 
-  /// The height (in pixels) of a character
-  final int height;
-
-  /// Whether the fontweight is bold (w700) or normal (w400)
+  /// Whether the fontweight is bold (w700) or normal (w400).
   final bool bold;
+
+  /// Whether the font style is italic.
+  final bool italic;
 
   /// Creates a font.
   const GYWFont({
-    required this.name,
-    required this.prefix,
-    required this.size,
-    required this.width,
-    required this.height,
-    required this.bold,
-  });
+    required this.filename,
+    this.name,
+    this.fontFamily,
+    this.charWidth = 0.6,
+    this.bold = false,
+    this.italic = false,
+  }) : assert(filename.length == 5, "The filename must be 5 characters long");
 
   @override
   String toString() {
-    return "Font '$name' ($prefix)";
+    return "Font '$name' ($filename)";
   }
 
   @override
   bool operator ==(Object other) {
     if (other is GYWFont) {
-      return prefix == other.prefix;
+      return filename == other.filename;
     } else {
       return false;
     }
   }
 
   @override
-  int get hashCode => Object.hash(prefix, size);
+  int get hashCode => Object.hash(name, filename);
 }
+
+/// Roboto Mono Normal
+/// Work around https://github.com/dart-lang/language/issues/2374
+const robotoMonoFont = GYWFont(
+  filename: "robmn",
+  name: "Roboto Mono",
+  fontFamily: "Roboto Mono",
+);
 
 /// The [GYWFont] fonts supported by default on aRdent smart glasses.
 enum GYWFonts {
-  /// For small texts with a low significance.
-  small(
-    GYWFont(
-      name: "Small",
-      prefix: "a10",
-      size: 18,
-      width: 10,
-      height: 25,
-      bold: false,
-    ),
-  ),
+  /// Roboto Mono Normal
+  robotoMono(robotoMonoFont),
 
-  /// For common texts with a medium significance.
-  medium(
+  /// Roboto Mono Bold
+  robotoMonoBold(
     GYWFont(
-      name: "Medium",
-      prefix: "b14",
-      size: 24,
-      width: 14,
-      height: 33,
+      filename: "robmb",
+      name: "Roboto Mono Bold",
+      fontFamily: "Roboto Mono",
       bold: true,
     ),
   ),
 
-  /// For common texts with a medium significance.
-  large(
+  /// Roboto Mono Italic
+  robotoMonoItalic(
     GYWFont(
-      name: "Large",
-      prefix: "a16",
-      size: 28,
-      width: 16,
-      height: 39,
-      bold: false,
+      filename: "robmi",
+      name: "Roboto Mono Italic",
+      fontFamily: "Roboto Mono",
+      italic: true,
     ),
   ),
 
-  /// For important texts with major significance for the user.
-  huge(
+  /// Roboto Mono Bold Italic
+  robotoMonoBoldItalic(
     GYWFont(
-      name: "Huge",
-      prefix: "b28",
-      size: 48,
-      width: 28,
-      height: 67,
+      filename: "robme",
+      name: "Roboto Mono Bold Italic",
+      fontFamily: "Roboto Mono",
       bold: true,
+      italic: true,
     ),
   );
 

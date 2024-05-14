@@ -188,7 +188,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   ///
   /// The value must be between 0 and 1.
   Future<void> setBrightness(double value) async {
-    assert(value >= 0 && value <= 1);
+    assert(value >= 0 && value <= 1, "Brightness must be between 0 and 1");
 
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.setBrightness.value)
@@ -206,7 +206,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   ///
   /// The value must be between 0 and 1.
   Future<void> setContrast(double value) async {
-    assert(value >= 0 && value <= 1);
+    assert(value >= 0 && value <= 1, "Contrast must be between 0 and 1");
 
     final controlBytes = BytesBuilder()
       ..addByte(GYWControlCode.setContrast.value)
