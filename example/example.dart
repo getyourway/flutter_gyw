@@ -32,7 +32,8 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
         text: "Hello world",
         top: 50,
         left: 220,
-        font: GYWFonts.medium.font,
+        size: 32,
+        font: GYWFonts.robotoMono.font,
       ),
     ];
 

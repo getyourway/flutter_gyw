@@ -60,12 +60,10 @@ class TextDrawing extends GYWDrawing {
   String get wrappedText => _wrapText().join("\n");
 
   /// The [GYWFont] to use
-  ///
-  /// If no font is given, it uses the most recent one
-  final GYWFont? font;
+  final GYWFont font;
 
-  /// The text size. Overrides the font size.
-  final int? size;
+  /// The text size.
+  final int size;
 
   /// The color of the text.
   final Color color;
@@ -85,8 +83,8 @@ class TextDrawing extends GYWDrawing {
   /// Creates a text element.
   const TextDrawing({
     required this.text,
-    this.font,
-    this.size,
+    this.font = robotoMonoFont,
+    this.size = 24,
     this.color = Colors.black,
     this.maxWidth,
     this.maxLines = 1,
@@ -96,8 +94,7 @@ class TextDrawing extends GYWDrawing {
 
   @override
   List<GYWBtCommand> toCommands() {
-    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
-    final int charHeight = (fontSize * 1.33).ceil();
+    final int charHeight = (size * pixelsPerPoint).ceil();
 
     final List<GYWBtCommand> commands = [];
 
@@ -126,8 +123,7 @@ class TextDrawing extends GYWDrawing {
       textWidth = maxWidth;
     }
 
-    final int fontSize = size ?? font?.size ?? GYWFonts.small.font.size;
-    final int charWidth = (fontSize * 0.6).ceil();
+    final int charWidth = (size * font.charWidth).ceil();
     final int maxCharsPerLine = textWidth ~/ charWidth;
 
     final List<String> words = text.split(" ");
@@ -158,8 +154,8 @@ class TextDrawing extends GYWDrawing {
     controlBytes.add(int16Bytes(left));
     controlBytes.add(int16Bytes(top));
 
-    controlBytes.add(utf8.encode(font?.prefix ?? "NUL"));
-    controlBytes.add(int8Bytes(size ?? 0));
+    controlBytes.add(utf8.encode(font.filename));
+    controlBytes.add(int8Bytes(size));
 
     controlBytes.add(rgba8888BytesFromColor(color));
 
@@ -210,24 +206,19 @@ class TextDrawing extends GYWDrawing {
 
   /// Deserializes a [TextDrawing] from JSON data
   factory TextDrawing.fromJson(Map<String, dynamic> data) {
-    GYWFont? font;
-    try {
-      font = GYWFonts.values
-          .firstWhere(
-            (e) => e.font.prefix == data["font"],
-          )
-          .font;
-    } on StateError {
-      font = null;
-    }
+    final font = GYWFonts.values
+        .firstWhere(
+          (e) => e.font.filename == data["font"],
+          orElse: () => GYWFonts.robotoMono,
+        )
+        .font;
 
     return TextDrawing(
       left: data["left"] as int,
       top: data["top"] as int,
-      // Deprecated: "text" key will be deprecated in future version
-      text: data["data"] as String? ?? data["text"] as String,
+      text: data["data"] as String,
       font: font,
-      size: data["size"] as int?,
+      size: data["size"] as int,
       color: colorFromHex(data["color"] as String?) ?? Colors.black,
       maxWidth: data["max_width"] as int?,
       maxLines: data["max_lines"] as int? ?? 1,
@@ -241,9 +232,7 @@ class TextDrawing extends GYWDrawing {
       "left": left,
       "top": top,
       "data": text,
-      // Deprecated: "text" key will be deprecated in future version
-      "text": text,
-      if (font != null) "font": font!.prefix,
+      "font": font.filename,
       "size": size,
       "color": hexFromColor(color),
       "max_width": maxWidth,

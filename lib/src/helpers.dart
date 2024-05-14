@@ -63,7 +63,7 @@ List<int> byteFromScale(double scale) {
     // max: 0.99 -> -99
     scaleByte = (-scale * 100.0).round();
   }
-  assert(-99 <= scaleByte && scaleByte <= 127);
+  assert(-99 <= scaleByte && scaleByte <= 127, "Scale byte out of range");
   return int8Bytes(scaleByte);
 }
 
