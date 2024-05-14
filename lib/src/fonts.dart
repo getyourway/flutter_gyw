@@ -88,11 +88,11 @@ enum GYWFonts {
     ),
   ),
 
-  /// Roboto Mono Italic Bold
-  robotoMonoItalicBold(
+  /// Roboto Mono Bold Italic
+  robotoMonoBoldItalic(
     GYWFont(
       filename: "robme",
-      name: "Roboto Mono Italic Bold",
+      name: "Roboto Mono Bold Italic",
       fontFamily: "Roboto Mono",
       bold: true,
       italic: true,
