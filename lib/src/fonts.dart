@@ -86,6 +86,16 @@ enum GYWFonts {
       fontFamily: "Roboto Mono",
       italic: true,
     ),
+  ),
+
+  robotoMonoItalicBold(
+    GYWFont(
+      filename: "robme",
+      name: "Roboto Mono Italic Bold",
+      fontFamily: "Roboto Mono",
+      bold: true,
+      italic: true,
+    ),
   );
 
   /// The [GYWFont] object to use for aRdent communication.
