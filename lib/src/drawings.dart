@@ -3,11 +3,11 @@ import "dart:typed_data";
 
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gyw/src/custom_mappers.dart";
-import "package:flutter_gyw/src/helpers.dart";
 
 import "commands.dart";
+import "custom_mappers.dart";
 import "fonts.dart";
+import "helpers.dart";
 import "icons.dart";
 import "screen.dart";
 
