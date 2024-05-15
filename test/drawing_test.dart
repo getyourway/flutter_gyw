@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gyw/flutter_gyw.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -22,7 +23,7 @@ void main() {
         text: "Text with position",
         font: GYWFonts.robotoMonoBold.font,
         size: 48,
-        color: const Color(0x12345678),
+        colorHex: 0x12345678,
         maxWidth: 300,
         maxLines: 3,
       );
@@ -57,7 +58,7 @@ void main() {
         icon,
         left: 120,
         top: 220,
-        color: Colors.green,
+        colorHex: Colors.green.value,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
@@ -69,7 +70,7 @@ void main() {
         "data": "Test",
       };
 
-      expect(() => GYWDrawing.fromJson(json), throwsA(isA<UnsupportedError>()));
+      expect(() => GYWDrawing.fromMap(json), throwsA(isA<MapperException>()));
     });
   });
 
