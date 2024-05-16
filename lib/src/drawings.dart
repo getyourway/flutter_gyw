@@ -88,7 +88,7 @@ class TextDrawing extends GYWDrawing with TextDrawingMappable {
   final int? maxLines;
 
   /// Creates a text element.
-  TextDrawing({
+  const TextDrawing({
     required this.text,
     this.font = robotoMonoFont,
     this.size = 24,
