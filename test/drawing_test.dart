@@ -92,6 +92,31 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
+    test("RectangleDrawing", () {
+      final GYWDrawing drawing = RectangleDrawing(
+        left: 100,
+        top: 200,
+        width: 300,
+        height: 400,
+        colorHex: Colors.red.value,
+      );
+
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
+    });
+
+    test("SpinnerDrawing", () {
+      final GYWDrawing drawing = SpinnerDrawing(
+        left: 100,
+        top: 200,
+        scale: 1.23,
+        colorHex: Colors.blue.value,
+        animationTimingFunction: AnimationTimingFunction.ease_out,
+        spinsPerSecond: 2.5,
+      );
+
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
+    });
+
     test("Unsupported type", () {
       final json = {
         "type": "unsupported",
