@@ -9,6 +9,7 @@
 * [REFACTOR] Make `maxLines` nullable
 * [REFACTOR] Simplify the use of user-defined icons
 * [REFACTOR] Remove font prefixes
+* [REFACTOR] Replace manual serialization code with dart_mappable
 
 ## 1.2.1
 * [ADD] Add spinner image

@@ -1,12 +1,13 @@
 import "dart:io";
 
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gyw/flutter_gyw.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
   group("JSON", () {
-    test("Text without optional values", () {
+    test("TextDrawing without optional values", () {
       final GYWDrawing drawing = TextDrawing(
         text: "Text",
         font: GYWFonts.robotoMono.font,
@@ -15,14 +16,14 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Text with optional values", () {
+    test("TextDrawing with optional values", () {
       final GYWDrawing drawing = TextDrawing(
         left: 100,
         top: 200,
         text: "Text with position",
         font: GYWFonts.robotoMonoBold.font,
         size: 48,
-        color: const Color(0x12345678),
+        colorHex: 0x12345678,
         maxWidth: 300,
         maxLines: 3,
       );
@@ -30,7 +31,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon", () {
+    test("IconDrawing", () {
       final GYWIcon icon = GYWIcons.checkbox.icon;
 
       final GYWDrawing drawing = IconDrawing(icon);
@@ -38,7 +39,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon with position", () {
+    test("IconDrawing with position", () {
       final GYWIcon icon = GYWIcons.up.icon;
 
       final GYWDrawing drawing = IconDrawing(
@@ -50,14 +51,39 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon with color", () {
+    test("IconDrawing with color", () {
       final GYWIcon icon = GYWIcons.left.icon;
 
       final GYWDrawing drawing = IconDrawing(
         icon,
         left: 120,
         top: 220,
-        color: Colors.green,
+        colorHex: Colors.green.value,
+      );
+
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
+    });
+
+    test("RectangleDrawing", () {
+      final GYWDrawing drawing = RectangleDrawing(
+        left: 100,
+        top: 200,
+        width: 300,
+        height: 400,
+        colorHex: Colors.red.value,
+      );
+
+      expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
+    });
+
+    test("SpinnerDrawing", () {
+      final GYWDrawing drawing = SpinnerDrawing(
+        left: 100,
+        top: 200,
+        scale: 1.23,
+        colorHex: Colors.blue.value,
+        animationTimingFunction: AnimationTimingFunction.ease_out,
+        spinsPerSecond: 2.5,
       );
 
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
@@ -69,7 +95,7 @@ void main() {
         "data": "Test",
       };
 
-      expect(() => GYWDrawing.fromJson(json), throwsA(isA<UnsupportedError>()));
+      expect(() => GYWDrawing.fromMap(json), throwsA(isA<MapperException>()));
     });
   });
 
