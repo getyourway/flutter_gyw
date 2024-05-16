@@ -338,6 +338,7 @@ class SpinnerDrawing extends GYWDrawing with SpinnerDrawingMappable {
 }
 
 /// The animations for spinner rotating behaviour
+@MappableEnum()
 enum AnimationTimingFunction {
   /// Linear timing function
   linear(0),

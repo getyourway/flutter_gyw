@@ -6,6 +6,59 @@
 
 part of 'drawings.dart';
 
+class AnimationTimingFunctionMapper
+    extends EnumMapper<AnimationTimingFunction> {
+  AnimationTimingFunctionMapper._();
+
+  static AnimationTimingFunctionMapper? _instance;
+  static AnimationTimingFunctionMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = AnimationTimingFunctionMapper._());
+    }
+    return _instance!;
+  }
+
+  static AnimationTimingFunction fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  AnimationTimingFunction decode(dynamic value) {
+    switch (value) {
+      case 'linear':
+        return AnimationTimingFunction.linear;
+      case 'ease_in':
+        return AnimationTimingFunction.ease_in;
+      case 'ease_out':
+        return AnimationTimingFunction.ease_out;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(AnimationTimingFunction self) {
+    switch (self) {
+      case AnimationTimingFunction.linear:
+        return 'linear';
+      case AnimationTimingFunction.ease_in:
+        return 'ease_in';
+      case AnimationTimingFunction.ease_out:
+        return 'ease_out';
+    }
+  }
+}
+
+extension AnimationTimingFunctionMapperExtension on AnimationTimingFunction {
+  String toValue() {
+    AnimationTimingFunctionMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<AnimationTimingFunction>(this)
+        as String;
+  }
+}
+
 class GYWDrawingMapper extends ClassMapperBase<GYWDrawing> {
   GYWDrawingMapper._();
 
@@ -546,6 +599,7 @@ class SpinnerDrawingMapper extends SubClassMapperBase<SpinnerDrawing> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SpinnerDrawingMapper._());
       GYWDrawingMapper.ensureInitialized().addSubMapper(_instance!);
+      AnimationTimingFunctionMapper.ensureInitialized();
     }
     return _instance!;
   }
