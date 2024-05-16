@@ -16,6 +16,7 @@ part "drawings.mapper.dart";
 /// A drawing that can be displayed on a pair of aRdent smart glasses
 @immutable
 @MappableClass(
+  caseStyle: CaseStyle.snakeCase,
   discriminatorKey: "type",
   includeCustomMappers: [
     GYWIconMapper(),

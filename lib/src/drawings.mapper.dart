@@ -144,14 +144,15 @@ class TextDrawingMapper extends SubClassMapperBase<TextDrawing> {
   static const Field<TextDrawing, int> _f$size =
       Field('size', _$size, opt: true, def: 24);
   static int _$colorHex(TextDrawing v) => v.colorHex;
-  static const Field<TextDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, opt: true, def: 0xFF000000);
+  static const Field<TextDrawing, int> _f$colorHex = Field(
+      'colorHex', _$colorHex,
+      key: 'color_hex', opt: true, def: 0xFF000000);
   static int? _$maxWidth(TextDrawing v) => v.maxWidth;
   static const Field<TextDrawing, int> _f$maxWidth =
-      Field('maxWidth', _$maxWidth, opt: true);
+      Field('maxWidth', _$maxWidth, key: 'max_width', opt: true);
   static int? _$maxLines(TextDrawing v) => v.maxLines;
   static const Field<TextDrawing, int> _f$maxLines =
-      Field('maxLines', _$maxLines, opt: true, def: 1);
+      Field('maxLines', _$maxLines, key: 'max_lines', opt: true, def: 1);
   static int _$left(TextDrawing v) => v.left;
   static const Field<TextDrawing, int> _f$left =
       Field('left', _$left, opt: true, def: 0);
@@ -323,8 +324,9 @@ class IconDrawingMapper extends SubClassMapperBase<IconDrawing> {
   static const Field<IconDrawing, int> _f$left =
       Field('left', _$left, opt: true, def: 0);
   static int _$colorHex(IconDrawing v) => v.colorHex;
-  static const Field<IconDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, opt: true, def: 0xFF000000);
+  static const Field<IconDrawing, int> _f$colorHex = Field(
+      'colorHex', _$colorHex,
+      key: 'color_hex', opt: true, def: 0xFF000000);
   static double _$scale(IconDrawing v) => v.scale;
   static const Field<IconDrawing, double> _f$scale =
       Field('scale', _$scale, opt: true, def: 1.0);
@@ -468,7 +470,7 @@ class RectangleDrawingMapper extends SubClassMapperBase<RectangleDrawing> {
       Field('height', _$height);
   static int? _$colorHex(RectangleDrawing v) => v.colorHex;
   static const Field<RectangleDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, opt: true);
+      Field('colorHex', _$colorHex, key: 'color_hex', opt: true);
 
   @override
   final MappableFields<RectangleDrawing> fields = const {
@@ -618,16 +620,19 @@ class SpinnerDrawingMapper extends SubClassMapperBase<SpinnerDrawing> {
       Field('scale', _$scale, opt: true, def: 1.0);
   static int? _$colorHex(SpinnerDrawing v) => v.colorHex;
   static const Field<SpinnerDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, opt: true);
+      Field('colorHex', _$colorHex, key: 'color_hex', opt: true);
   static AnimationTimingFunction _$animationTimingFunction(SpinnerDrawing v) =>
       v.animationTimingFunction;
   static const Field<SpinnerDrawing, AnimationTimingFunction>
       _f$animationTimingFunction = Field(
           'animationTimingFunction', _$animationTimingFunction,
-          opt: true, def: AnimationTimingFunction.linear);
+          key: 'animation_timing_function',
+          opt: true,
+          def: AnimationTimingFunction.linear);
   static double _$spinsPerSecond(SpinnerDrawing v) => v.spinsPerSecond;
-  static const Field<SpinnerDrawing, double> _f$spinsPerSecond =
-      Field('spinsPerSecond', _$spinsPerSecond, opt: true, def: 1.0);
+  static const Field<SpinnerDrawing, double> _f$spinsPerSecond = Field(
+      'spinsPerSecond', _$spinsPerSecond,
+      key: 'spins_per_second', opt: true, def: 1.0);
 
   @override
   final MappableFields<SpinnerDrawing> fields = const {
