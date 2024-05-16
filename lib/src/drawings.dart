@@ -62,6 +62,7 @@ class TextDrawing extends GYWDrawing with TextDrawingMappable {
   final int size;
 
   /// Text color in hexadecimal format.
+  @MappableField(key: "color")
   final int colorHex;
 
   /// Text color.
@@ -184,6 +185,7 @@ class IconDrawing extends GYWDrawing with IconDrawingMappable {
   final GYWIcon icon;
 
   /// Hexadecimal code of the icon fill color
+  @MappableField(key: "color")
   final int colorHex;
 
   /// Fill color.
@@ -241,6 +243,7 @@ class RectangleDrawing extends GYWDrawing with RectangleDrawingMappable {
   final int height;
 
   /// The fill color. If null, the rectangle will use the current background color.
+  @MappableField(key: "color")
   final int? colorHex;
 
   /// Fill color.
@@ -287,6 +290,7 @@ class SpinnerDrawing extends GYWDrawing with SpinnerDrawingMappable {
   final double scale;
 
   /// The fill color. If null, the image colors will be preserved.
+  @MappableField(key: "color")
   final int? colorHex;
 
   /// Fill color.

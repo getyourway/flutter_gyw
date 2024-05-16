@@ -144,9 +144,8 @@ class TextDrawingMapper extends SubClassMapperBase<TextDrawing> {
   static const Field<TextDrawing, int> _f$size =
       Field('size', _$size, opt: true, def: 24);
   static int _$colorHex(TextDrawing v) => v.colorHex;
-  static const Field<TextDrawing, int> _f$colorHex = Field(
-      'colorHex', _$colorHex,
-      key: 'color_hex', opt: true, def: 0xFF000000);
+  static const Field<TextDrawing, int> _f$colorHex =
+      Field('colorHex', _$colorHex, key: 'color', opt: true, def: 0xFF000000);
   static int? _$maxWidth(TextDrawing v) => v.maxWidth;
   static const Field<TextDrawing, int> _f$maxWidth =
       Field('maxWidth', _$maxWidth, key: 'max_width', opt: true);
@@ -324,9 +323,8 @@ class IconDrawingMapper extends SubClassMapperBase<IconDrawing> {
   static const Field<IconDrawing, int> _f$left =
       Field('left', _$left, opt: true, def: 0);
   static int _$colorHex(IconDrawing v) => v.colorHex;
-  static const Field<IconDrawing, int> _f$colorHex = Field(
-      'colorHex', _$colorHex,
-      key: 'color_hex', opt: true, def: 0xFF000000);
+  static const Field<IconDrawing, int> _f$colorHex =
+      Field('colorHex', _$colorHex, key: 'color', opt: true, def: 0xFF000000);
   static double _$scale(IconDrawing v) => v.scale;
   static const Field<IconDrawing, double> _f$scale =
       Field('scale', _$scale, opt: true, def: 1.0);
@@ -470,7 +468,7 @@ class RectangleDrawingMapper extends SubClassMapperBase<RectangleDrawing> {
       Field('height', _$height);
   static int? _$colorHex(RectangleDrawing v) => v.colorHex;
   static const Field<RectangleDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, key: 'color_hex', opt: true);
+      Field('colorHex', _$colorHex, key: 'color', opt: true);
 
   @override
   final MappableFields<RectangleDrawing> fields = const {
@@ -620,7 +618,7 @@ class SpinnerDrawingMapper extends SubClassMapperBase<SpinnerDrawing> {
       Field('scale', _$scale, opt: true, def: 1.0);
   static int? _$colorHex(SpinnerDrawing v) => v.colorHex;
   static const Field<SpinnerDrawing, int> _f$colorHex =
-      Field('colorHex', _$colorHex, key: 'color_hex', opt: true);
+      Field('colorHex', _$colorHex, key: 'color', opt: true);
   static AnimationTimingFunction _$animationTimingFunction(SpinnerDrawing v) =>
       v.animationTimingFunction;
   static const Field<SpinnerDrawing, AnimationTimingFunction>
