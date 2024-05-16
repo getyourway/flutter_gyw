@@ -35,7 +35,7 @@ void main() {
       expect(iconMapper.decode(iconMapper.encode(icon)), icon);
     });
 
-    test("Text without optional values", () {
+    test("TextDrawing without optional values", () {
       final GYWDrawing drawing = TextDrawing(
         text: "Text",
         font: GYWFonts.robotoMono.font,
@@ -44,7 +44,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Text with optional values", () {
+    test("TextDrawing with optional values", () {
       final GYWDrawing drawing = TextDrawing(
         left: 100,
         top: 200,
@@ -59,7 +59,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon", () {
+    test("IconDrawing", () {
       final GYWIcon icon = GYWIcons.checkbox.icon;
 
       final GYWDrawing drawing = IconDrawing(icon);
@@ -67,7 +67,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon with position", () {
+    test("IconDrawing with position", () {
       final GYWIcon icon = GYWIcons.up.icon;
 
       final GYWDrawing drawing = IconDrawing(
@@ -79,7 +79,7 @@ void main() {
       expect(GYWDrawing.fromJson(drawing.toJson()), drawing);
     });
 
-    test("Icon with color", () {
+    test("IconDrawing with color", () {
       final GYWIcon icon = GYWIcons.left.icon;
 
       final GYWDrawing drawing = IconDrawing(
