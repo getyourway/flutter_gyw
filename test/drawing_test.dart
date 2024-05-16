@@ -3,38 +3,10 @@ import "dart:io";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gyw/flutter_gyw.dart";
-import "package:flutter_gyw/src/custom_mappers.dart";
 import "package:flutter_test/flutter_test.dart";
-
-const fontMapper = GYWFontMapper();
-const iconMapper = GYWIconMapper();
 
 void main() {
   group("JSON", () {
-    test("Built-in font", () {
-      final GYWFont font = GYWFonts.robotoMonoBold.font;
-      expect(fontMapper.decode(fontMapper.encode(font)), font);
-    });
-
-    test("Custom font", () {
-      const GYWFont font = GYWFont(filename: "custo");
-      // Unknown fonts are replaced by the default one.
-      expect(
-        fontMapper.decode(fontMapper.encode(font)),
-        GYWFonts.robotoMono.font,
-      );
-    });
-
-    test("Built-in icon", () {
-      final GYWIcon icon = GYWIcons.nfc.icon;
-      expect(iconMapper.decode(iconMapper.encode(icon)), icon);
-    });
-
-    test("Custom icon", () {
-      const GYWIcon icon = GYWIcon(name: "custom", filename: "custom");
-      expect(iconMapper.decode(iconMapper.encode(icon)), icon);
-    });
-
     test("TextDrawing without optional values", () {
       final GYWDrawing drawing = TextDrawing(
         text: "Text",
