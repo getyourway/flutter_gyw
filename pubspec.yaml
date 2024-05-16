@@ -9,12 +9,16 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  dart_mappable: ^4.2.2
   flutter:
     sdk: flutter
   flutter_blue_plus: ^1.31.4
 
 dev_dependencies:
-  dartdoc: ^6.3.0
+  analyzer: ^6.4.1
+  build_runner: ^2.4.9
+  dart_mappable_builder: ^4.2.3
+  dartdoc: ^8.0.8
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter

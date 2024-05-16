@@ -43,16 +43,14 @@ class GYWFont {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is GYWFont) {
-      return filename == other.filename;
-    } else {
-      return false;
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GYWFont &&
+          runtimeType == other.runtimeType &&
+          filename == other.filename;
 
   @override
-  int get hashCode => Object.hash(name, filename);
+  int get hashCode => filename.hashCode;
 }
 
 /// Roboto Mono Normal
