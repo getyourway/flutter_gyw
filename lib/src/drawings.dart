@@ -14,15 +14,6 @@ import "screen.dart";
 part "drawings.mapper.dart";
 
 /// A drawing that can be displayed on a pair of aRdent smart glasses
-abstract interface class Drawing {
-  /// The distance (in pixels) from the top of the screen
-  int get top;
-
-  /// The distance (in pixels) from the top of the screen
-  int get left;
-}
-
-/// A drawing that can be displayed on a pair of aRdent smart glasses
 @immutable
 @MappableClass(
   discriminatorKey: "type",
@@ -31,11 +22,11 @@ abstract interface class Drawing {
     GYWFontMapper(),
   ],
 )
-sealed class GYWDrawing with GYWDrawingMappable implements Drawing {
-  @override
+sealed class GYWDrawing with GYWDrawingMappable {
+  /// The distance (in pixels) from the top of the screen
   final int top;
 
-  @override
+  /// The distance (in pixels) from the top of the screen
   final int left;
 
   /// Abstract const contructor.
