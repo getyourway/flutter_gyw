@@ -263,7 +263,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
         chunk = data.sublist(start);
       }
 
-      await characteristic.write(chunk);
+      await characteristic.write(chunk, withoutResponse: true);
 
       start += 20;
       end += 20;
