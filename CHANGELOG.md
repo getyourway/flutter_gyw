@@ -10,6 +10,7 @@
 * [REFACTOR] Simplify the use of user-defined icons
 * [REFACTOR] Remove font prefixes
 * [REFACTOR] Replace manual serialization code with dart_mappable
+* [IMP] Write to bluetooth characteristics without waiting for a response
 
 ## 1.2.1
 * [ADD] Add spinner image
