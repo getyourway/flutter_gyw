@@ -124,6 +124,8 @@ final drawing = TextDrawing(
 );
 ```
 
+The reason the constructor takes the color as an integer value (`Colors.black.value`) instead of a Color object (`Colors.black`) is that some color constants represent an entire palette of colors (`ColorSwatch`) and not a single color. Serializing and deserializing a color swatch will reduce it to a single color which breaks the equality between the original color and the deserialized one. To avoid surprises around inconsistent equality checks, the color is given as an integer to ensure it represents a single color. For convenience, a getter called `color` is provided which returns the color as a `Color` object. The same applies to other drawings.
+
 ### 2. IconDrawing
 
 Displays an icon on the screen.
