@@ -99,8 +99,6 @@ for (GYWDrawing drawing in drawings) {
 }
 ```
 
-> :bulb: You can use the `delay` parameter of the `sendDrawing` method in order to speed up or down the transfer, but be careful that increasing the transfer rate may affect the reliability of the transfered data, i.e. some drawings may be skipped or badly interpreted.
-
 ## Example
 
 A complete example can be found [here](example/example.dart)
@@ -109,15 +107,7 @@ A complete example can be found [here](example/example.dart)
 
 Here is a list of the different elements that can be shown on the screen. For more information on parameters and authorized values, feel free to look at the code documentation for more advanced details.
 
-### 1. BlankScreen
-
-Fills the screen with a solid color. If no color is given, the screen will be filled with the last color used, useful for erasing parts of the screen.
-
-```dart
-final drawing = BlankScreen(color: Colors.white);
-```
-
-### 2. TextDrawing
+### 1. TextDrawing
 
 Displays text on the screen.
 
@@ -126,15 +116,17 @@ final drawing = TextDrawing(
   text: "Hello, World!",
   left: 220,
   top: 50,
-  font: GYWFont.large,
-  color: Colors.black,
+  font: GYWFonts.robotoMonoBold.font,
+  colorHex: Colors.black.value,
   size: 34,
   maxWidth: 200,
   maxLines: 2,
 );
 ```
 
-### 3. IconDrawing
+The reason the constructor takes the color as an integer value (`Colors.black.value`) instead of a Color object (`Colors.black`) is that some color constants represent an entire palette of colors (`ColorSwatch`) and not a single color. Serializing and deserializing a color swatch will reduce it to a single color which breaks the equality between the original color and the deserialized one. To avoid surprises around inconsistent equality checks, the color is given as an integer to ensure it represents a single color. For convenience, a getter called `color` is provided which returns the color as a `Color` object. The same applies to other drawings.
+
+### 2. IconDrawing
 
 Displays an icon on the screen.
 
@@ -143,7 +135,7 @@ final drawing = IconDrawing(
   icon: GYWIcons.checkbox.icon,
   left: 220,
   top: 50,
-  color: Colors.blue,
+  colorHex: Colors.blue.value,
   scale: 1.5,
 );
 ```
@@ -160,15 +152,15 @@ final myIcon = GYWIcon(
 );
 
 final drawing = IconDrawing(
-  icon: myIcon,
+  myIcon,
   left: 220,
   top: 50,
-  color: Colors.blue,
-  scale: 1.5
+  colorHex: Colors.blue.value,
+  scale: 1.5,
 );
 ```
 
-### 4. RectangleDrawing
+### 3. RectangleDrawing
 
 Draws a colored rectangle on the screen.
 
@@ -178,11 +170,11 @@ final drawing = RectangleDrawing(
   top: 50,
   width: 100,
   height: 100,
-  color: Colors.red,
+  colorHex: Colors.red.value,
 );
 ```
 
-### 5. SpinnerDrawing
+### 4. SpinnerDrawing
 
 Draws an animated spinner.
 
@@ -191,7 +183,7 @@ final drawing = SpinnerDrawing(
   left: 300,
   top: 200,
   scale: 2.5,
-  color: Colors.blue,
+  colorHex: Colors.blue.value,
   animationTimingFunction: AnimationTimingFunction.ease_out,
   spinsPerSecond: 1.5,
 );
@@ -215,19 +207,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ### How to reset the screen of the aRdent glasses?
 
-`GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to send a blank screen that will override the whole screen.
+`GYWDrawing` objects appear on the screen as a stack. Each new drawing will be printed over the previous one. Therefore, to reset the screen, you need to clear it.
 
-To achieve this, you can use a `BlankScreen` drawing:
+To achieve this, you can call the `clearScreen` method.
 
 ```dart
-device.sendDrawing(const Blankcreen());
+device.clearScreen();
 ```
 
-By sending this drawing, it will replace all previous drawings and create a blank canvas for new content to be displayed.
+This will replace all previous drawings and create a blank canvas for new content to be displayed. A background color can also be given to this method. Not specifying a background color will clear the screen with the last background color used, or white if no background color has been specified yet.
 
-Alternatively, if you only need to modify specific elements on the screen, such as toggling a checkbox or changing the color of an icon, you can use the `blank` icon and color it in the same color as the background. Then, you can display additional elements on top of it. However, keep in mind that stacking too many elements without clearing the screen may consume memory resources, so it's recommended to periodically clear the screen using the `BlankScreen` drawing when necessary.
-
-Note that through this drawing, you can change the background color.
+Alternatively, if you only need to clear parts of the screen, such as erasing a single drawing, you can draw a `RectangleDrawing` without color. It will use the current background color to erase what is under it.
 
 ### How can I have bigger icons?
 

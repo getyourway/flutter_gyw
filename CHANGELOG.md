@@ -11,6 +11,7 @@
 * [REFACTOR] Remove font prefixes
 * [REFACTOR] Replace manual serialization code with dart_mappable
 * [IMP] Write to bluetooth characteristics without waiting for a response
+* [IMP] Update the readme
 
 ## 1.2.1
 * [ADD] Add spinner image
