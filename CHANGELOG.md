@@ -1,3 +1,6 @@
+## 2.0.1
+* [DEL] Remove the `startDisplay` method
+
 ## 2.0.0
 * [DEL] Remove deprecated functionality
 * [REFACTOR] Encode positions as int16 instead of int32

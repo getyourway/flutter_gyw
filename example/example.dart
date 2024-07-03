@@ -76,7 +76,6 @@ class _GYWExampleScreenState extends State<GYWExampleScreen> {
                   subtitle: Text(device.id),
                   onTap: () async {
                     if (await device.connect()) {
-                      await device.startDisplay();
                       setState(() => connectedDevice = device);
                     }
                   },
