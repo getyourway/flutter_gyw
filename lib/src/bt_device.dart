@@ -20,7 +20,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   bool _isConnecting = false;
   bool _isDisconnecting = false;
   bool _isConnected = false;
-  bool _screenOn = false;
 
   /// Whether the connection to the device is in progress
   bool get isConnecting => _isConnecting;
@@ -144,7 +143,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       _isDisconnecting = false;
     }
 
-    _screenOn = false;
     notifyListeners();
 
     return !isConnected;
@@ -268,25 +266,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       start += 20;
       end += 20;
     }
-  }
-
-  /// Turns the screen on and initializes it for future drawings.
-  ///
-  /// This method must be called once before performing display operations.
-  Future<void> startDisplay() async {
-    if (_screenOn) {
-      // Skip the command
-      return;
-    }
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      int8Bytes(GYWControlCode.startDisplay.value),
-    );
-
-    await _sendBTCommand(command);
-
-    _screenOn = true;
   }
 
   /// Turns the display backlight on or off

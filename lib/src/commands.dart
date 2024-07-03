@@ -16,9 +16,6 @@ enum GYWCharacteristic {
 
 /// A code to operate aRdent smart glasses
 enum GYWControlCode {
-  /// Switch on the screen
-  startDisplay(0x01),
-
   /// Show an image on the screen
   displayImage(0x02),
 
