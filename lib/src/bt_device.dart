@@ -270,25 +270,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Turns the screen on and initializes it for future drawings.
-  ///
-  /// This method must be called once before performing display operations.
-  Future<void> startDisplay() async {
-    if (_screenOn) {
-      // Skip the command
-      return;
-    }
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      int8Bytes(GYWControlCode.startDisplay.value),
-    );
-
-    await _sendBTCommand(command);
-
-    _screenOn = true;
-  }
-
   /// Turns the display backlight on or off
   Future<void> enableBacklight(
     bool enable,
