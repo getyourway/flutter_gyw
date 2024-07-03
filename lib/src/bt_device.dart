@@ -20,7 +20,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   bool _isConnecting = false;
   bool _isDisconnecting = false;
   bool _isConnected = false;
-  bool _screenOn = false;
 
   /// Whether the connection to the device is in progress
   bool get isConnecting => _isConnecting;
@@ -144,7 +143,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       _isDisconnecting = false;
     }
 
-    _screenOn = false;
     notifyListeners();
 
     return !isConnected;
