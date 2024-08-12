@@ -93,7 +93,7 @@ for (GYWDrawing drawing in drawings) {
 
 ## Example
 
-A complete example can be found [here](example/example.dart)
+A complete example can be found [here](https://github.com/getyourway/flutter_gyw/blob/master/example/example.dart)
 
 ## Drawings
 

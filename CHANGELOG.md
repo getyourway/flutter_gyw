@@ -1,3 +1,6 @@
+## 2.0.2
+* [DEL] Remove some technical features that are not needed in the library
+
 ## 2.0.1
 * [DEL] Remove the `startDisplay` method
 
