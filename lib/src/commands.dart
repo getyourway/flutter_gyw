@@ -25,21 +25,6 @@ enum GYWControlCode {
   /// Clear the screen
   clear(0x05),
 
-  /// Change the contrast
-  setContrast(0x06),
-
-  /// Change the brightness
-  setBrightness(0x07),
-
-  /// Change the text font of the next text elements
-  setFont(0x08),
-
-  /// Enable or disable screen auto-rotate
-  autoRotateScreen(0x0A),
-
-  /// Enable or disable the display backlight
-  enableBacklight(0x0B),
-
   /// Draw a colored rectangle
   drawRectangle(0x0C),
 

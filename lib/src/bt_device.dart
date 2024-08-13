@@ -182,57 +182,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
   }
 
-  /// Sets the screen brightness.
-  ///
-  /// The value must be between 0 and 1.
-  Future<void> setBrightness(double value) async {
-    assert(value >= 0 && value <= 1, "Brightness must be between 0 and 1");
-
-    final controlBytes = BytesBuilder()
-      ..addByte(GYWControlCode.setBrightness.value)
-      ..add(int8Bytes((value * 255).toInt()));
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      controlBytes.toBytes(),
-    );
-
-    await _sendBTCommand(command);
-  }
-
-  /// Sets the screen contrast.
-  ///
-  /// The value must be between 0 and 1.
-  Future<void> setContrast(double value) async {
-    assert(value >= 0 && value <= 1, "Contrast must be between 0 and 1");
-
-    final controlBytes = BytesBuilder()
-      ..addByte(GYWControlCode.setContrast.value)
-      ..add(int8Bytes((value * 255).toInt()));
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      controlBytes.toBytes(),
-    );
-
-    await _sendBTCommand(command);
-  }
-
-  /// Enables or disables the screen autorotation.
-  Future<void> autoRotateScreen(
-    bool enable,
-  ) async {
-    final controlBytes = BytesBuilder()
-      ..addByte(GYWControlCode.autoRotateScreen.value)
-      ..addByte(enable ? 1 : 0);
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      controlBytes.toBytes(),
-    );
-    await _sendBTCommand(command);
-  }
-
   Future<void> _sendBTCommand(GYWBtCommand command) async {
     final fb.BluetoothCharacteristic? characteristic =
         await _findCharacteristic(command.characteristic.uuid);
@@ -266,21 +215,6 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       start += 20;
       end += 20;
     }
-  }
-
-  /// Turns the display backlight on or off
-  Future<void> enableBacklight(
-    bool enable,
-  ) async {
-    final controlBytes = BytesBuilder()
-      ..addByte(GYWControlCode.enableBacklight.value)
-      ..addByte(enable ? 1 : 0);
-
-    final command = GYWBtCommand(
-      GYWCharacteristic.ctrlDisplay,
-      controlBytes.toBytes(),
-    );
-    await _sendBTCommand(command);
   }
 
   /// Reset the content of the screen and its background color.
