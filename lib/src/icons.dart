@@ -15,7 +15,7 @@ class GYWIcon {
   /// The height (in pixels) of the icon
   final double height;
 
-  /// Whether the icon is available by default on aRdent
+  /// Whether the icon is available by default on aRdent or not
   final bool library;
 
   /// The path of the associated PNG file in the assets folder
