@@ -1,5 +1,9 @@
+import "dart:convert";
 import "dart:typed_data";
 import "dart:ui";
+
+/// Converts a String into UTF-8 bytes
+Uint8List textBytes(String value) => utf8.encode(value);
 
 /// Converts an int16 into bytes
 Uint8List int16Bytes(

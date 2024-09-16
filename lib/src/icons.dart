@@ -15,11 +15,38 @@ class GYWIcon {
   /// The height (in pixels) of the icon
   final double height;
 
+  /// Whether the icon is available by default on aRdent or not
+  final bool library;
+
   /// The path of the associated PNG file in the assets folder
-  final String pathPng;
+  String get pathPng {
+    if (library) {
+      if (filename.endsWith(".svg")) {
+        return "assets/icons/${filename.replaceAll(".svg", ".png")}";
+      } else if (filename.endsWith(".png")) {
+        return "assets/icons/$filename";
+      } else {
+        return "assets/icons/$filename.png";
+      }
+    } else {
+      return "assets/icons/unknown.png";
+    }
+  }
 
   /// The path of the associated SVG file in the assets folder
-  final String pathSvg;
+  String get pathSvg {
+    if (library) {
+      if (filename.endsWith(".svg")) {
+        return "assets/icons/$filename";
+      } else if (filename.endsWith(".png")) {
+        return "assets/icons/${filename.replaceAll(".png", ".svg")}";
+      } else {
+        return "assets/icons/$filename.svg";
+      }
+    } else {
+      return "assets/icons/unknown.svg";
+    }
+  }
 
   /// Creates an icon.
   const GYWIcon({
@@ -27,9 +54,7 @@ class GYWIcon {
     required this.filename,
     this.width = 48,
     this.height = 48,
-    this.pathPng = "assets/icons/unknown.png",
-    this.pathSvg = "assets/icons/unknown.svg",
-  });
+  }) : library = false;
 
   const GYWIcon._library({
     required this.name,
@@ -37,8 +62,7 @@ class GYWIcon {
     this.width = 48,
     // ignore: unused_element
     this.height = 48,
-  })  : pathPng = "assets/icons/$filename.png",
-        pathSvg = "assets/icons/$filename.svg";
+  }) : library = true;
 
   @override
   bool operator ==(Object other) =>
