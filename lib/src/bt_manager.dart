@@ -13,6 +13,7 @@ class GYWBtManager {
   }
 
   Future<void> _init() async {
+    FlutterBluePlus.setLogLevel(LogLevel.info);
     FlutterBluePlus.adapterState.listen((state) {
       if (bluetoothOn != (state == BluetoothAdapterState.on)) {
         bluetoothOn = state == BluetoothAdapterState.on;

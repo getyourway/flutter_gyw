@@ -1,4 +1,3 @@
-import "dart:convert";
 import "dart:typed_data";
 
 import "package:dart_mappable/dart_mappable.dart";
@@ -160,7 +159,7 @@ class TextDrawing extends GYWDrawing with TextDrawingMappable {
     controlBytes.add(int16Bytes(left));
     controlBytes.add(int16Bytes(top));
 
-    controlBytes.add(utf8.encode(font.filename));
+    controlBytes.add(textBytes(font.filename));
     controlBytes.add(int8Bytes(size));
 
     controlBytes.add(rgba8888BytesFromColor(color));
@@ -168,7 +167,7 @@ class TextDrawing extends GYWDrawing with TextDrawingMappable {
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert(line),
+        textBytes(line),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -223,7 +222,7 @@ class IconDrawing extends GYWDrawing with IconDrawingMappable {
     return <GYWBtCommand>[
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("${icon.filename}.svg"),
+        textBytes("${icon.filename}${icon.library ? '.svg' : ''}"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
@@ -332,7 +331,7 @@ class SpinnerDrawing extends GYWDrawing with SpinnerDrawingMappable {
     return [
       GYWBtCommand(
         GYWCharacteristic.nameDisplay,
-        const Utf8Encoder().convert("spinner_1.svg"),
+        textBytes("spinner_1.svg"),
       ),
       GYWBtCommand(
         GYWCharacteristic.ctrlDisplay,
