@@ -1,5 +1,6 @@
 ## 2.0.3
 * [FIX] Fix the use of images that are not library icons
+* [IMP] Eagerly cache characteristics and expose the cache publicly
 
 ## 2.0.2
 * [DEL] Remove some technical features that are not needed in the library
