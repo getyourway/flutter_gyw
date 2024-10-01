@@ -45,8 +45,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
   StreamSubscription<fb.BluetoothConnectionState>? _deviceStateListener;
 
-  Map<String, fb.BluetoothCharacteristic?> _characteristics =
-      <String, fb.BluetoothCharacteristic?>{};
+  final Map<String, fb.BluetoothCharacteristic> _characteristics = {};
 
   /// Creates a bluetooth device.
   GYWBtDevice({
@@ -86,6 +85,16 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
+
+      // Discover all charactersitics
+      _characteristics.clear();
+      final services = await fbDevice.discoverServices();
+
+      for (final service in services) {
+        for (final characteristic in service.characteristics) {
+          _characteristics[characteristic.uuid.toString()] = characteristic;
+        }
+      }
     } on TimeoutException {
       _isConnected = false;
       _isConnecting = false;
@@ -134,7 +143,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     }
 
     // Clear saved characteristics
-    _characteristics = <String, fb.BluetoothCharacteristic?>{};
+    _characteristics.clear();
 
     try {
       await fbDevice.disconnect();
@@ -148,29 +157,9 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
     return !isConnected;
   }
 
-  Future<fb.BluetoothCharacteristic?> _findCharacteristic(String uuid) async {
-    if (_characteristics[uuid] != null) {
-      return _characteristics[uuid];
-    }
-
-    final List<fb.BluetoothService?> services =
-        await fbDevice.discoverServices();
-
-    for (final fb.BluetoothService? service in services) {
-      try {
-        final c = service?.characteristics
-            .firstWhere((element) => element.uuid == fb.Guid(uuid));
-
-        // Save characteristic in cache
-        _characteristics[uuid] = c;
-
-        return c;
-      } on StateError {
-        continue;
-      }
-    }
-
-    return null;
+  /// Find a characteristic by its UUID
+  fb.BluetoothCharacteristic? findCharacteristic(String uuid) {
+    return _characteristics[uuid];
   }
 
   /// Sends data to the aRdent device to display a [GYWDrawing]
@@ -183,11 +172,12 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   Future<void> _sendBTCommand(GYWBtCommand command) async {
-    final fb.BluetoothCharacteristic? characteristic =
-        await _findCharacteristic(command.characteristic.uuid);
+    final characteristic = findCharacteristic(command.characteristic.uuid);
 
     if (characteristic == null) {
-      throw const GYWException("Bluetooth characteristic not found");
+      throw GYWException(
+        "Bluetooth characteristic ${command.characteristic.uuid} not found",
+      );
     } else {
       await _sendData(characteristic, command.data);
     }
