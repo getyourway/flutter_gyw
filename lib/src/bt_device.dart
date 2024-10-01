@@ -142,6 +142,9 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       _deviceStateListener = null;
     }
 
+    // Clear saved characteristics
+    _characteristics.clear();
+
     try {
       await fbDevice.disconnect();
       _isConnected = false;
