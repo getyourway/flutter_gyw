@@ -5,6 +5,7 @@ import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:flutter_blue_plus/flutter_blue_plus.dart" as fb;
 import "package:flutter_gyw/flutter_gyw.dart";
+import "package:meta/meta.dart";
 
 import "commands.dart";
 import "helpers.dart";
@@ -12,6 +13,7 @@ import "helpers.dart";
 /// The representation of a Bluetooth device in the library
 class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// The encapsulated FlutterBluePlus device
+  @internal
   fb.BluetoothDevice fbDevice;
 
   /// The time when the device was last detected
@@ -158,6 +160,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   }
 
   /// Find a characteristic by its UUID
+  @internal
   fb.BluetoothCharacteristic? findCharacteristic(String uuid) {
     return _characteristics[uuid];
   }
