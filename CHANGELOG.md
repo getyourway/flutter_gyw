@@ -1,5 +1,7 @@
-## 2.0.3
+## 2.0.4
 * [IMP] Annotate `GYWBtDevice.fbDevice` and `GYWBtDevice.findCharacteristic` with `@internal`
+
+## 2.0.3
 * [FIX] Fix the use of images that are not library icons
 * [IMP] Eagerly cache characteristics and expose the cache publicly
 
