@@ -1,5 +1,5 @@
 name: flutter_gyw
-version: 2.0.2
+version: 2.0.4
 description: A package to manage interactions with aRdent smart glasses.
 repository: https://github.com/getyourway/flutter_gyw/
 
@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_blue_plus: ^1.32.11
+  meta: ^1.15.0
 
 dev_dependencies:
   analyzer: ^6.7.0

@@ -1,5 +1,16 @@
 import "package:flutter/services.dart";
 
+/// A class gathering the services used on aRdent
+enum GYWService {
+  /// Service to control the display
+  display("9f3443f3-5149-4d53-9b92-35def7b82e51");
+
+  /// The UUID of the service
+  final String uuid;
+
+  const GYWService(this.uuid);
+}
+
 /// A class gathering the characteristics used on aRdent
 enum GYWCharacteristic {
   /// Characterisitic to control the display
