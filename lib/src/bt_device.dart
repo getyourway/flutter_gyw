@@ -97,14 +97,14 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
           _characteristics[characteristic.uuid.toString()] = characteristic;
         }
       }
-    } on TimeoutException {
+    } on Exception catch (e, s) {
+      log("An error occured during BT Connection", error: e, stackTrace: s);
+
       _isConnected = false;
       _isConnecting = false;
       notifyListeners();
 
       return isConnected;
-    } on Exception catch (e, s) {
-      log("An error occured during BT Connection", error: e, stackTrace: s);
     }
 
     // Device is already connected

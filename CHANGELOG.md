@@ -1,5 +1,6 @@
 ## 2.0.4
 * [IMP] Annotate `GYWBtDevice.fbDevice` and `GYWBtDevice.findCharacteristic` with `@internal`
+* [FIX] Fix `GYWBtDevice.connect` returning true when connection fails
 
 ## 2.0.3
 * [FIX] Fix the use of images that are not library icons
