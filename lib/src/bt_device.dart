@@ -10,6 +10,13 @@ import "package:meta/meta.dart";
 import "commands.dart";
 import "helpers.dart";
 
+enum _ConnectionState {
+  connecting,
+  connected,
+  disconnecting,
+  disconnected,
+}
+
 /// The representation of a Bluetooth device in the library
 class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// The encapsulated FlutterBluePlus device
@@ -19,18 +26,24 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
   /// The time when the device was last detected
   late DateTime lastSeen;
 
-  bool _isConnecting = false;
-  bool _isDisconnecting = false;
-  bool _isConnected = false;
+  var __connectionState = _ConnectionState.disconnected;
+
+  _ConnectionState get _connectionState => __connectionState;
+
+  set _connectionState(_ConnectionState value) {
+    __connectionState = value;
+    notifyListeners();
+  }
 
   /// Whether the connection to the device is in progress
-  bool get isConnecting => _isConnecting;
+  bool get isConnecting => _connectionState == _ConnectionState.connecting;
 
   /// Whether the disconnection to the device is in progress
-  bool get isDisconnecting => _isDisconnecting;
+  bool get isDisconnecting =>
+      _connectionState == _ConnectionState.disconnecting;
 
   /// Whether the device is connected
-  bool get isConnected => _isConnected;
+  bool get isConnected => _connectionState == _ConnectionState.connected;
 
   late int _lastRssi;
 
@@ -81,9 +94,7 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       );
     }
 
-    _isConnecting = true;
-    _isDisconnecting = false;
-    notifyListeners();
+    _connectionState = _ConnectionState.connecting;
 
     try {
       await fbDevice.connect(timeout: const Duration(seconds: 5));
@@ -99,27 +110,19 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       }
     } on Exception catch (e, s) {
       log("An error occured during BT Connection", error: e, stackTrace: s);
-
-      _isConnected = false;
-      _isConnecting = false;
-      notifyListeners();
-
-      return isConnected;
+      _connectionState = _ConnectionState.disconnected;
+      return false;
     }
 
-    // Device is already connected
-    _isConnected = true;
+    _connectionState = _ConnectionState.connected;
 
     _deviceStateListener = fbDevice.connectionState.listen((state) async {
       if (state == fb.BluetoothConnectionState.disconnected) {
-        await disconnect();
+        await _deviceDisconnected();
       }
     });
 
-    _isConnecting = false;
-    notifyListeners();
-
-    return isConnected;
+    return true;
   }
 
   /// Disconnects the Bluetooth device
@@ -130,33 +133,34 @@ class GYWBtDevice with ChangeNotifier implements Comparable<GYWBtDevice> {
       throw const GYWStatusException(
         "The device is still trying to be connected.",
       );
-    } else if (_isDisconnecting) {
+    } else if (isDisconnecting) {
       throw const GYWStatusException(
         "The device is already trying to be disconnected.",
       );
     }
-    _isDisconnecting = true;
-    notifyListeners();
 
-    // Clear status listener
-    if (_deviceStateListener != null) {
-      await _deviceStateListener!.cancel();
-      _deviceStateListener = null;
+    _connectionState = _ConnectionState.disconnecting;
+
+    try {
+      await fbDevice.disconnect();
+      await _deviceDisconnected();
+      return true;
+    } on fb.FlutterBluePlusException catch (e, s) {
+      log("An error occured during BT disconnection", error: e, stackTrace: s);
+      _connectionState = _ConnectionState.connected;
+      return false;
     }
+  }
+
+  Future<void> _deviceDisconnected() async {
+    // Clear status listener
+    await _deviceStateListener?.cancel();
+    _deviceStateListener = null;
 
     // Clear saved characteristics
     _characteristics.clear();
 
-    try {
-      await fbDevice.disconnect();
-      _isConnected = false;
-    } finally {
-      _isDisconnecting = false;
-    }
-
-    notifyListeners();
-
-    return !isConnected;
+    _connectionState = _ConnectionState.disconnected;
   }
 
   /// Find a characteristic by its UUID
