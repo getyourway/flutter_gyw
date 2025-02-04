@@ -428,6 +428,22 @@ enum GYWIcons {
       name: "Key #",
       filename: "key_#",
     ),
+  ),
+
+  /// Left arrow icon
+  key_left(
+    GYWIcon._library(
+      name: "Key Left",
+      filename: "key_left",
+    ),
+  ),
+
+  /// Right arrow icon
+  key_right(
+    GYWIcon._library(
+      name: "Key Right",
+      filename: "key_right",
+    ),
   );
 
   /// The [GYWIcon] object to use to communicate with aRdent.

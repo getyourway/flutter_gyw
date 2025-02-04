@@ -2,6 +2,7 @@
 * [IMP] Annotate `GYWBtDevice.fbDevice` and `GYWBtDevice.findCharacteristic` with `@internal`
 * [FIX] Fix `GYWBtDevice.connect` returning true when connection fails
 * [FIX] Fix `GYWStatusException: The device is already trying to be disconnected.`
+* [IMP] Add arrow key icons
 
 ## 2.0.3
 * [FIX] Fix the use of images that are not library icons
